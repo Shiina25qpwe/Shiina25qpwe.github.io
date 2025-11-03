@@ -16,7 +16,7 @@ tags:                                             #标签
 
 最近，我在使用 Gemini API 时遇到了一个常见的错误：
 
-> "You exceeded your current quota... Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 50"
+> "You exceeded your current quota... Quota exceeded for metric: generativela.googleapis.com/generate_content_free_tier_requests, limit: 50"
 
 这个错误提示我“超过了免费套餐的请求配额”。这让我对 Gemini API 的计费和限额策略产生了许多疑问：
 
@@ -88,6 +88,13 @@ tags:                                             #标签
 
 这是你开启“即用即付”后**必须做的第一件事**。它管理的是你的**总金额**。
 
+* **【关键澄清：这是“月度”限制】**
+    你需要知道，Google Cloud 的预算是围绕**月度 (Monthly)** 结算周期设计的。你设置的是一个**月度总预算**（例如 $10），**不能**设置“每日 $1”这样的重复预算。
+    
+    不过，它的监控和提醒是**实时**的。当你在这个月（无论是哪一天）累计花费达到了提醒阈值（例如 $5），系统会**立即**给你发邮件。
+
+**操作步骤：**
+
 1.  前往 Google Cloud Console 的 **“结算” > “预算和提醒”** 页面。
     * **直达链接：** [https://console.cloud.google.com/billing/budgets](https://console.cloud.google.com/billing/budgets)
 2.  点击“创建预算”，为你当前的项目设置一个预算。
@@ -102,7 +109,16 @@ tags:                                             #标签
 
 ### Step 2: 技术保险丝——设置“API 配额”
 
-这是你的“技术保险丝”，它管理的是你的**调用速率** (RPM, 每分钟请求数)。
+这是你的“技术保险丝”，它管理的是你的**调用速率**。
+
+* **【关键澄清：这是“每分钟”限制】**
+    当你转为“即用即付”后，“免费套餐”里的那些 `...per day` (每日) 限制就被移除了。你需要设置的是**更精细、更安全**的**“每分钟”**限制。
+    
+    **为什么“每分钟”限制是你的首选？**
+    * **场景（每日限制）：** 假设你能设置“每日 10,000 次”限额。一个出错的脚本可能在**短短 5 分钟内**就跑满 10,000 次，产生高额费用。
+    * **场景（每分钟限制）：** 你设置了 `Requests per minute` (每分钟请求数) 为 **100**。出错的脚本在**第 1 分钟**的第 101 次调用时就**立即被阻止**，将你的损失降到最低。
+
+**操作步骤：**
 
 1.  前往 Gemini API 的配额页面。
     * **直达链接 (通用)：** [https://console.cloud.google.com/apis/api/generativelanguage.googleapis.com/quotas](https://console.cloud.google.com/apis/api/generativelanguage.googleapis.com/quotas)
@@ -129,8 +145,8 @@ Google Cloud 是一个庞大的平台。即使你只想用 Gemini API，你也�
 1.  （可选）使用**“免费套餐” (Free Tier)** 进行初步的功能测试，接受它极低的每日限额。
 2.  （可选）使用**“免费试用” ($300 赠金)** 来测试 API 的高性能，不用担心付费。
 3.  当准备正式使用时，**升级到“即用即付” (Pay-as-you-go)**。
-4.  **立刻**前往“结算”页面，设置一个 **$10 的预算提醒（和自动停止操作）**。
+4.  **立刻**前往“结算”页面，设置一个 **$10 的月度预算提醒（和自动停止操作）**。
 5.  **立刻**前往“API 配额”页面，将 **RPM（每分钟请求数）** 主动调低到 100 左右。
 6.  **只使用 Gemini API**，不要在控制台里乱点其他你不知道的服务。
 
-通过“财务预算”管住总金额，通过“API 配额”管住突发速率，你就可以安心地使用 Gemini API 了。
+通过“财务预算”管住月度总金额，通过“API 配额”管住每分钟的突发速率，你就可以安心地使用 Gemini API 了。
