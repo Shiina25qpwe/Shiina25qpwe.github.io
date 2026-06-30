@@ -1,40 +1,109 @@
+<!-- 
+  ============================================================
+  index.html — 首页 (文章列表)
+  ============================================================
+  
+  layout: page → 继承 page.html 布局 (default → page)
+  即拥有: 头部背景图 + 侧边栏 (取决于 site.sidebar 配置)
+  
+  front-matter:
+    description : 首页描述, 显示在头部背景图下方
+  
+  依赖: jekyll-paginate 插件 (_config.yml 中 plugins: [jekyll-paginate])
+        提供 paginator 对象, 自动按 paginate: 10 分页
+  
+  【paginator 对象属性】
+    paginator.posts              : 当前页的文章列表
+    paginator.total_posts        : 文章总数
+    paginator.total_pages        : 总页数
+    paginator.page               : 当前页码
+    paginator.previous_page      : 上一页页码 (第 1 页为 nil)
+    paginator.previous_page_path : 上一页路径 (如 /page1/)
+    paginator.next_page          : 下一页页码 (最后一页为 nil)
+    paginator.next_page_path     : 下一页路径
+-->
+
 ---
 layout: page
 description: "随便记录点什么,有空再慢慢整理吧"
 ---
 
+
+<!-- 
+  ===== 文章列表 =====
+  遍历 paginator.posts, 每篇文章渲染一个预览卡片:
+    - 标题 (可点击链接)
+    - 副标题 (可选, 仅当 post.subtitle 存在时显示)
+    - 内容预览 (纯文本, 前 200 字符)
+    - 元信息 (作者 + 日期)
+-->
 {% for post in paginator.posts %}
 <div class="post-preview">
+
+    <!-- 文章链接 + 标题 (点击进入文章详情页) -->
     <a href="{{ post.url | prepend: site.baseurl }}">
         <h2 class="post-title">
             {{ post.title }}
         </h2>
+
+        <!-- 副标题 (仅在 front-matter 中设置了 subtitle 时渲染) -->
         {% if post.subtitle %}
         <h3 class="post-subtitle">
             {{ post.subtitle }}
         </h3>
         {% endif %}
+
+        <!-- 
+          内容预览
+          strip_html  : 移除所有 HTML 标签 (保留纯文本)
+          truncate:200: 截取前 200 个字符
+        -->
         <div class="post-content-preview">
             {{ post.content | strip_html | truncate:200 }}
         </div>
     </a>
+
+    <!-- 
+      文章元信息
+      post.author : 可选, 不设则回退到 site.title
+      date: "%B %-d, %Y" → 如 "January 1, 2024"
+    -->
     <p class="post-meta">
-        Posted by {% if post.author %}{{ post.author }}{% else %}{{ site.title }}{% endif %} on {{ post.date | date: "%B %-d, %Y" }}
+        Posted by {% if post.author %}{{ post.author }}{% else %}{{ site.title }}{% endif %}
+        on {{ post.date | date: "%B %-d, %Y" }}
     </p>
 </div>
 <hr>
 {% endfor %}
 
-<!-- Pager -->
+
+<!-- 
+  ===== 翻页导航 (Pager) =====
+  仅当文章总数 > 1 页时显示 (单页博客不显示翻页)
+  
+  使用 Bootstrap .pager 样式:
+    .previous : 左浮动 (← Newer Posts)
+    .next     : 右浮动 (Older Posts →)
+  
+  注意: Jekyll 文章按日期降序排列,
+        第 1 页 = 最新文章, 第 2 页 = 更早文章。
+        所以 "上一页" = 更新的文章 (Newer), "下一页" = 更旧的文章 (Older)。
+  
+  replace: '//', '/'
+    jekyll-paginate 的 previous_page_path 有时会产生双斜杠 (//page2/),
+    此过滤器将其修复为单斜杠。
+-->
 {% if paginator.total_pages > 1 %}
 <ul class="pager">
     {% if paginator.previous_page %}
     <li class="previous">
+        <!-- &larr; = ← (HTML 实体: 左箭头) -->
         <a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&larr; Newer Posts</a>
     </li>
     {% endif %}
     {% if paginator.next_page %}
     <li class="next">
+        <!-- &rarr; = → (HTML 实体: 右箭头) -->
         <a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">Older Posts &rarr;</a>
     </li>
     {% endif %}

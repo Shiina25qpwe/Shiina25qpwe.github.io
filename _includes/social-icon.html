@@ -1,0 +1,37 @@
+{% comment %}
+  ============================================================
+  social-icon.html - 可复用的社交图标组件
+  ============================================================
+  调用示例：
+    {% include social-icon.html url="https://github.com/xxx" icon="github" external=true %}
+    {% include social-icon.html url="https://www.jianshu.com/u/xxx" text="简" external=true %}
+
+  参数说明：
+    url      : 链接地址（必填）
+    icon     : Font Awesome 图标后缀，与 text 二选一
+               传入 "github" → 渲染为 <i class="fa fa-github">
+               可选值参考: https://fontawesome.com/v4/icons/
+    text     : 自定义文字图标，与 icon 二选一
+               用于 Font Awesome 没有对应图标的平台（如简书="简"、知乎="知"）
+               传入非空值时忽略 icon 参数，直接显示文字
+    external : 是否外链（默认 false）
+               true  → 添加 target="_blank" rel="noopener noreferrer"（新标签页打开）
+               false → 当前页跳转（如站内 RSS 链接）
+
+  HTML 结构说明：
+    fa-stack       : Font Awesome 图标叠加容器
+    fa-stack-2x    : 底层图标（2 倍大小），此处为实心圆 fa-circle 作背景
+    fa-stack-1x    : 上层图标（标准大小），叠加在圆形背景之上
+    fa-inverse     : 颜色反转，将上层图标变为白色，与深色圆形背景形成对比
+    fa-lg          : 整体再放大 33%
+{% endcomment %}
+<li>
+    <a {% if include.external %}target="_blank" rel="noopener noreferrer"{% endif %} href="{{ include.url }}">
+        <span class="fa-stack fa-lg">
+            <!-- 底层：实心圆背景（2x 尺寸） -->
+            <i class="fa fa-circle fa-stack-2x"></i>
+            <!-- 上层：图标或自定义文字（标准尺寸，反色为白色） -->
+            <i class="fa {% if include.text %}fa-stack-1x fa-inverse{% else %}fa-{{ include.icon }} fa-stack-1x fa-inverse{% endif %}">{% if include.text %}{{ include.text }}{% endif %}</i>
+        </span>
+    </a>
+</li>
