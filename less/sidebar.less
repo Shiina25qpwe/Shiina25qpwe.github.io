@@ -1,8 +1,23 @@
+/* 
+  ============================================================
+  sidebar.less - 侧边栏样式
+  ============================================================
+  
+  被 hux-blog.less 通过 @import "sidebar.less" 引入。
+  
+  层级结构:
+    .sidebar-container           — 侧边栏主容器
+      h5 / a                    — 标题和链接 (灰色调弱化)
+      .tags a                   — 标签药丸 (圆角边框)
+      .short-about              — 个人简介卡片
+        img                     — 头像 (80%宽, 圆角)
+        p                       — 简介文字
+        .list-inline > li       — 社交图标列表
+*/
+
 @import "variables.less";
 
-// Sidebar Components
-
-// Large Screen
+// 大屏/中屏: 文章容器右侧留 5% 空白 (防止内容贴边)
 @media (min-width: 1200px){
     .post-container, .sidebar-container{
         padding-right: 5%;
@@ -14,24 +29,30 @@
     }
 }
 
-// Container of Sidebar, also Friends
+// 侧边栏主容器
 .sidebar-container{
-    color: @gray-l;
+    color: @gray-l;           // 弱化文字色 (#bfbfbf)
     font-size: 14px;
+
+    // 侧边栏小标题 (如 "FEATURED TAGS", "FRIENDS")
     h5{
-        color: @gray;
+        color: @gray;         // #808080
         padding-bottom: 1em;
         a{
             color: @gray !important;
             text-decoration: none;
         }
     }
+
+    // 侧边栏链接默认灰色，悬停时变主题色
     a{
         color: @gray-l !important;
         &:hover, &:active{
             color: @brand-primary !important;
         }
     }
+
+    // 标签药丸: 边框默认灰色，悬停变主题色
     .tags{
         a{
             border-color: @gray-l;
@@ -40,6 +61,8 @@
             }
         }
     }
+
+    // 个人简介卡片
     .short-about{
         img{
             width: 80%;
@@ -51,6 +74,7 @@
             margin-top: 0px;
             margin-bottom: 20px;
         }
+        // 社交图标列表: 移除左侧内边距 (图标自带间距)
         .list-inline>li{
             padding-left: 0px;
         }

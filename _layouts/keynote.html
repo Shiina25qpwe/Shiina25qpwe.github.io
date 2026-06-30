@@ -1,12 +1,26 @@
----
-layout: default
----
+<!-- 
+  ============================================================
+  keynote.html - Keynote 演示文稿布局
+  ============================================================
+  继承自 default.html（layout: default）
+  
+  适用场景：嵌入外部 iframe 内容（如 slides.com 演示、B站视频等）
+  
+  front-matter 特有变量:
+    page.iframe      : iframe 的 src URL（必填，否则显示空白）
+    page.header-img  : 头部背景图片（可选，覆盖 site.header-img）
+    page.navcolor    : 导航栏颜色模式，"invert" = 反色（深色背景用浅色文字）
+    page.tags        : 标签数组，如 ["JavaScript", "CSS"]
+    page.author      : 作者名（可选，不设则用 site.title）
+    page.subtitle    : 副标题（可选，留空也渲染占位 h2）
+-->
 
-<!-- Image to hack wechat -->
-<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
-<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
-
-<!-- Post Header -->
+<!-- 
+  ===== 内联 CSS（仅此布局使用，不污染全局样式表） =====
+  
+  注意：background-image 被注释掉，因为本布局用 iframe 填满头部。
+  如需背景图模式，取消注释 background-image 并移除 iframe。
+-->
 <style type="text/css">
     header.intro-header{
         /*background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')*/
@@ -18,7 +32,11 @@ layout: default
         height: 100%;
         border: 0;
     }
-    /* Override Nav Style */
+    /* 
+      ===== 导航栏反色模式 =====
+      当 page.navcolor == "invert"，将导航栏文字和汉堡图标从白色改为 #777（灰色）
+      适用于 iframe 内容偏亮/偏白时，确保导航栏文字可读
+    */
     {% if page.navcolor == "invert" %}
         .navbar-custom .nav li a,
         .navbar-custom .nav li a:hover,
@@ -28,25 +46,73 @@ layout: default
 
     {% endif %}
 </style>
+
+<!-- 
+  ===== 页面头部（iframe 模式） =====
+  
+  ⚠ HTML 结构重要说明：
+    下面的 <iframe src="..."/> 使用了自闭合写法，但在 HTML5 中 iframe 不是 void 元素，
+    浏览器实际会将其解析为 <iframe>（开放标签）。
+    因此 <iframe> 和 </iframe> 之间的所有内容（.container 及其子元素）
+    被视为 iframe 的 fallback 内容。
+    
+    由于 iframe 有 src 属性正常加载内容，fallback 永远不会渲染到屏幕上。
+    但这段内容有两个作用：
+      1. SEO：搜索引擎爬虫不执行 JS/iframe，但仍可读取其中的标题和标签文字
+      2. 降级：如果未来改为无 src 的模式，这段内容可直接显示
+    
+    page.iframe : front-matter 变量，传入完整的 iframe URL
+                 示例: "https://slides.com/username/slide-deck/embed"
+-->
 <header class="intro-header" >
     <iframe src="{{page.iframe}}"/>
         <div class="container">
             <div class="row">
+                <!-- 
+                  Bootstrap 栅格居中：大屏 8/12 列偏移 2，中屏 10/12 列偏移 1
+                -->
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <div class="post-heading">
+                        
+                        <!-- 
+                          ===== 标签列表 =====
+                          遍历 page.tags 数组生成标签链接
+                          每个标签链接到 /tags/#标签名 锚点
+                        -->
                         <div class="tags">
                             {% for tag in page.tags %}
                             <a class="tag" href="{{ site.baseurl }}/tags/#{{ tag }}" title="{{ tag }}">{{ tag }}</a>
                             {% endfor %}
                         </div>
+
+                        <!-- 标题 -->
                         <h1>{{ page.title }}</h1>
-                        {% comment %}
-                            always create a h2 for keeping the margin , Hux
-                        {% endcomment %}
+
+                        <!-- 
+                          副标题（始终渲染 h2 以保持间距）
+                          即使 page.subtitle 为空也输出空 <h2>，
+                          目的是撑开标题与 meta 之间的垂直间距（margin）
+                        -->
+                        {% comment %} always create a h2 for keeping the margin , Hux {% endcomment %}
                         {% comment %} if page.subtitle {% endcomment %}
                         <h2 class="subheading">{{ page.subtitle }}</h2>
                         {% comment %} endif {% endcomment %}
-                        <span class="meta">Posted by {% if page.author %}{{ page.author }}{% else %}{{ site.title }}{% endif %} on {{ page.date | date: "%B %-d, %Y" }}</span>
+
+                        <!-- 
+                          文章元信息
+                          Posted by [作者] on [日期]
+                          
+                          page.author  : 可选，不设则回退到 site.title
+                          page.date    : Jekyll 自动取自文件名，格式如 2024-01-01
+                          date: "%B %-d, %Y" : Liquid 日期过滤器
+                            %B  → 完整月份名（January）
+                            %-d → 不带前导零的日期（1 而非 01）
+                            %Y  → 四位年份（2024）
+                        -->
+                        <span class="meta">
+                            Posted by {% if page.author %}{{ page.author }}{% else %}{{ site.title }}{% endif %}
+                            on {{ page.date | date: "%B %-d, %Y" }}
+                        </span>
                     </div>
                 </div>
             </div>
@@ -54,21 +120,49 @@ layout: default
     </iframe>
 </header>
 
-<!-- Post Content -->
+<!-- 
+  ===== 文章主体 =====
+-->
 <article>
     <div class="container">
         <div class="row">
 
-            <!-- Post Container -->
+            <!-- 
+              ===== 文章内容区 =====
+              post-container : 自定义类，用于 JavaScript 目录生成（generateCatalog 查找此容器）
+              栅格：大屏 8/12+偏移2，中屏 10/12+偏移1 → 居中显示
+            -->
             <div class="post-container
                 col-lg-8 col-lg-offset-2
                 col-md-10 col-md-offset-1 ">
 
+                <!-- 
+                  {{ content }} : Jekyll 特殊变量
+                  渲染对应 .md/.html 文件的正文内容
+                -->
 				{{ content }}
 
+                <!-- 
+                  不可见的分隔线
+                  visibility: hidden → 占位但不可见，用于撑开内容与翻页导航的间距
+                -->
                 <hr style="visibility: hidden;">
 
-
+                <!-- 
+                  ===== 上一篇 / 下一篇 翻页导航 =====
+                  
+                  page.previous / page.next : Jekyll 内置变量
+                  自动指向按日期排序的相邻文章（基于 _posts 目录）
+                  
+                  .url   : 文章 URL
+                  .title : 文章标题
+                  
+                  data-toggle="tooltip"  : Bootstrap tooltip 插件属性
+                  data-placement="top"   : tooltip 显示在链接上方
+                  title="..."            : tooltip 显示的文字
+                  
+                  replace: '//', '/'     : 修复可能的双斜杠（baseurl 拼接时产生）
+                -->
                 <ul class="pager">
                     {% if page.previous.url %}
                     <li class="previous">
@@ -88,12 +182,23 @@ layout: default
                     {% endif %}
                 </ul>
 
-                <!-- Gitalk 评论 start  -->
+                <!-- 
+                  ===== Gitalk 评论插件 =====
+                  
+                  配置在 _config.yml 的 site.gitalk 对象中:
+                    enable       : true/false  是否启用
+                    clientID     : GitHub OAuth App Client ID
+                    clientSecret : GitHub OAuth App Client Secret
+                    repo         : 存放评论的 GitHub 仓库名
+                    owner        : 仓库所有者
+                    admin        : 管理员列表（数组，如 ["username"]）
+                  
+                  Gitalk 原理：利用 GitHub Issues 作为评论存储后端
+                  每条评论对应一个 Issue（按页面路径区分）
+                -->
                 {% if site.gitalk.enable %}
-                <!-- Gitalk link  -->
                 <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
                 <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
-
                 <div id="gitalk-container"></div>
                     <script type="text/javascript">
                     var gitalk = new Gitalk({
@@ -107,26 +212,47 @@ layout: default
                     gitalk.render('gitalk-container');
                 </script>
                 {% endif %}
-                <!-- Gitalk end -->
 
+                <!-- 
+                  ===== Disqus 评论（旧方案，与 Gitalk 二选一） =====
+                  配置: site.disqus.enable = true 时启用
+                  ⚠ 注意：post.html 使用 site.disqus_username 判断，
+                  此处使用 site.disqus.enable，两者不一致（历史遗留）
+                -->
                 {% if site.disqus.enable %}
-                <!-- disqus 评论框 start -->
                 <div class="comment">
-                    <div id="disqus_thread" class="disqus-thread">
-
-                    </div>
+                    <div id="disqus_thread" class="disqus-thread"></div>
                 </div>
-                <!-- disqus 评论框 end -->
                 {% endif %}
 
             </div>
 
-            <!-- Sidebar Container -->
+            <!-- 
+              ===== 侧边栏 =====
+              栅格：与文章内容区相同宽度（大屏 8/12+偏移2）
+              位于文章下方（非侧边并排）
+            -->
             <div class="sidebar-container
                 col-lg-8 col-lg-offset-2
                 col-md-10 col-md-offset-1 ">
 
-                <!-- Featured Tags -->
+                <!-- 
+                  ===== 精选标签 =====
+                  
+                  配置: site.featured-tags = true 时启用
+                  site.tags : Jekyll 内置变量，包含所有标签及其文章列表
+                             结构: { "tagname" => [post1, post2, ...] }
+                  
+                  Liquid 迭代:
+                    tag[0] → 标签名（字符串）
+                    tag[1] → 该标签下的文章数组
+                    tag[1].size → 文章数量
+                  
+                  featured-condition-size : _config.yml 配置项
+                    只有文章数 > 此值的标签才显示（过滤小众标签）
+                  
+                  rel="{{ tag[1].size }}" : 将文章数写入 rel 属性（非标准用法，用于样式或 JS）
+                -->
                 {% if site.featured-tags %}
                 <section>
                     <hr class="hidden-sm hidden-xs">
@@ -143,7 +269,19 @@ layout: default
                 </section>
                 {% endif %}
 
-                <!-- Friends Blog -->
+                <!-- 
+                  ===== 友链 =====
+                  
+                  配置: site.friends 在 _config.yml 中定义为对象数组
+                  示例:
+                    friends:
+                      - title: "朋友的博客"
+                        href: "https://friend.example.com"
+                      - title: "另一个朋友"
+                        href: "https://another.example.com"
+                  
+                  list-inline : 列表项水平排列（而非竖向）
+                -->
                 {% if site.friends %}
                 <hr>
                 <h5>FRIENDS</h5>
@@ -158,14 +296,26 @@ layout: default
     </div>
 </article>
 
-<!-- resize header to fullscreen keynotes -->
+<!-- 
+  ===== 动态调整 iframe 头部高度 =====
+  
+  目标：让 iframe 头部始终占满视口（减去 85px 提示用户下方还有内容）
+  
+  监听三个事件（确保各种加载场景都能触发）:
+    DOMContentLoaded : DOM 解析完成（最快触发）
+    load             : 所有资源（图片/iframe）加载完成（最晚触发）
+    resize           : 窗口大小变化时重新计算
+  
+  额外在脚本末尾直接调用一次 resize()，
+  防止上述事件均已错过（脚本动态插入场景）。
+-->
 <script>
     var $header = document.getElementsByTagName("header")[0];
     function resize(){
         /*
-         * leave 85px to both
-         * - told/imply users that there has more content below
-         * - let user can scroll in mobile device, seeing the keynote-view is unscrollable
+         * 留出 85px 的可见区域：
+         *   - 暗示/告知用户下方还有更多内容
+         *   - 让移动端用户可以滚动（否则 keyonte 视口不可滚动会导致被困）
          */
         $header.style.height = (window.innerHeight-85) + 'px';
     }
@@ -182,9 +332,18 @@ layout: default
 </script>
 
 
-
+<!-- 
+  ===== Disqus 评论 JS（仅在启用时加载） =====
+  
+  配置: site.disqus.enable = true 时启用
+  变量:
+    disqus_shortname  : Disqus 站点的短名称（注册时设定）
+    disqus_identifier : 页面唯一标识（用于关联评论线程）
+    disqus_url        : 页面完整 URL（用于 Disqus 反向链接）
+  
+  脚本异步加载 Disqus embed.js，不阻塞页面渲染。
+-->
 {% if site.disqus.enable %}
-<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "{{site.disqus.username}}";
@@ -197,23 +356,31 @@ layout: default
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
 </script>
-<!-- disqus 公共JS代码 end -->
 {% endif %}
 
 
+<!-- 
+  ===== AnchorJS（标题锚点链接） =====
+  
+  配置: site.anchorjs = true 时启用（_config.yml）
+  
+  AnchorJS 自动为文章中的 h1~h6 标题添加 # 锚点图标，
+  鼠标悬停时显示，点击复制该标题的 URL。
+  
+  async() 函数统一定义在 head.html，此处直接使用。
+  
+  anchors.options:
+    visible   : 'always' → 始终显示锚点图标（默认 'hover' 仅悬停时显示）
+    placement : 'right'  → 图标在标题右侧
+    icon      : '#'      → 图标文字为 #
+  
+  anchors.add()           → 为所有标题添加锚点
+    .remove('selector')   → 排除特定标题（头部大标题、副标题、侧边栏标题不加锚点）
+  
+  CSS @media 查询:
+    屏幕 ≥ 800px 时，图标移至标题左侧（left: -0.75em），避免与右侧内容重叠
+-->
 {% if site.anchorjs %}
-<!-- async load function -->
-<script>
-    function async(u, c) {
-      var d = document, t = 'script',
-          o = d.createElement(t),
-          s = d.getElementsByTagName(t)[0];
-      o.src = u;
-      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
-      s.parentNode.insertBefore(o, s);
-    }
-</script>
-<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
 <script>
     async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
         anchors.options = {
