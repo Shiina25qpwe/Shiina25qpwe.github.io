@@ -1,0 +1,50 @@
+<!--
+  ============================================================
+  anchor-js.html — 为页面标题添加锚点链接图标
+  ============================================================
+  依赖：anchor-js (CDN 异步加载)
+  控制：_config.yml 中设置 anchorjs: true/false
+
+  功能说明：
+    1. 定义 async() 异步加载工具函数（与 footer.html 中的相同，此处独立定义以保证
+       此组件在未加载 footer 的页面也能独立工作）
+    2. 异步加载 anchor-js CDN 资源
+    3. 排除特定区域的标题（intro-header、subheading、sidebar-container）
+    4. 大屏幕（≥800px）上将锚点图标放在标题左侧
+-->
+{% if site.anchorjs %}
+
+<!-- async load function（异步脚本加载工具） -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- anchor-js：自动为正文标题添加 # 锚点链接 -->
+<!-- 文档：http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // 去除特定区域标题的锚点（封面标题、副标题、侧栏标题不需要锚点）
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+
+<style>
+    /* 大屏幕（≥800px）时将锚点图标放在标题左侧，更美观 */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+{% endif %}

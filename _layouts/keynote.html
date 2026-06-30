@@ -1,12 +1,40 @@
----
-layout: default
----
+<!--
+  ============================================================
+  keynote.html — 嵌入式页面布局（继承 default）
+  ============================================================
+  使用方式：在页面 front-matter 中设置 layout: keynote
 
-<!-- Image to hack wechat -->
+  适用 front-matter 字段：
+    iframe        : 嵌入的 URL（必填，页面主要内容由此 iframe 承载）
+    title         : 页面标题
+    subtitle      : 副标题（可选）
+    author        : 作者名（可选）
+    tags          : 标签数组
+    navcolor      : "invert" → 导航栏反色（浅色背景 iframe 时使用）
+    date          : 发布日期
+
+  与 post.html 的区别：
+    - 无封面背景图，代之以全屏 iframe 嵌入
+    - 无 header-img / header-mask 支持
+    - Gitalk 使用路径原文（不用 md5），无 distractionFreeMode
+    - Disqus 使用 site.disqus.enable（而非 site.disqus_username）
+    - 全屏自适应 JS（窗口大小变化时重新调整 iframe 高度）
+
+  页面结构：
+    封面区   → iframe 全屏嵌入 + 标签 + 标题 + 副标题 + 作者/日期
+    正文区   → {{ content }}（通常为空，内容在 iframe 中）
+    评论区   → Gitalk（优先）/ Disqus（备选）
+    侧栏区   → 精选标签 + 友情链接
+    底部 JS  → 全屏自适应 + Disqus 嵌入 + anchor-js 锚点
+  ============================================================
+-->
+
+<!-- WeChat 分享 hack（已废弃） -->
 <!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
 <!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
 
-<!-- Post Header -->
+
+<!-- ==================== 封面区样式 ==================== -->
 <style type="text/css">
     header.intro-header{
         /*background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')*/
@@ -18,35 +46,48 @@ layout: default
         height: 100%;
         border: 0;
     }
-    /* Override Nav Style */
+
+    /* 导航栏反色（浅色背景时使用，将深色菜单文字改为灰色） */
     {% if page.navcolor == "invert" %}
         .navbar-custom .nav li a,
         .navbar-custom .nav li a:hover,
         .navbar-custom .navbar-brand,
         .navbar-custom .navbar-brand:hover {color:#777;}
         .navbar-default .navbar-toggle .icon-bar {background-color:#777;}
-
     {% endif %}
 </style>
+
 <header class="intro-header" >
+    <!-- iframe 嵌入内容 -->
     <iframe src="{{page.iframe}}"/>
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <div class="post-heading">
+
+                        <!-- 标签 -->
                         <div class="tags">
                             {% for tag in page.tags %}
                             <a class="tag" href="{{ site.baseurl }}/tags/#{{ tag }}" title="{{ tag }}">{{ tag }}</a>
                             {% endfor %}
                         </div>
+
+                        <!-- 标题 -->
                         <h1>{{ page.title }}</h1>
+
+                        <!-- 副标题（始终渲染以保持间距） -->
                         {% comment %}
-                            always create a h2 for keeping the margin , Hux
+                            always create a h2 for keeping the margin, Hux
                         {% endcomment %}
                         {% comment %} if page.subtitle {% endcomment %}
                         <h2 class="subheading">{{ page.subtitle }}</h2>
                         {% comment %} endif {% endcomment %}
-                        <span class="meta">Posted by {% if page.author %}{{ page.author }}{% else %}{{ site.title }}{% endif %} on {{ page.date | date: "%B %-d, %Y" }}</span>
+
+                        <!-- 作者 + 发布日期 -->
+                        <span class="meta">
+                            Posted by {% if page.author %}{{ page.author }}{% else %}{{ site.title }}{% endif %}
+                            on {{ page.date | date: "%B %-d, %Y" }}
+                        </span>
                     </div>
                 </div>
             </div>
@@ -54,21 +95,22 @@ layout: default
     </iframe>
 </header>
 
-<!-- Post Content -->
+
+<!-- ==================== 正文区 ==================== -->
 <article>
     <div class="container">
         <div class="row">
 
-            <!-- Post Container -->
+            <!-- 正文容器 -->
             <div class="post-container
                 col-lg-8 col-lg-offset-2
                 col-md-10 col-md-offset-1 ">
 
-				{{ content }}
+                {{ content }}
 
                 <hr style="visibility: hidden;">
 
-
+                <!-- 上一篇 / 下一篇导航 -->
                 <ul class="pager">
                     {% if page.previous.url %}
                     <li class="previous">
@@ -88,14 +130,16 @@ layout: default
                     {% endif %}
                 </ul>
 
-                <!-- Gitalk 评论 start  -->
+
+                <!-- ==================== 评论区 ==================== -->
+
+                <!-- Gitalk 评论（基于 GitHub Issues） -->
+                <!-- 注意：与 post.html 不同，keynote 不使用 md5 缩短 id，无 distractionFreeMode -->
                 {% if site.gitalk.enable %}
-                <!-- Gitalk link  -->
                 <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
                 <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
-
                 <div id="gitalk-container"></div>
-                    <script type="text/javascript">
+                <script type="text/javascript">
                     var gitalk = new Gitalk({
                     clientID: '{{site.gitalk.clientID}}',
                     clientSecret: '{{site.gitalk.clientSecret}}',
@@ -109,32 +153,34 @@ layout: default
                 {% endif %}
                 <!-- Gitalk end -->
 
+                <!-- Disqus 评论（备选方案） -->
+                <!-- 注意：此处使用 site.disqus.enable 控制，与 post.html 的 site.disqus_username 不同 -->
                 {% if site.disqus.enable %}
-                <!-- disqus 评论框 start -->
                 <div class="comment">
                     <div id="disqus_thread" class="disqus-thread">
-
                     </div>
                 </div>
-                <!-- disqus 评论框 end -->
                 {% endif %}
 
             </div>
 
-            <!-- Sidebar Container -->
+
+            <!-- ==================== 侧栏区 ==================== -->
+
+            <!-- 精选标签 + 友情链接 -->
             <div class="sidebar-container
                 col-lg-8 col-lg-offset-2
                 col-md-10 col-md-offset-1 ">
 
-                <!-- Featured Tags -->
+                <!-- 精选标签 -->
                 {% if site.featured-tags %}
                 <section>
                     <hr class="hidden-sm hidden-xs">
-                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <h5><a href="{{ '/tags/' | prepend: site.baseurl }}">FEATURED TAGS</a></h5>
                     <div class="tags">
                         {% for tag in site.tags %}
-                            {% if tag[1].size > {{site.featured-condition-size}} %}
-                                <a href="/tags/#{{ tag[0] }}" title="{{ tag[0] }}" rel="{{ tag[1].size }}">
+                            {% if tag[1].size > site.featured-condition-size %}
+                                <a href="{{ '/tags/#' | prepend: site.baseurl }}{{ tag[0] }}" title="{{ tag[0] }}" rel="{{ tag[1].size }}">
                                     {{ tag[0] }}
                                 </a>
                             {% endif %}
@@ -143,7 +189,7 @@ layout: default
                 </section>
                 {% endif %}
 
-                <!-- Friends Blog -->
+                <!-- 友情链接 -->
                 {% if site.friends %}
                 <hr>
                 <h5>FRIENDS</h5>
@@ -154,39 +200,53 @@ layout: default
                 </ul>
                 {% endif %}
             </div>
+
         </div>
     </div>
 </article>
 
-<!-- resize header to fullscreen keynotes -->
+
+<!-- ==================== 全屏自适应（Keynote 专属） ==================== -->
+<!--
+  将 <header> 高度设为窗口高度 - 85px
+  85px 余量用途：
+    - 暗示用户下方还有更多内容（不完全覆盖屏幕）
+    - 移动端保留滚动手势空间（iframe 不可滚动）
+-->
 <script>
     var $header = document.getElementsByTagName("header")[0];
     function resize(){
         /*
-         * leave 85px to both
-         * - told/imply users that there has more content below
-         * - let user can scroll in mobile device, seeing the keynote-view is unscrollable
+         * 保留 85px 余量：
+         * - 告知用户下方还有内容
+         * - 移动端可滚动（keynote 视图本身不可滚动）
          */
         $header.style.height = (window.innerHeight-85) + 'px';
     }
+    // DOMContentLoaded : DOM 就绪后立即设置
     document.addEventListener('DOMContentLoaded', function(){
         resize();
     })
+    // load : 所有资源加载完成后再次设置
     window.addEventListener('load', function(){
         resize();
     })
+    // resize : 窗口大小变化时自适应
     window.addEventListener('resize', function(){
         resize();
     })
+    // 首次同步执行（防止闪烁）
     resize();
 </script>
 
 
+<!-- ==================== 页面底部 JS ==================== -->
 
+<!-- Disqus 嵌入脚本 -->
+<!-- 注意：此处使用 site.disqus.username（嵌套结构），与 post.html 的 site.disqus_username（扁平结构）不同 -->
 {% if site.disqus.enable %}
-<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES * * */
+    /* Disqus 配置变量 */
     var disqus_shortname = "{{site.disqus.username}}";
     var disqus_identifier = "{{page.id}}";
     var disqus_url = "{{site.url}}{{page.url}}";
@@ -197,42 +257,8 @@ layout: default
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
 </script>
-<!-- disqus 公共JS代码 end -->
 {% endif %}
 
 
-{% if site.anchorjs %}
-<!-- async load function -->
-<script>
-    function async(u, c) {
-      var d = document, t = 'script',
-          o = d.createElement(t),
-          s = d.getElementsByTagName(t)[0];
-      o.src = u;
-      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
-      s.parentNode.insertBefore(o, s);
-    }
-</script>
-<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
-<script>
-    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
-        anchors.options = {
-          visible: 'always',
-          placement: 'right',
-          icon: '#'
-        };
-        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
-    })
-</script>
-<style>
-    /* place left on bigger screen */
-    @media all and (min-width: 800px) {
-        .anchorjs-link{
-            position: absolute;
-            left: -0.75em;
-            font-size: 1.1em;
-            margin-top : -0.1em;
-        }
-    }
-</style>
-{% endif %}
+<!-- anchor-js：为正文标题生成锚点链接 -->
+{% include anchor-js.html %}

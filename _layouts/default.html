@@ -1,9 +1,27 @@
+<!--
+  ============================================================
+  default.html — 基础布局（所有页面的骨架）
+  ============================================================
+  被继承者：post.html, page.html, keynote.html, tags.html
+
+  结构：
+    <head>  ← head.html（meta、CSS、MathJax）
+    <body>
+      导航栏   ← nav.html
+      {{ content }} ← 子布局内容填充
+      页脚     ← footer.html（社交图标、JS 脚本）
+      WeChat hack 图片
+    </body>
+
+  ontouchstart="" 的作用：
+    在 iOS Safari 中激活 CSS :active 伪类，否则按钮无按下反馈效果
+-->
 <!DOCTYPE html>
 <html lang="en">
 
 {% include head.html %}
 
-<!-- hack iOS CSS :active style -->
+<!-- hack iOS CSS :active style（让 iOS Safari 支持 :active 伪类） -->
 <body ontouchstart="">
 
     {% include nav.html %}
@@ -12,10 +30,13 @@
 
     {% include footer.html %}
 
-
-<!-- Image to hack wechat -->
+<!--
+  WeChat 分享 hack：
+  微信内置浏览器会抓取页面中第一张 ≥300x300 的图片作为分享封面，
+  此隐藏图片用于指定微信分享时显示的图标
+-->
 <img src="/img/apple-touch-icon.png" width="0" height="0" />
-<!-- Migrate from head to bottom, no longer block render and still work -->
+<!-- 移到 body 底部：不阻塞首屏渲染，微信仍能抓取 -->
 
 </body>
 

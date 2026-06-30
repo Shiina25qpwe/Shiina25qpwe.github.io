@@ -1,15 +1,35 @@
----
-layout: default
----
+<!--
+  ============================================================
+  page.html — 通用页面 / 博客首页布局（继承 default）
+  ============================================================
+  使用方式：在页面 front-matter 中设置 layout: page
 
-<!-- Page Header -->
+  适用 front-matter 字段：
+    header-img              : 封面背景图片路径
+    title                   : 页面标题（不设则显示 site.title）
+    description             : 页面描述 / 头部副标题
+    sidebar                 : site 级别（_config.yml），控制侧栏模式
+
+  页面结构：
+    封面区   → 背景图 + 标题 + 描述
+    正文区   → {{ content }}（首页为文章列表，关于页等为静态内容）
+    侧栏区   → 两种模式（由 _config.yml 的 sidebar 控制）：
+               - false（无侧栏）: 文章列表全宽 → 下方精选标签+友链
+               - true（有侧栏） : 文章列表左 8 列 → 右侧栏 3 列（About + 精选标签 + 友链）
+  ============================================================
+-->
+
+
+<!-- ==================== 封面区 ==================== -->
 <header class="intro-header" style="background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
                 <div class="site-heading">
+                    <!-- 标题：有 page.title 则显示，否则使用站点标题 -->
                     <h1>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</h1>
                     <!--<hr class="small">-->
+                    <!-- 描述：来自 page.description -->
                     <span class="subheading">{{ page.description }}</span>
                 </div>
             </div>
@@ -17,78 +37,36 @@ layout: default
     </div>
 </header>
 
-<!-- Main Content -->
+
+<!-- ==================== 正文区 ==================== -->
 <div class="container">
-	<div class="row">
+    <div class="row">
+
+        <!-- ============================================================
+             模式 A：site.sidebar == false（无侧栏）
+             文章列表全宽 → 下方放置精选标签 + 友情链接
+        ============================================================ -->
         {% if site.sidebar == false %}
-<!-- NO SIDEBAR -->
-    <!-- PostList Container -->
+
+            <!-- 文章列表容器（全宽） -->
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 postlist-container">
                 {{ content }}
             </div>
-    <!-- Sidebar Container -->
+
+            <!-- 精选标签 + 友情链接（位于文章列表下方） -->
             <div class="
                 col-lg-8 col-lg-offset-2
                 col-md-10 col-md-offset-1
                 sidebar-container">
 
-                <!-- Featured Tags -->
+                <!-- 精选标签（无水平线分隔，与其他页面不同） -->
                 {% if site.featured-tags %}
                 <section>
                     <!-- no hr -->
-                    <h5><a href="{{'/tags/' | prepend: site.baseurl }}">FEATURED TAGS</a></h5>
-                    <div class="tags">
-        				{% for tag in site.tags %}
-                            {% if tag[1].size > {{site.featured-condition-size}} %}
-                				<a href="{{ site.baseurl }}/tags/#{{ tag[0] }}" title="{{ tag[0] }}" rel="{{ tag[1].size }}">
-                                    {{ tag[0] }}
-                                </a>
-                            {% endif %}
-        				{% endfor %}
-        			</div>
-                </section>
-                {% endif %}
-
-                <!-- Friends Blog -->
-                {% if site.friends %}
-                <hr>
-                <h5>FRIENDS</h5>
-                <ul class="list-inline">
-                    {% for friend in site.friends %}
-                        <li><a href="{{friend.href}}">{{friend.title}}</a></li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-            </div>
-        {% else %}
-
-<!-- USE SIDEBAR -->
-    <!-- PostList Container -->
-    		<div class="
-                col-lg-8 col-lg-offset-1
-                col-md-8 col-md-offset-1
-                col-sm-12
-                col-xs-12
-                postlist-container
-            ">
-    			{{ content }}
-    		</div>
-    <!-- Sidebar Container -->
-            <div class="
-                col-lg-3 col-lg-offset-0
-                col-md-3 col-md-offset-0
-                col-sm-12
-                col-xs-12
-                sidebar-container
-            ">
-                <!-- Featured Tags -->
-                {% if site.featured-tags %}
-                <section>
-                    <hr class="hidden-sm hidden-xs">
-                    <h5><a href="{{'/tags/' | prepend: site.baseurl }}">FEATURED TAGS</a></h5>
+                    <h5><a href="{{ '/tags/' | prepend: site.baseurl }}">FEATURED TAGS</a></h5>
                     <div class="tags">
                         {% for tag in site.tags %}
-                            {% if tag[1].size > {{site.featured-condition-size}} %}
+                            {% if tag[1].size > site.featured-condition-size %}
                                 <a href="{{ site.baseurl }}/tags/#{{ tag[0] }}" title="{{ tag[0] }}" rel="{{ tag[1].size }}">
                                     {{ tag[0] }}
                                 </a>
@@ -98,99 +76,7 @@ layout: default
                 </section>
                 {% endif %}
 
-                <!-- Short About -->
-                <section class="visible-md visible-lg">
-                    <hr><h5><a href="{{'/about/' | prepend: site.baseurl }}">ABOUT ME</a></h5>
-                    <div class="short-about">
-                        {% if site.sidebar-avatar %}
-                            <a href="{{ site.baseurl }}/about">
-                                <img src="{{site.sidebar-avatar}}"/>
-                            </a>
-                        {% endif %}
-                        {% if site.sidebar-about-description %}
-                            <p>{{site.sidebar-about-description}}</p>
-                        {% endif %}
-                        <!-- SNS Link -->
-                        <ul class="list-inline">
-                            {% if site.RSS %}
-                            <li>
-                                <a href="{{ "/feed.xml" | prepend: site.baseurl }}">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
-                                    </span>
-                                </a>
-                            </li>
-                            {% endif %}
-                            <!-- add jianshu add target = "_blank" to <a> by BY -->
-                            {% if site.jianshu_username %}
-                            <li>
-                                <a target="_blank" href="https://www.jianshu.com/u/{{ site.jianshu_username }}">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
-                                    </span>
-                                </a>
-                            </li>
-                            {% endif %}
-                            {% if site.twitter_username %}
-                            <li>
-                                <a href="https://twitter.com/{{ site.twitter_username }}">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
-                                    </span>
-                                </a>
-                            </li>
-                            {% endif %}
-                            {% if site.zhihu_username %}
-                            <li>
-                                <a target="_blank" href="https://www.zhihu.com/people/{{ site.zhihu_username }}">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa  fa-stack-1x fa-inverse">知</i>
-                                    </span>
-                                </a>
-                            </li>
-                            {% endif %}
-                            {% if site.weibo_username %}
-                            <li>
-                                <a target="_blank" href="http://weibo.com/{{ site.weibo_username }}">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
-                                    </span>
-                                </a>
-                            </li>
-                            {% endif %}
-                            {% if site.facebook_username %}
-                            <li>
-                                <a target="_blank" href="https://www.facebook.com/{{ site.facebook_username }}">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
-                                    </span>
-                                </a>
-                            </li>
-                            {% endif %}
-                            {% if site.github_username %}
-                            <li>
-                                <a target="_blank" href="https://github.com/{{ site.github_username }}">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                                    </span>
-                                </a>
-                            </li>
-                            {% endif %}
-                            
-                        </ul>
-                        {% if site.email %}
-                            <p>✉️ {{site.email}}</p>
-                        {% endif %}
-                    </div>
-                </section>
-                <!-- Friends Blog -->
+                <!-- 友情链接 -->
                 {% if site.friends %}
                 <hr>
                 <h5>FRIENDS</h5>
@@ -200,7 +86,146 @@ layout: default
                     {% endfor %}
                 </ul>
                 {% endif %}
-    		</div>
+            </div>
+
+        <!-- ============================================================
+             模式 B：site.sidebar == true（有侧栏）
+             文章列表（左 8 列）+ 侧栏（右 3 列）并排显示
+        ============================================================ -->
+        {% else %}
+
+            <!-- 文章列表容器（左 8 列） -->
+            <div class="
+                col-lg-8 col-lg-offset-1
+                col-md-8 col-md-offset-1
+                col-sm-12
+                col-xs-12
+                postlist-container
+            ">
+                {{ content }}
+            </div>
+
+            <!-- 侧栏容器（右 3 列） -->
+            <div class="
+                col-lg-3 col-lg-offset-0
+                col-md-3 col-md-offset-0
+                col-sm-12
+                col-xs-12
+                sidebar-container
+            ">
+
+                <!-- 精选标签 -->
+                {% if site.featured-tags %}
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="{{ '/tags/' | prepend: site.baseurl }}">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        {% for tag in site.tags %}
+                            {% if tag[1].size > site.featured-condition-size %}
+                                <a href="{{ site.baseurl }}/tags/#{{ tag[0] }}" title="{{ tag[0] }}" rel="{{ tag[1].size }}">
+                                    {{ tag[0] }}
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </section>
+                {% endif %}
+
+                <!-- 个人简介（仅中大屏幕显示） -->
+                <!--
+                  配置变量（来自 _config.yml）：
+                    sidebar-avatar            : 头像图片 URL
+                    sidebar-about-description : 简介文字
+                    email                     : 联系邮箱
+                  社交图标：与 footer.html 一样复用 social-icon.html 组件
+                -->
+                <section class="visible-md visible-lg">
+                    <hr><h5><a href="{{ '/about/' | prepend: site.baseurl }}">ABOUT ME</a></h5>
+                    <div class="short-about">
+
+                        {% if site.sidebar-avatar %}
+                            <a href="{{ site.baseurl }}/about">
+                                <img src="{{site.sidebar-avatar}}"/>
+                            </a>
+                        {% endif %}
+
+                        {% if site.sidebar-about-description %}
+                            <p>{{site.sidebar-about-description}}</p>
+                        {% endif %}
+
+                        <!-- 社交图标 -->
+                        <ul class="list-inline">
+
+                            <!-- RSS（站内链接） -->
+                            {% if site.RSS %}
+                            <li>
+                                <a href="{{ '/feed.xml' | prepend: site.baseurl }}">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            {% endif %}
+
+                            <!-- 简书（外链，自定义文字图标"简"） -->
+                            {% if site.jianshu_username %}
+                                {% capture jianshu_url %}https://www.jianshu.com/u/{{ site.jianshu_username }}{% endcapture %}
+                                {% include social-icon.html url=jianshu_url text="简" external=true %}
+                            {% endif %}
+
+                            <!-- Twitter（外链，当前页打开） -->
+                            {% if site.twitter_username %}
+                                {% capture twitter_url %}https://twitter.com/{{ site.twitter_username }}{% endcapture %}
+                                {% include social-icon.html url=twitter_url icon="twitter" %}
+                            {% endif %}
+
+                            <!-- 知乎（外链，自定义文字图标"知"） -->
+                            {% if site.zhihu_username %}
+                                {% capture zhihu_url %}https://www.zhihu.com/people/{{ site.zhihu_username }}{% endcapture %}
+                                {% include social-icon.html url=zhihu_url text="知" external=true %}
+                            {% endif %}
+
+                            <!-- 微博（外链） -->
+                            {% if site.weibo_username %}
+                                {% capture weibo_url %}http://weibo.com/{{ site.weibo_username }}{% endcapture %}
+                                {% include social-icon.html url=weibo_url icon="weibo" external=true %}
+                            {% endif %}
+
+                            <!-- Facebook（外链） -->
+                            {% if site.facebook_username %}
+                                {% capture facebook_url %}https://www.facebook.com/{{ site.facebook_username }}{% endcapture %}
+                                {% include social-icon.html url=facebook_url icon="facebook" external=true %}
+                            {% endif %}
+
+                            <!-- GitHub（外链） -->
+                            {% if site.github_username %}
+                                {% capture github_url %}https://github.com/{{ site.github_username }}{% endcapture %}
+                                {% include social-icon.html url=github_url icon="github" external=true %}
+                            {% endif %}
+
+                        </ul>
+
+                        <!-- 联系邮箱 -->
+                        {% if site.email %}
+                            <p>✉️ {{site.email}}</p>
+                        {% endif %}
+                    </div>
+                </section>
+
+                <!-- 友情链接 -->
+                {% if site.friends %}
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    {% for friend in site.friends %}
+                        <li><a href="{{friend.href}}">{{friend.title}}</a></li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+            </div>
         {% endif %}
-	</div>
+
+    </div>
 </div>
