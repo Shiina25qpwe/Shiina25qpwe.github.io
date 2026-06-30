@@ -1,26 +1,116 @@
+<!-- 
+  ============================================================
+  feed.xml — RSS 2.0 订阅源
+  ============================================================
+  
+  Jekyll 自动处理此文件 (layout: null = 不套用 HTML 模板)。
+  输出为纯 XML, 访问 /feed.xml 即可获取 RSS 订阅源。
+  
+  footer.html 中的 RSS 图标链接指向此文件:
+    <a href="{{ "/feed.xml" | prepend: site.baseurl }}">...</a>
+  
+  【RSS 阅读器兼容】
+    RSS 2.0 规范: https://www.rssboard.org/rss-specification
+    支持 Feedly, Inoreader, NetNewsWire, Reeder 等主流阅读器。
+  
+  【修改指南】
+    - 修改文章数量: 改第 8 行的 limit:10
+    - 改用摘要而非全文: 将 post.content 改为 post.excerpt
+    - 添加频道图标: 在 <channel> 中添加 <image> 元素
+  
+  【Jekyll 变量速查】
+    site.time         : 站点构建时间
+    site.posts        : 所有文章 (按日期降序)
+    post.url          : 文章相对路径
+    post.tags         : 文章标签数组
+    post.categories   : 文章分类数组
+    jekyll.version    : Jekyll 版本号
+-->
+
 ---
 layout: null
 ---
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+  RSS 2.0 根元素
+  xmlns:atom — Atom 命名空间 (用于 <atom:link> 自引用, 帮助阅读器识别源唯一性)
+-->
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+
+  <!-- 
+    <channel> — RSS 频道 (一个 feed 只有一个)
+    
+    【必填子元素】
+      title       : 频道名称 (显示在阅读器侧边栏)
+      description : 频道描述
+      link        : 频道对应的网站 URL
+    
+    【可选子元素】
+      atom:link   : Atom 自引用 (RSS 阅读器用此 URL 检查更新)
+      pubDate     : 频道发布时间 (RFC 822 格式)
+      lastBuildDate: 频道最后构建时间
+      generator   : 生成器标识
+      image       : 频道图标 (可添加 <image><url>...</url></image>)
+  -->
   <channel>
+    <!-- 频道基本信息 -->
     <title>{{ site.title | xml_escape }}</title>
     <description>{{ site.description | xml_escape }}</description>
     <link>{{ site.url }}{{ site.baseurl }}/</link>
+
+    <!-- Atom 自引用: 阅读器通过此 URL 获取/更新 feed -->
     <atom:link href="{{ "/feed.xml" | prepend: site.baseurl | prepend: site.url }}" rel="self" type="application/rss+xml" />
+
+    <!-- 时间戳 (RFC 822 格式, 如 "Mon, 01 Jan 2024 00:00:00 +0000") -->
     <pubDate>{{ site.time | date_to_rfc822 }}</pubDate>
     <lastBuildDate>{{ site.time | date_to_rfc822 }}</lastBuildDate>
+
+    <!-- 生成器 -->
     <generator>Jekyll v{{ jekyll.version }}</generator>
+
+    <!-- 
+      ===== 文章列表 =====
+      limit:10 — 仅输出最近 10 篇文章
+      如需修改数量, 改此数字即可。
+      如需全部文章, 删除 "limit:10"。
+    -->
     {% for post in site.posts limit:10 %}
       <item>
+        <!-- 
+          文章标题
+          xml_escape : 转义 XML 特殊字符 (<, >, &, ", ')
+                      防止标题中的 HTML 标签破坏 XML 结构
+        -->
         <title>{{ post.title | xml_escape }}</title>
+
+        <!-- 
+          文章内容 (全文)
+          ⚠ 使用 post.content 输出完整 HTML, feed 文件较大。
+          如需改用摘要, 替换为:
+            <description>{{ post.excerpt | xml_escape }}</description>
+        -->
         <description>{{ post.content | xml_escape }}</description>
+
+        <!-- 发布时间 (RFC 822) -->
         <pubDate>{{ post.date | date_to_rfc822 }}</pubDate>
+
+        <!-- 文章链接 (完整 URL) -->
         <link>{{ post.url | prepend: site.baseurl | prepend: site.url }}</link>
+
+        <!-- 
+          全局唯一标识符 (GUID)
+          isPermaLink="true" : GUID 是永久链接 (URL), 非随机字符串
+          阅读器用 GUID 判断文章是否已读过
+        -->
         <guid isPermaLink="true">{{ post.url | prepend: site.baseurl | prepend: site.url }}</guid>
+
+        <!-- 标签 (每个标签一个 <category>) -->
         {% for tag in post.tags %}
         <category>{{ tag | xml_escape }}</category>
         {% endfor %}
+
+        <!-- 分类 (每个分类一个 <category>) -->
         {% for cat in post.categories %}
         <category>{{ cat | xml_escape }}</category>
         {% endfor %}

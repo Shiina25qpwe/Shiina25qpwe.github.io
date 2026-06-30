@@ -1,2 +1,32 @@
+# ============================================================
+#  codecov.yml — Codecov 代码覆盖率配置
+# ============================================================
+#
+#  Codecov (https://codecov.io/) 是一个代码覆盖率报告服务。
+#  它与 CI (如 Travis CI / GitHub Actions) 集成, 在测试运行后
+#  上传覆盖率数据并生成可视化报告。
+#
+#  ⚠ 注意:
+#    1. 此配置用于代码项目 (有单元测试), 纯博客站点通常不需要
+#    2. 以下 token 是 API 密钥, 已提交到仓库 (非最佳实践)
+#       建议: 改为在 CI 环境变量中设置 CODECOV_TOKEN,
+#             并删除此文件中的 token 字段
+#    3. Codecov 需要 CI 中运行了测试套件并生成了覆盖率文件
+#       (如 coverage.xml, lcov.info) 才能正常工作
+#
+#  完整配置参考: https://docs.codecov.com/docs/codecov-yaml
+#
+#  【token 的两行值格式】(无需修改, 仅供参考)
+#    token       : Codecov 项目的 Upload Token
+#                  在 Codecov 项目 Settings → General 中获取
+#                  用于验证上传请求来源, 保证覆盖率数据不被篡改
+#    notify      : 是否在未提供 token 时仍允许上传 (默认 no)
+#                  设为 yes 可在公开仓库中免 token 上传
+#    branch      : 仅报告特定分支的覆盖率 (默认所有分支)
+#    after_n_builds : 等待 N 次构建后再评论 PR (用于多 job CI)
+# ============================================================
+
 codecov:
   token: d8b2c89f-64a9-4b9a-ac44-da4e871caeff
+  # notify: no              # 默认: 无 token 时拒绝上传
+  # branch: master          # 默认: 所有分支

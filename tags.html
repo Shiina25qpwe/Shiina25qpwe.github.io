@@ -1,3 +1,35 @@
+<!-- 
+  ============================================================
+  tags.html — 标签汇总页面
+  ============================================================
+  
+  layout: default → 直接继承 default.html (而非 page.html)
+    这意味着此页面没有侧边栏 (sidebar), 只有:
+      head → nav → 本页内容 → footer
+    原因: 标签页本身已包含完整的标签导航, 侧边栏可省略。
+  
+  front-matter:
+    title       : 页面标题 (浏览器标签页 + 头部大标题)
+    description : 副标题文字
+    header-img  : 头部背景图片
+  
+  【Jekyll site.tags 数据结构】
+    site.tags 是一个对象, 键为标签名, 值为该标签下的文章数组:
+    {
+      "JavaScript" => [post1, post2, ...],
+      "CSS"        => [post3, ...],
+      ...
+    }
+    
+    Liquid 迭代:
+      tag[0] → 标签名 (字符串)
+      tag[1] → 文章数组 (可通过 .size 获取数量)
+  
+  【页面结构】
+    1. 标签云      — #tag_cloud 可视化标签 (配合 jquery.tagcloud.js 渲染)
+    2. 标签列表    — 每个标签下的文章预览列表 (.one-tag-list)
+-->
+
 ---
 title: Tags
 layout: default
@@ -5,7 +37,11 @@ description: 归类整理
 header-img: "img/20180630 060.JPG"
 ---
 
-<!-- Page Header -->
+<!-- 
+  ===== 页面头部 =====
+  与 page.html 结构相同: 全屏背景图 + 居中标题
+  #tag-heading ID 用于 CSS 样式 (如 .page-fullscreen #tag-heading)
+-->
 <header class="intro-header" style="background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')">
     <div class="container">
         <div class="row">
@@ -19,35 +55,61 @@ header-img: "img/20180630 060.JPG"
     </div>
 </header>
 
-<!-- Main Content -->
+<!-- 
+  ===== 主内容区 =====
+-->
 <div class="container">
 	<div class="row">
 		<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <!-- 标签云 -->
+
+            <!-- 
+              ===== 标签云 (Tag Cloud) =====
+              
+              #tag_cloud : 标签云容器, footer.html 中的 jquery.tagcloud.js 检测到此 ID 后加载
+              .tags      : 标签药丸样式 (hux-blog.css 第 12 段)
+              
+              每个标签链接包含:
+                href="#标签名"          → 点击滚动到下方对应标签列表
+                title="标签名"         → 鼠标悬停提示
+                rel="{{ tag[1].size }}" → 文章数量 (作为权重值)
+              
+              ⚠ rel 属性的非标准用法:
+                jquery.tagcloud.js 读取 rel 属性值作为标签权重,
+                权重越大的标签字体越大/颜色越深。
+                rel 值由 Liquid {{ tag[1].size }} 动态填充,
+                代表该标签下的文章数。
+            -->
 			<div id='tag_cloud' class="tags">
 				{% for tag in site.tags %}
 				<a href="#{{ tag[0] }}" title="{{ tag[0] }}" rel="{{ tag[1].size }}">{{ tag[0] }}</a>
 				{% endfor %}
 			</div>
 
-            <!--<blockquote class="tag-comments">
-                标签命名规范：
-                    <li>行业观察、职位、公司优先使用中文</li>
-                    <li>外国产品、术语优先使用英文</li>
-            </blockquote>-->
-
-            <!-- 标签列表 -->
+            <!-- 
+              ===== 标签列表 (One-Tag-List) =====
+              
+              每个标签一个区块 (.one-tag-list), 包含:
+                - 标签标题 (.listing-seperator) 带 Font Awesome 标签图标
+                - 该标签下的文章预览列表 (.post-preview)
+              
+              文章预览与首页 index.html 结构相同 (标题 + 副标题),
+              但省略了内容预览文字和元信息 (保持列表简洁)。
+            -->
 			{% for tag in site.tags %}
 			<div class="one-tag-list">
+                <!-- 
+                  标签标题
+                  .fa-tag             : Font Awesome 标签图标
+                  .listing-seperator  : 分隔符样式 (主题色文字, 大字号)
+                  #{{ tag[0] }}       : 锚点 ID (标签云链接跳转目标)
+                -->
 			  	<span class="fa fa-tag listing-seperator" id="{{ tag[0] }}">
                     <span class="tag-text">{{ tag[0] }}</span>
                 </span>
+
+                <!-- 该标签下的文章列表 -->
 				{% for post in tag[1] %}
-				  <!-- <li class="listing-item">
-				  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
-				  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
-				  </li> -->
-				 <div class="post-preview">
+				<div class="post-preview">
 				    <a href="{{ post.url | prepend: site.baseurl }}">
 				        <h2 class="post-title">
                             {{ post.title }}
@@ -58,7 +120,6 @@ header-img: "img/20180630 060.JPG"
 				        </h3>
 				        {% endif %}
 				    </a>
-				    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
 				</div>
 				<hr>
 				{% endfor %}

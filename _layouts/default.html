@@ -1,9 +1,35 @@
 <!DOCTYPE html>
+<!-- 
+  ============================================================
+  default.html - 站点基础布局（所有页面的根模板）
+  ============================================================
+  
+  Jekyll 布局继承链（由具体到抽象）：
+    post.html / page.html / keynote.html
+           ↓  (front-matter: layout: default)
+       default.html  ← 你在这里
+           ↓  (include)
+    head.html  +  nav.html  +  footer.html
+
+  {{ content }} 是 Jekyll 特殊变量，渲染子布局/页面的 HTML 内容。
+
+  页面结构顺序：
+    1. head.html      → <head> meta、CSS、SEO 标签
+    2. nav.html       → 固定顶部导航栏
+    3. {{ content }}  → 子布局内容（post/page/keynote）
+    4. footer.html    → 页脚社交图标、JS 脚本
+    5. WeChat 缩略图  → 0x0 隐藏图片，用于微信分享抓取封面
+-->
 <html lang="en">
 
 {% include head.html %}
 
-<!-- hack iOS CSS :active style -->
+<!-- 
+  ontouchstart="" : iOS Safari 兼容 Hack
+  空的 touchstart 事件处理让 iOS 识别该元素为"可触摸"，
+  从而使 CSS :active 伪类生效（否则 iOS 默认忽略 :active）。
+  必须放在 <body> 上以确保全页可用。
+-->
 <body ontouchstart="">
 
     {% include nav.html %}
@@ -12,11 +38,24 @@
 
     {% include footer.html %}
 
-
-<!-- Image to hack wechat -->
+<!-- 
+  ===== WeChat 分享缩略图 Hack =====
+  WeChat 内置浏览器抓取分享卡片封面时，会取页面中第一张图片。
+  放置一张 0×0 的不可见图片作为"诱饵"，确保分享时使用此图。
+  
+  width="0" height="0" : 视觉上不可见，但 DOM 中存在，
+  WeChat 的 Open Graph 抓取器仍能读取。
+  
+  为什么是 apple-touch-icon.png？
+    该图在 head.html 中已声明为 <link rel="apple-touch-icon">，
+    尺寸至少 180×180，适合作为分享封面。
+  
+  为什么放在底部？
+    从 <head> 移到底部（MIGRATED），不再阻塞首屏渲染，
+    微信抓取器会等待页面加载完成后才读取，放在底部不影响功能。
+-->
 <img src="/img/apple-touch-icon.png" width="0" height="0" />
 <!-- Migrate from head to bottom, no longer block render and still work -->
 
 </body>
-
 </html>
