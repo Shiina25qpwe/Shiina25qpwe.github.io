@@ -1,49 +1,18 @@
-<!-- 
-  ============================================================
-  404.html — 页面未找到错误页
-  ============================================================
-  
-  当用户访问不存在的 URL 时, GitHub Pages 自动显示此页面。
-  (前提: 文件命名为 404.html 并置于站点根目录)
-  
-  layout: default → 继承 default.html (head + nav + footer)
-  
-  设计: 全屏居中显示 404 错误信息, 背景使用专用 404 图片。
-  
-  ⚠ 全屏效果的实现:
-    此页面使用 JS 动态添加 .page-fullscreen 类到 <body>。
-    配合 hux-blog.css 第 15 段 (.page-fullscreen) 的 CSS:
-      - .intro-header → position: fixed; 全屏覆盖
-      - #tag-heading   → flexbox 垂直居中
-    同时复用了 #tag-heading 的 ID (标签页也使用此 ID),
-    CSS 中 .page-fullscreen #tag-heading 的 flexbox 居中规则同时生效。
--->
-
 ---
 layout: default
-description: "你来到了没有知识的荒原 🙊"    # 页面描述 (显示在 404 标题下方)
-header-img: "img/404-bg.jpg"            # 404 页面专用背景图
-permalink: /404.html                    # 固定 URL (GitHub Pages 要求)
+description: "你来到了没有知识的荒原 🙊"
+header-img: "img/404-bg.jpg"
+permalink: /404.html
 ---
 
-<!-- 
-  ===== 页面头部 =====
-  与 page.html 结构相同: 全屏背景图 + 居中标题
-  使用 inline style 设置 background-image (无法在 CSS 中根据 page.header-img 动态切换)
--->
+
+<!-- Page Header -->
 <header class="intro-header" style="background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')">
 	<div class="container">
 		<div class="row">
-			<!-- Bootstrap 栅格: 大屏 8/12 列偏移2, 中屏 10/12 列偏移1 → 居中 -->
 			<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-				<!-- 
-				  .site-heading : 通用页面标题样式 (白色文字, 居中)
-				  #tag-heading  : 复用标签页标题的 ID, 
-				                  触发 .page-fullscreen #tag-heading 的 flexbox 居中 CSS
-				-->
 				<div class="site-heading" id="tag-heading">
 					<h1>404</h1>
-					<!-- page.description = "你来到了没有知识的荒原 🙊" -->
 					<span class="subheading">{{ page.description }}</span>
 				</div>
 			</div>
@@ -51,18 +20,6 @@ permalink: /404.html                    # 固定 URL (GitHub Pages 要求)
 	</div>
 </header>
 
-<!-- 
-  ===== 全屏模式激活 =====
-  
-  为什么用 JS 而非直接在 <body> 上写 class="page-fullscreen"?
-    <body> 在 default.html 中定义, 不在 404.html 中。
-    default.html 是所有 layout 的公共模板, 不适合为 404 页面做特殊处理。
-    因此使用 JS 在页面加载后动态添加类名。
-  
-  ⚠ 副作用: 页面首次渲染后有极短暂的 "非全屏→全屏" 闪烁 (FOUC)。
-    如需消除, 可在 <head> 中通过 Liquid 判断 page.permalink 来提前添加类:
-      <body class="{% if page.permalink == '/404.html' %}page-fullscreen{% endif %}">
--->
 <script>
 	document.body.classList.add('page-fullscreen');
 </script>

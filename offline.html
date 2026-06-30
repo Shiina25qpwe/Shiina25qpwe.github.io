@@ -1,43 +1,12 @@
-<!-- 
-  ============================================================
-  offline.html — PWA 离线提示页面
-  ============================================================
-  
-  当用户离线访问站点时, Service Worker 拦截网络请求并返回此页面。
-  (前提: sw.js 中配置了对此页面的缓存策略)
-  
-  layout: default → 继承 default.html
-  
-  设计: 全屏居中显示离线提示, 与 404.html 结构一致。
-  
-  【与 404.html 的区别】
-    404.html  : 页面不存在 (服务器返回 404 状态码)
-    offline.html : 网络离线 (Service Worker 返回缓存页面)
-    两者使用相同的全屏布局 + 相同的背景图 (404-bg.jpg),
-    仅标题和描述文字不同。
-  
-  【Service Worker 配合】
-    sw.js 中应配置离线回退 (Offline Fallback):
-      - 预缓存 offline.html
-      - fetch 事件中: 网络请求失败时返回缓存的 offline.html
-  
-  【全屏效果】
-    与 404.html 相同: JS 动态添加 .page-fullscreen 类到 <body>,
-    触发 hux-blog.css 第 15 段的 flexbox 居中 CSS。
--->
-
 ---
 layout: default
-description: "网络似乎出现了问题 😥"    # 离线提示文字 (显示在标题下方)
-header-img: "img/404-bg.jpg"            # 背景图 (与 404 页面共用)
-permalink: /offline.html                # 固定 URL (Service Worker 引用此路径)
+description: "网络似乎出现了问题 😥"
+header-img: "img/404-bg.jpg"
+permalink: /offline.html
 ---
 
-<!-- 
-  ===== 页面头部 =====
-  全屏背景图 + 居中标题, 与 404.html 结构相同。
-  #tag-heading ID 复用以触发 .page-fullscreen #tag-heading 的 flexbox 居中。
--->
+
+<!-- Page Header -->
 <header class="intro-header" style="background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')">
 	<div class="container">
 		<div class="row">
@@ -51,10 +20,6 @@ permalink: /offline.html                # 固定 URL (Service Worker 引用此�
 	</div>
 </header>
 
-<!-- 
-  激活全屏模式
-  详见 404.html 中的注释: JS 动态添加类的原因 + FOUC 闪烁消除方案
--->
 <script>
 	document.body.classList.add('page-fullscreen');
 </script>

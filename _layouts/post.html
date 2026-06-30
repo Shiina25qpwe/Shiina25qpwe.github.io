@@ -1,32 +1,12 @@
-<!-- 
-  ============================================================
-  post.html - 文章详情页布局
-  ============================================================
-  继承自 default.html（layout: default）
-  
-  适用场景：_posts 目录下的所有博客文章
-  
-  front-matter 特有变量:
-    page.header-img  : 头部背景图（可选，不设则用 site.header-img）
-    page.header-mask : 头部遮罩透明度 0.0~1.0（可选，不设则无遮罩）
-    page.tags        : 标签数组，如 ["JavaScript", "CSS"]
-    page.author      : 作者名（可选，不设则用 site.title）
-    page.subtitle    : 副标题（可选，留空也渲染占位 h2）
-    page.catalog     : 是否显示侧边目录（true/false，需配合 footer.html 中的 generateCatalog）
--->
+---
+layout: default
+---
 
-<!-- 
-  ===== 页面头部内联 CSS =====
-  
-  position: relative : 为 .header-mask 绝对定位提供参照
-  background-image   : 文章特色图片（每篇文章可通过 header-img 自定义）
-  
-  遮罩原理:
-    .header-mask 是一个绝对定位的 div，覆盖整个 header
-    background: rgba(0,0,0, opacity) → 黑色半透明遮罩
-    page.header-mask 控制透明度（0 = 完全透明, 1 = 完全黑色）
-    用途：让背景图上的白色标题文字更清晰可读
--->
+<!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
 <style type="text/css">
     header.intro-header{
         position: relative;
@@ -42,74 +22,46 @@
     }
     {% endif %}
 </style>
-
-<!-- 
-  ===== 页面头部 =====
--->
 <header class="intro-header" >
-    <!-- 遮罩层（仅 header-mask 有值时渲染） -->
     <div class="header-mask"></div>
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="post-heading">
-                    
-                    <!-- 标签列表 -->
                     <div class="tags">
                         {% for tag in page.tags %}
                         <a class="tag" href="{{ site.baseurl }}/tags/#{{ tag }}" title="{{ tag }}">{{ tag }}</a>
                         {% endfor %}
                     </div>
-
-                    <!-- 标题 -->
                     <h1>{{ page.title }}</h1>
-
-                    <!-- 
-                      副标题（始终渲染以保持间距）
-                      即使为空也输出 <h2> 标签——维持标题与元信息之间的垂直 margin
-                    -->
-                    {% comment %} always create a h2 for keeping the margin , Hux {% endcomment %}
+                    {% comment %}
+                        always create a h2 for keeping the margin , Hux
+                    {% endcomment %}
                     {% comment %} if page.subtitle {% endcomment %}
                     <h2 class="subheading">{{ page.subtitle }}</h2>
                     {% comment %} endif {% endcomment %}
-
-                    <!-- 
-                      文章元信息
-                      Posted by [作者] on [日期]
-                      date: "%B %-d, %Y" → 如 "January 1, 2024"
-                    -->
-                    <span class="meta">
-                        Posted by {% if page.author %}{{ page.author }}{% else %}{{ site.title }}{% endif %}
-                        on {{ page.date | date: "%B %-d, %Y" }}
-                    </span>
+                    <span class="meta">Posted by {% if page.author %}{{ page.author }}{% else %}{{ site.title }}{% endif %} on {{ page.date | date: "%B %-d, %Y" }}</span>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- 
-  ===== 文章主体 =====
--->
+<!-- Post Content -->
 <article>
     <div class="container">
         <div class="row">
 
-            <!-- 
-              ===== 文章内容区 =====
-              post-container : 自定义类，footer.html 的 generateCatalog 查找此容器提取标题
-            -->
+    <!-- Post Container -->
             <div class="
                 col-lg-8 col-lg-offset-2
                 col-md-10 col-md-offset-1
                 post-container">
 
-                {{ content }}
+				{{ content }}
 
-                <!-- 不可见分隔线（占位间距） -->
                 <hr style="visibility: hidden;">
 
-                <!-- ===== 上一篇 / 下一篇 翻页导航 ===== -->
                 <ul class="pager">
                     {% if page.previous.url %}
                     <li class="previous">
@@ -129,25 +81,16 @@
                     {% endif %}
                 </ul>
 
-                <!-- 
-                  ===== Gitalk 评论插件 =====
-                  
-                  与 keynote.html 的区别：
-                    本布局额外加载了 md5.min.js，对 location.pathname 做 MD5 哈希
-                    原因：GitHub Issue 的标签/ID 有长度限制（50 字符），
-                    长路径可能超限，MD5 后固定 32 字符，避免截断问题
-                    
-                    distractionFreeMode : 专注模式（true 时隐藏无关 UI 元素）
-                    此参数仅在 post.html 中存在（keynote.html 未包含）
-                  
-                  Thank DF: https://github.com/NSDingFan/NSDingFan.github.io/issues/3#issuecomment-407496538
-                -->
+
+                <!--Gitalk评论start  -->
                 {% if site.gitalk.enable %}
+                <!-- 引入Gitalk评论插件  -->
                 <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
                 <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
-                <!-- MD5 哈希库：用于将页面路径转为固定长度 ID -->
-                <script src="{{ site.baseurl }}/js/md5.min.js"></script>
                 <div id="gitalk-container"></div>
+                <!-- 引入一个生产md5的js，用于对id值进行处理，防止其过长 -->
+                <!-- Thank DF:https://github.com/NSDingFan/NSDingFan.github.io/issues/3#issuecomment-407496538 -->
+                <script src="{{ site.baseurl }}/js/md5.min.js"></script>
                 <script type="text/javascript">
                     var gitalk = new Gitalk({
                     clientID: '{{site.gitalk.clientID}}',
@@ -161,69 +104,49 @@
                     gitalk.render('gitalk-container');
                 </script>
                 {% endif %}
+                <!-- Gitalk end -->
 
-                <!-- 
-                  ===== Disqus 评论（旧方案） =====
-                  ⚠ 注意：此处用 site.disqus_username 判断启用，
-                  而 keynote.html 用 site.disqus.enable，两者不一致。
-                  如果同时配置两个方案，建议统一为一种判断方式。
-                -->
                 {% if site.disqus_username %}
+                <!-- disqus 评论框 start -->
                 <div class="comment">
                     <div id="disqus_thread" class="disqus-thread"></div>
                 </div>
+                <!-- disqus 评论框 end -->
                 {% endif %}
 
-            </div>
+            </div>  
 
-            <!-- 
-              ===== 侧边目录容器（Side Catalog） =====
-              
-              仅在 front-matter 中设置 catalog: true 时渲染
-              栅格：大屏 2 列（col-lg-2），仅大屏可见（visible-lg-block）
-              
-              结构:
-                .side-catalog
-                  .catalog-toggle  → 点击折叠/展开按钮
-                  .catalog-body    → 目录列表容器（由 footer.html 的 generateCatalog 填充）
-              
-              目录实际由 footer.html 中的 JS 动态生成（读取 post-container 中的 h1~h6），
-              此处只提供空的 HTML 容器。
-            -->
-            {% if page.catalog %}
-                <div class="
-                    col-lg-2 col-lg-offset-0
-                    visible-lg-block
-                    sidebar-container
-                    catalog-container">
-                    <div class="side-catalog">
-                        <hr class="hidden-sm hidden-xs">
-                        <h5>
-                            <a class="catalog-toggle" href="#">CATALOG</a>
-                        </h5>
-                        <ul class="catalog-body"></ul>
-                    </div>
+    <!-- Side Catalog Container -->
+        {% if page.catalog %}
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
                 </div>
-            {% endif %}
+            </div>
+        {% endif %}
 
-            <!-- 
-              ===== 侧边栏（精选标签 + 友链） =====
-              栅格：与文章内容区相同（大屏 8/12+偏移2）
-              位于文章下方，非侧边并排
-            -->
+    <!-- Sidebar Container -->
             <div class="
                 col-lg-8 col-lg-offset-2
                 col-md-10 col-md-offset-1
                 sidebar-container">
 
-                <!-- ===== 精选标签 ===== -->
+                <!-- Featured Tags -->
                 {% if site.featured-tags %}
                 <section>
                     <hr class="hidden-sm hidden-xs">
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
         				{% for tag in site.tags %}
-                            {% if tag[1].size > site.featured-condition-size %}
+                            {% if tag[1].size > {{site.featured-condition-size}} %}
                 				<a href="/tags/#{{ tag[0] }}" title="{{ tag[0] }}" rel="{{ tag[1].size }}">
                                     {{ tag[0] }}
                                 </a>
@@ -233,7 +156,7 @@
                 </section>
                 {% endif %}
 
-                <!-- ===== 友链 ===== -->
+                <!-- Friends Blog -->
                 {% if site.friends %}
                 <hr>
                 <h5>FRIENDS</h5>
@@ -249,11 +172,8 @@
 </article>
 
 
-<!-- 
-  ===== Disqus 评论 JS（仅在启用时加载） =====
-  ⚠ 此处用 site.disqus_username 判断（keynote.html 用 site.disqus.enable）
--->
 {% if site.disqus_username %}
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "{{site.disqus_username}}";
@@ -266,36 +186,36 @@
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
 </script>
+<!-- disqus 公共JS代码 end -->
 {% endif %}
 
 
-<!-- 
-  ===== AnchorJS（标题锚点链接） =====
-  
-  与 keynote.html 的差异：
-    本布局不设置 anchors.options（使用 AnchorJS 默认值），
-    仅调用 anchors.add() 并移除特定标题。
-    
-    BY Fix: 去除了标题前的 '#' 图标文字
-    issues: https://github.com/qiubaiying/qiubaiying.github.io/issues/137
-    
-    默认行为：鼠标悬停标题时显示 ¶ 段落符号作为锚点图标，
-    点击复制该标题的 URL hash。
-    
-    .remove() 排除列表:
-      .intro-header h1       → 页面大标题不加锚点
-      .subheading            → 副标题不加锚点
-      .sidebar-container h5  → 侧边栏小标题不加锚点
--->
 {% if site.anchorjs %}
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
 <script>
     async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
-        // 使用 AnchorJS 默认配置（hover 显示 ¶ 图标，右侧放置）
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
         anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
     })
 </script>
 <style>
-    /* 大屏时锚点图标移至标题左侧 */
+    /* place left on bigger screen */
     @media all and (min-width: 800px) {
         .anchorjs-link{
             position: absolute;

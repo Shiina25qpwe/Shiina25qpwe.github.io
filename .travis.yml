@@ -1,86 +1,13 @@
-# ============================================================
-#  .travis.yml — Travis CI 持续集成配置
-# ============================================================
-#
-#  Travis CI 是一个云端 CI/CD 服务 (https://travis-ci.org/)。
-#  当代码推送到 GitHub 仓库时, Travis 自动执行此文件中定义的构建流程。
-#
-#  ⚠ 注意: Travis CI 已于 2020-12 关闭 travis-ci.org 免费计划,
-#    新项目建议迁移到 GitHub Actions (.github/workflows/*.yml)。
-#
-#  当前配置的构建流程:
-#    1. 安装 Ruby 依赖 (jekyll, jekyll-paginate)
-#    2. 执行 jekyll build 编译站点
-#    3. (可选) 部署到 GitHub Pages 或其它托管平台
-#
-#  【参考文档】
-#    Travis CI 配置: https://docs.travis-ci.com/user/customizing-the-build/
-#    Jekyll 部署:   https://docs.travis-ci.com/user/deployment/pages/
-# ============================================================
-
-
-# ── 构建环境 ──────────────────────────────────────────────
-
-language: ruby                      # 使用 Ruby 语言环境
-# rvm:                              # 可选: 指定 Ruby 版本
-#   - 2.7                           #   不指定则使用 Travis 默认版本
-
-
-# ── 环境变量 ──────────────────────────────────────────────
-
+language: ruby
 env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
-    #                                  ↑ 强制 Nokogiri 使用系统 libxml2 库
-    #                                    避免编译原生扩展超时 (CI 环境常见问题)
-    #                                    Nokogiri 是 jekyll 的间接依赖 (html-pipeline → nokogiri)
+install: 
+  - gem install jekyll
+  - gem install jekyll-paginate
+script: 
+  - jekyll build
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+  
 
-
-# ── 安装依赖 (Install) ───────────────────────────────────
-
-install:
-  - gem install jekyll              # 安装 Jekyll 静态站点生成器
-  - gem install jekyll-paginate     # 安装分页插件 (配合 _config.yml 的 paginate 配置)
-
-# 如果项目有 Gemfile, 可简化为:
-# install:
-#   - bundle install
-
-
-# ── 构建 (Script) ─────────────────────────────────────────
-
-script:
-  - jekyll build                    # 编译站点, 输出到 _site/ 目录
-  #                                 # 若构建失败 (Liquid 语法错误等), CI 标记为失败
-
-
-# ── 构建成功后 (After Success) ────────────────────────────
-
-# ⚠ 以下命令向 Codecov 上报代码覆盖率数据, 适用于有测试套件的代码项目。
-#   对于纯博客站点 (无测试), 此行无实际作用, 可以安全删除。
-# after_success:
-#   - bash <(curl -s https://codecov.io/bash)
-
-
-# ── 可选配置 (当前未启用, 按需取消注释) ────────────────────
-
-# 缓存 Bundler 依赖 (加速后续构建)
-# cache: bundler
-
-# 仅对特定分支构建
-# branches:
-#   only:
-#     - master
-#     - main
-
-# 自动部署到 GitHub Pages (需要设置 GitHub Token)
-# 参考: https://docs.travis-ci.com/user/deployment/pages/
-# deploy:
-#   provider: pages
-#   skip_cleanup: true              # 保留 _site 目录 (默认会清理)
-#   github_token: $GITHUB_TOKEN     # 在 Travis 项目设置中配置的环境变量
-#   local_dir: _site                # 部署目录
-#   target_branch: gh-pages         # 目标分支 (GitHub Pages 默认分支)
-#   on:
-#     branch: master                # 仅在 master 分支推送时触发部署
-#   keep_history: true              # 保留 gh-pages 分支的提交历史

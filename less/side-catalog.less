@@ -1,64 +1,33 @@
-/* 
-  ============================================================
-  side-catalog.less - 侧边目录样式
-  ============================================================
-  
-  被 hux-blog.less 通过 @import "side-catalog.less" 引入。
-  
-  配合 footer.html 的 generateCatalog() 动态生成目录项,
-  配合 nav.html 的 __HuxNav__.close() 和 CSS .fold 类控制折叠。
-  
-  结构:
-    .catalog-container         — 目录外层容器 (padding:0)
-      .side-catalog            — 目录主体
-        &.fixed                — 滚动后固定定位 (position:fixed)
-        &.fold                 — 折叠状态 (JS toggle)
-        .catalog-toggle::before— 折叠按钮图标 (−/+) 
-        .catalog-body          — 目录列表
-          li a                 — 目录链接 (单行溢出省略号)
-          .h1_nav ~ .h6_nav   — 按标题级别缩进
-          .active              — 当前高亮项 (灰色背景 + 主题色文字)
-  
-  响应式: 小于 1200px 时隐藏整个目录
-*/
+// Directory Section
 
-// 目录外层容器 (父级 .sidebar-container 已处理边距)
 .catalog-container{
     padding: 0px;
 }
 
 .side-catalog {
-    // ── 固定定位 (JS 在滚动超过头部后添加 .fixed) ──
     &.fixed{
         position: fixed;
-        top: -21px;           // 微调: 与顶部保持 21px 距离
+        top: -21px;
     }
-
-    // ── 折叠状态 (JS toggle .fold 类) ──
     &.fold{
         .catalog-toggle::before{
-            content: "+";     // 折叠时显示 + 号
+            content: "+";
         }
         .catalog-body{
-            display: none;    // 隐藏目录列表
+            display: none;
         }
     }
-
-    // 折叠按钮图标: 展开时显示 − 号
     .catalog-toggle::before{
-        content: "\2212";     // Unicode 减号 (−)
+        content: "−";
         position: relative;
         margin-right: 5px;
         bottom: 1px;
     }
-
     display: block;
     overflow: auto;
     height: 100%;
     padding-bottom: 40px;
     width: 195px;
-
-    // ── 目录列表 ──
     .catalog-body{
         position: relative;
         list-style: none;
@@ -67,13 +36,9 @@
         padding-left: 0px;
         padding-right: 5px;
         text-indent: 0;
-
-        // 目录项
         li{
             position: relative;
             list-style: none;
-
-            // 目录链接: 单行截断 + 省略号
             a{
                 padding-left: 10px;
                 max-width: 180px;
@@ -87,35 +52,28 @@
                 text-overflow: ellipsis;
             }
         }
-
-        // h1~h3 级标题: 不缩进, 粗体
         .h1_nav,.h2_nav,.h3_nav{
             margin-left: 0;
             font-size: 13px;
             font-weight: bold;
         }
-
-        // h4~h6 级标题: 缩进 10px, 更小字号
         .h4_nav,.h5_nav,.h6_nav{
             margin-left: 10px;
             font-size: 12px;
             a{
-                max-width: 170px;  // 缩进后减少可用宽度
+                max-width: 170px;
             }
         }
-
-        // 当前高亮目录项
         .active{
             a{
-                color: @brand-primary !important;  // 主题色文字
+                color: #0085a1!important;
             }
             border-radius: 4px;
-            background-color: #F5F5F5;             // 浅灰背景
+            background-color: #F5F5F5;
         }
     }
 }
 
-// 小屏 (<1200px) 隐藏整个目录 (空间不足)
 @media (max-width: 1200px){
     .side-catalog{
         display: none;

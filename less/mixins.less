@@ -1,27 +1,11 @@
-/* 
-  ============================================================
-  mixins.less - 可复用 Less Mixin（混入/函数）
-  ============================================================
-  
-  Mixin 类似于 CSS 函数，通过 .mixin-name() 调用，
-  编译后展开为完整的 CSS 属性集合。
-*/
+// Mixins
 
-/* 
-  .transition-all() — 全局过渡动画
-  ⚠ 当前未在项目中调用，保留以备扩展使用
-*/
 .transition-all() {
     -webkit-transition: all 0.5s;
     -moz-transition: all 0.5s;
     transition: all 0.5s;
 }
 
-/* 
-  .background-cover() — 背景图覆盖模式
-  调用处: .intro-header (hux-blog.less)
-  效果: 背景图等比例缩放填满容器，超出部分裁剪
-*/
 .background-cover() {
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -29,35 +13,10 @@
     -o-background-size: cover;
 }
 
-/* 
-  .serif() — 衬线字体 (Serif)
-  调用处: .post-preview > .post-meta, .intro-header .post-heading .meta
-  用途: 文章元信息（日期/作者）使用 Lora 衬线字体以示区分
-*/
 .serif() {
 	font-family: 'Lora', 'Times New Roman', serif;
 }
 
-/* 
-  .sans-serif() — 无衬线字体栈 (跨平台系统字体)
-  ============================================================
-  
-  调用处: body, h1~h6, .navbar-custom, .btn, .pager, .subheading 等
-          (hux-blog.less 中几乎所有文字元素)
-  
-  设计理念:
-    - Apple 平台优先使用系统字体 (San Francisco / 苹方)
-    - Windows 回退到微软雅黑
-    - Linux 回退到文泉驿微米黑
-    - 最后回退到通用 sans-serif
-  
-  来源: TypeIsBeautiful 博客排版方案
-        http://zhuanlan.zhihu.com/ibuick/20186806
-  
-  ⚠ 注意: 此 mixin 包含 line-height: 1.7 声明，
-    多处在调用 .sans-serif 后又用 line-height: 1.1 覆盖。
-    如需修改默认行高，修改此处即可全局生效。
-*/
 .sans-serif () {
 	/* Hux learn from
      *     TypeIsBeautiful,

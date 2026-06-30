@@ -1,21 +1,8 @@
-/* 
-  ============================================================
-  variables.less - 全局 Less 变量
-  ============================================================
-  
-  所有颜色变量集中定义于此，修改后全局生效。
-  修改后需重新编译 Less → CSS:  lessc hux-blog.less > ../css/hux-blog.css
-*/
+// Variables
 
-// ── 主题色 (蓝绿色) ──
-// 用途: 链接悬停、按钮主色、选中文本背景、标签高亮等
-@brand-primary: #0085a1;
-
-// ── 灰色阶 ──
-@gray-dark: lighten(black, 25%);    // #404040 — 正文文字色
-@gray:      lighten(black, 50%);    // #808080 — 次要文字/图标色
-@gray-l:    lighten(black, 75%);    // #bfbfbf — 侧边栏弱化文字
-@gray-light: #eee;                  // #eeeeee — 边框/分隔线
-
-// ── 白色变体 ──
-@white-faded: fade(white, 80%);     // rgba(255,255,255,0.8) — 导航栏半透明白色
+@brand-primary: #0085A1;
+@gray-dark: lighten(black, 25%);
+@gray: lighten(black, 50%);
+@gray-l: lighten(black, 75%);
+@white-faded: fade(white, 80%);
+@gray-light: #eee;

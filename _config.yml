@@ -1,207 +1,116 @@
-# ============================================================
-#  _config.yml — Hux Blog 主题全局配置文件
-# ============================================================
-#
-#  此文件控制整个 Jekyll 站点的行为和外观。
-#  修改后需重启 Jekyll: bundle exec jekyll serve
-#
-#  【引用关系速查】
-#    变量                       被以下文件使用
-#    ───────────────────────────────────────────────────────
-#    title                      head.html, footer.html, nav.html, default.html
-#    SEOTitle                   head.html (<title> 标签)
-#    header-img                 page.html, post.html, keynote.html (背景图)
-#    description                head.html (<meta name="description">)
-#    keyword                    head.html (<meta name="keywords">)
-#    url                        head.html (canonical URL)
-#    baseurl                    head.html, nav.html, footer.html (路径拼接)
-#    sidebar                    page.html (侧边栏模式切换)
-#    sidebar-avatar             page.html (侧边栏头像)
-#    sidebar-about-description  page.html (侧边栏简介)
-#    RSS                        footer.html, page.html (RSS 图标)
-#    *_username                 footer.html, page.html (各社交平台图标)
-#    github_repo                footer.html (Theme on GitHub 链接)
-#    github_repo_name           footer.html (GitHub Star 按钮仓库名, 可选)
-#    featured-tags              page.html, post.html, keynote.html
-#    featured-condition-size    page.html, post.html, keynote.html
-#    chrome-tab-theme-color     head.html (Android Chrome 标签页色)
-#    service-worker             footer.html, head.html (PWA 开关)
-#    ga_track_id / ga_domain    footer.html (Google Analytics)
-#    ba_track_id                footer.html (百度统计)
-#    disqus_username / enable   post.html, keynote.html (Disqus 评论)
-#    gitalk                     post.html, keynote.html (Gitalk 评论)
-#    anchorjs                   post.html, keynote.html (标题锚点)
-#    google_site_verification   head.html (Google Search Console)
-#    friends                    page.html, post.html, keynote.html (友链)
-#    email                      page.html (侧边栏邮箱)
-#    paginate / permalink       Jekyll 核心 (分页/URL格式)
-#    markdown / highlighter     Jekyll 核心 (Markdown 引擎)
-#    gems (plugins)             Jekyll 核心 (插件列表)
-# ============================================================
+# Site settings
+title: BYQ0002                                 #你的博客标题
+SEOTitle: BYQ0002                              #显示在浏览器上搜索时显示的标题
+header-img: img/64724388_p0.png                #显示在首页的背景图片
+#email: qiubaiying@gmail.com
+description: "主要写ACG相关随笔的备用博客"       #网站介绍(在head标签中显示)
+keyword: "anime, comic, game"                  #关键词(在head标签中显示)
+url: "https://byq0002.github.io/"          # your host, for absolute URL
+baseurl: ""      # for example, '/blog' if your blog hosted on 'host/blog'
+#github_repo: "https://github.com/qiubaiying/qiubaiying.github.io.git" # you code repository
+
+# Sidebar settings
+sidebar: true                           # whether or not using Sidebar.
+sidebar-about-description: "这个人很懒,他什么都没写"
+sidebar-avatar: /img/18614610_p0.png      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
-# ──────────────────────────────────────────────────────────
-#  1. 站点基本信息 (Site Settings)
-# ──────────────────────────────────────────────────────────
 
-title: BYQ0002                                 # 站点标题 (导航栏 Logo + 版权文字)
-SEOTitle: BYQ0002                              # SEO 标题 (浏览器标签页 + 搜索引擎结果)
-header-img: img/64724388_p0.png                # 全局默认头部背景图 (首页/标签页/独立页)
-                                               # 单篇文章可通过 front-matter header-img 覆盖
-#email: qiubaiying@gmail.com                   # 邮箱 (显示在侧边栏 ABOUT ME 卡片中)
-description: "主要写ACG相关随笔的备用博客"      # 站点描述 (<meta name="description">, 建议 ≤160 字符)
-keyword: "anime, comic, game"                  # 站点关键词 (<meta name="keywords">, 逗号分隔)
-
-url: "https://byq0002.github.io/"             # 站点完整域名 (用于 canonical URL + Disqus)
-                                               # ⚠ 结尾不加 / 斜杠
-baseurl: ""                                    # 子目录路径 (根目录部署留空, 如部署在 /blog 则填 "/blog")
-                                               # ⚠ 结尾不加 / 斜杠
-
-# Google 站点验证 (Google Search Console 所有权验证)
-# 在 GSC 后台获取验证码, 取消注释并填入:
-# google_site_verification: "xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI"
-
-# GitHub 仓库信息
-# github_repo: "https://github.com/qiubaiying/qiubaiying.github.io.git"  # 页脚 "Theme on GitHub" 链接
-# github_repo_name: "qiubaiying.github.io"  # GitHub Star 按钮仓库名 (可选, 不设则自动拼接 用户名.github.io)
+# SNS settings
+RSS: false
+# weibo_username:     qiubaiying
+#zhihu_username:     qiubaiying
+#github_username:    qiubaiying
+#facebook_username:  baiying.qiu.7
+#jianshu_username:   e71990ada2fd
+#twitter_username:   qiubaiying
 
 
-# ──────────────────────────────────────────────────────────
-#  2. 侧边栏配置 (Sidebar Settings)
-# ──────────────────────────────────────────────────────────
-
-sidebar: true                                  # 侧边栏模式
-                                               #   true  → 桌面端内容+侧边栏并排 (宽版)
-                                               #   false → 内容全宽, 侧边栏置底 (窄版)
-sidebar-about-description: "这个人很懒,他什么都没写"  # 侧边栏个人简介
-sidebar-avatar: /img/18614610_p0.png           # 侧边栏头像 (绝对路径, 首页和关于页共用)
-                                               # 支持外部 URL 如 https://example.com/avatar.jpg
 
 
-# ──────────────────────────────────────────────────────────
-#  3. 社交平台 (SNS Settings)
-# ──────────────────────────────────────────────────────────
-#  在下方取消注释并填入用户名即可在页脚和侧边栏显示对应图标。
-#  每个平台对应的图标/链接格式见 _includes/social-icon.html 文件头注释。
-
-RSS: false                                     # RSS 订阅图标 (true = 启用)
-# weibo_username:     qiubaiying               # 微博用户 ID (数字)
-# zhihu_username:     qiubaiying               # 知乎用户 ID (people/ 后部分)
-# github_username:    qiubaiying               # GitHub 用户名
-# facebook_username:  baiying.qiu.7            # Facebook 用户名
-# jianshu_username:   e71990ada2fd             # 简书用户 ID
-# twitter_username:   qiubaiying               # Twitter 用户名 (不含 @)
-# linkedin_username:  yourname                 # LinkedIn 用户名 (in/ 后部分)
+# Build settings
+# from 2016, 'pygments' is unsupported on GitHub Pages. Use 'rouge' for highlighting instead.
+permalink: pretty
+paginate: 10
+exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
+anchorjs: true                          # if you want to customize anchor. check out line:181 of `post.html`
 
 
-# ──────────────────────────────────────────────────────────
-#  4. 评论系统 (Comment System)
-# ──────────────────────────────────────────────────────────
-#  两种方案二选一, 同时启用可能导致冲突。
 
-# Disqus (https://disqus.com/)
-# ⚠ 注意: keynote.html 用 site.disqus.enable 判断, post.html 用 site.disqus_username 判断
-# 建议统一为 disqus_username 方式:
+# Gems
+# from PR#40, to support local preview for Jekyll 3.0
+gems: [jekyll-paginate]
+
+
+
+
+# Markdown settings
+# replace redcarpet to kramdown,
+# although redcarpet can auto highlight code, the lack of header-id make the catalog impossible, so I switch to kramdown
+# document: http://jekyllrb.com/docs/configuration/#kramdown
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM                            # use Github Flavored Markdown !important
+
+
+
+# 评论系统
+# Disqus（https://disqus.com/）
 # disqus_username: qiubaiying
 
-# Gitalk — 基于 GitHub Issues 的评论系统 (https://github.com/gitalk/gitalk)
-# 需要在 GitHub 创建 OAuth App 获取 clientID 和 clientSecret
-# gitalk:
-#   enable: true              # 是否启用
-#   clientID: f2c84e7629bb1446c1a4
-#   clientSecret: ca6d6139d1e1b8c43f8b2e19492ddcac8b322d0d
-#   repo: qiubaiying.github.io           # 存放评论的仓库名
-#   owner: qiubaiying                    # 仓库所有者
-#   admin: qiubaiying                    # 管理员 (可管理所有评论)
-#   distractionFreeMode: true            # 类似 Facebook 的阴影遮罩效果
+# Gitalk
+#gitalk:
+#  enable: true    #是否开启Gitalk评论
+#  clientID: f2c84e7629bb1446c1a4                            #生成的clientID
+#  clientSecret: ca6d6139d1e1b8c43f8b2e19492ddcac8b322d0d    #生成的clientSecret
+#  repo: qiubaiying.github.io    #仓库名称
+#  owner: qiubaiying    #github用户名
+#  admin: qiubaiying
+#  distractionFreeMode: true #是否启用类似FB的阴影遮罩
 
 
-# ──────────────────────────────────────────────────────────
-#  5. 统计分析 (Analytics Settings)
-# ──────────────────────────────────────────────────────────
+# 统计
 
-# 百度统计 — 在百度统计后台获取哈希 ID 后填入
-# ba_track_id: b50bf2b12b5338a1845e33832976fd68
+# Analytics settings
+# Baidu Analytics
+#ba_track_id: b50bf2b12b5338a1845e33832976fd68
 
-# Google Analytics — 在 GA 后台获取追踪 ID
-# 格式: "UA-XXXXX-Y" (Universal Analytics, 已于 2023-07 停止处理) 或 "G-XXXXXXXX" (GA4)
-# ga_track_id: 'UA-90855596-1'
-# ga_domain: auto                           # Cookie 域名
-#                                            #   "auto"       → 自动检测
-#                                            #   "example.com"→ 指定域名
-#                                            #   "none"       → 不设域名 (本地测试)
+# Google Analytics
+#ga_track_id: 'UA-90855596-1'            # Format: UA-xxxxxx-xx
+#ga_domain: qiubaiying.top               # 默认的是 auto, 这里我是自定义了的域名，你如果没有自己的域名，需要改成auto
 
 
-# ──────────────────────────────────────────────────────────
-#  6. 首页 & 标签 (Featured Tags)
-# ──────────────────────────────────────────────────────────
-
-featured-tags: true                            # 是否在侧边栏显示精选标签
-featured-condition-size: 1                     # 标签最小文章数阈值
-                                               #   1 → 所有标签都显示
-                                               #   3 → 仅文章数 ≥3 的标签显示
 
 
-# ──────────────────────────────────────────────────────────
-#  7. PWA (Progressive Web App)
-# ──────────────────────────────────────────────────────────
 
-chrome-tab-theme-color: "#000000"              # Chrome/Android 标签页主题色
-                                               # 格式: "#RRGGBB" 十六进制颜色值
-service-worker: true                           # 是否启用 Service Worker (离线缓存)
-                                               # 需同时配置 pwa/manifest.json 中的图标
+# Featured Tags
+featured-tags: true                     # 是否使用首页标签
+featured-condition-size: 1              # 相同标签数量大于这个数，才会出现在首页
 
 
-# ──────────────────────────────────────────────────────────
-#  8. 友链 (Friends / Blogroll)
-# ──────────────────────────────────────────────────────────
-#  取消注释并修改为你的友链列表:
-# friends:
-#   - title: "朋友的博客"
-#     href: "https://friend.example.com"
-#   - title: "另一个朋友"
-#     href: "https://another.example.com"
+
+# Progressive Web Apps
+chrome-tab-theme-color: "#000000"
+service-worker: true
 
 
-# ──────────────────────────────────────────────────────────
-#  9. Jekyll 构建配置 (Build Settings)
-# ──────────────────────────────────────────────────────────
 
-permalink: pretty                               # 文章 URL 格式
-                                                #   "pretty" → /2024/01/01/post-title/
-                                                #   "date"   → /2024/01/01/post-title.html
-                                                #   "none"   → /2024/01/01/post-title.html
-paginate: 10                                    # 首页每页显示的文章数
-anchorjs: true                                  # 标题锚点链接
-                                                #   true → 文章标题悬停时显示 # 链接图标
+# Friends
+#friends: [
+#    {
+#        title: "WY",
+#        href: "http://zhengwuyang.com"
+#    },{
+#        title: "简书·BY",
+#        href: "http://www.jianshu.com/u/e71990ada2fd"
+#    },{
+#        title: "Apple",
+#        href: "https://apple.com"
+#    },{
+#        title: "Apple Developer",
+#        href: "https://developer.apple.com/"
+#    }
+#]
 
-# 构建时排除的文件/目录 (不复制到 _site)
-exclude:
-  - "less"           # Less 源文件 (编译为 CSS 后不需要)
-  - "node_modules"   # npm 依赖
-  - "Gruntfile.js"   # Grunt 构建脚本
-  - "package.json"   # npm 配置
-  - "README.md"      # 项目说明
-
-# Markdown 引擎配置
-markdown: kramdown                               # Markdown 解析器
-highlighter: rouge                               # 代码语法高亮器 (GitHub Pages 默认)
-kramdown:
-  input: GFM                                      # 启用 GitHub Flavored Markdown
-                                                  #  支持围栏代码块 (```)、表格、任务列表等
-
-
-# ──────────────────────────────────────────────────────────
-#  10. Jekyll 插件 (Plugins)
-# ──────────────────────────────────────────────────────────
-
-# ⚠ Jekyll 3.x 使用 gems: 键名 (已废弃), Jekyll 4.x 使用 plugins:
-plugins:
-  - jekyll-paginate           # 分页插件 (生成上一页/下一页链接)
-
-
-# ──────────────────────────────────────────────────────────
-#  11. GitHub Pages 主题 (Theme) — 由 GitHub 自动注入, 无需修改
-# ──────────────────────────────────────────────────────────
-
-# theme: jekyll-theme-slate
+theme: jekyll-theme-slate

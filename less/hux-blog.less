@@ -1,46 +1,9 @@
-/* 
-  ============================================================
-  hux-blog.less - Hux Blog 主题主样式 (Less 源文件)
-  ============================================================
-  
-  编译命令: lessc hux-blog.less > ../css/hux-blog.css
-  
-  导入模块:
-    variables.less    — 颜色变量 (@brand-primary, @gray 等)
-    mixins.less       — 可复用 Mixin (.sans-serif, .background-cover 等)
-    sidebar.less      — 侧边栏样式
-    side-catalog.less — 侧边目录样式
-  
-  目录:
-    1. 基础排版      body, h1~h6, a, blockquote
-    2. 工具类        .img-hint, .shadow, select, table
-    3. 文章容器      .postlist-container, .post-container
-    4. 导航栏动画    #huxblog_navbar (Material Design)
-    5. 导航栏外观    .navbar-custom
-    6. 页面头部      .intro-header
-    7. 文章预览卡    .post-preview
-    8. 页脚          footer
-    9. 浮动标签表单  .floating-label-form-group
-    10. 按钮 & 翻页  .btn, .pager
-    11. 文本选择色   ::selection
-    12. 标签样式     .tags, #tag_cloud, .one-tag-list
-    13. 图片 & 杂项  .post-container img, .navbar-toggle
-    14. 多说(废弃)   .comment #ds-thread (多说2017年关闭)
-    15. 全屏页面     .page-fullscreen
-*/
-
 @import "variables.less";
 @import "mixins.less";
 @import "sidebar.less";
 @import "side-catalog.less";
 
-
-/* ============================================================
-   1. 基础排版 (Global Components & Typography)
-   ============================================================
-   body 使用 .sans-serif mixin (苹果/Windows 系统字体栈),
-   Mobile First 基准 16px, ≥768px 时增至 20px。
-*/
+// Global Components
 
 body {
 	.sans-serif;
@@ -66,6 +29,10 @@ h6 {
 	.sans-serif;
 	line-height: 1.1;
 	font-weight: bold;
+}
+h1{
+	// drop V1.1.1
+	//font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 h4{
     font-size: 21px;
@@ -98,12 +65,8 @@ blockquote {
 	}
 }
 
-
-/* ============================================================
-   2. 工具类 (Utils — Markdown 中可使用的样式)
-   ============================================================ */
-
-// 图片提示文字
+// Utils Style Class can be used in Markdown.
+small.img-hint{
 	display: block;
 	margin-top: -20px;
 	text-align: center;
@@ -154,12 +117,8 @@ pre code{
 	word-wrap: normal;	// no-wrap
 }
 
-
-/* ============================================================
-   3. 文章容器 (Post Container)
-   ============================================================ */
-
-// 首页文章列表容器
+// In the list of posts
+.postlist-container{
 	margin-bottom: 15px;
 }
 
@@ -240,14 +199,10 @@ pre code{
 }
 
 
-/* ============================================================
-   4. 导航栏折叠动画 (Material Design, 仅小屏)
-   ============================================================
-   transform: scaleX/scaleY 实现弹性展开效果,
-   配合 nav.html 中 JS 的 .in 类切换。
-   cubic-bezier 曲线: 关闭(0.47,0,0.4,0.99) 打开(0.23,1,0.32,1)
-*/
 
+// Navigation
+
+// materialize, mobile only
 @media only screen and (max-width: 767px) {
 	/**
 	 * Layout
@@ -321,15 +276,6 @@ pre code{
 		}
 	}
 }
-
-
-/* ============================================================
-   5. 导航栏外观 (Navbar Custom)
-   ============================================================
-   .navbar-custom: 透明背景, 白色文字, 三档响应式
-   .is-fixed: 滚动后固定顶部 (translate3d GPU加速)
-   .is-visible: 向上滚动重新滑入
-*/
 
 .navbar-custom {
 	// materialize
@@ -448,13 +394,7 @@ pre code{
 	}
 }
 
-
-/* ============================================================
-   6. 页面头部 (Intro Header)
-   ============================================================
-   背景图通过 HTML 内联 style 设置, 此处定义通用布局。
-   .site-heading 首页标题 / .post-heading 文章标题 / .page-heading 独立页标题
-*/
+// Header
 
 .intro-header {
 	background: no-repeat center center;
@@ -544,10 +484,7 @@ pre code{
 	}
 }
 
-
-/* ============================================================
-   7. 文章预览卡片 (Post Preview)
-   ============================================================ */
+// Post Preview Pages (Home Page)
 
 .post-preview {
 	> a {
@@ -617,10 +554,7 @@ pre code{
     }
 }
 
-
-/* ============================================================
-   8. 分隔 & 页脚 (Sections & Footer)
-   ============================================================ */
+// Sections
 
 .section-heading {
 	font-size: 36px;
@@ -661,10 +595,7 @@ footer {
 	}
 }
 
-
-/* ============================================================
-   9. 浮动标签表单 (Floating Label Form — Material Design)
-   ============================================================ */
+// Contact Form Styles
 
 .floating-label-form-group {
 	font-size: 14px;
@@ -724,10 +655,7 @@ form .row:first-child .floating-label-form-group {
 	border-top: 1px solid @gray-light;
 }
 
-
-/* ============================================================
-   10. 按钮 & 翻页导航 (Buttons & Pager)
-   ============================================================ */
+// Button Styles
 
 .btn {
 	.sans-serif;
@@ -804,10 +732,7 @@ form .row:first-child .floating-label-form-group {
 	}
 }
 
-
-/* ============================================================
-   11. 文本选择颜色 (Selection Highlight)
-   ============================================================ */
+// -- Highlight Color Customization
 
 ::-moz-selection {
 	color: white;
@@ -832,15 +757,7 @@ img::-moz-selection {
 }
 
 
-/* ============================================================
-   12. 标签样式 (Tags)
-   ============================================================
-   .tags        : 文章头部 + 侧边栏标签 (药丸样式, 白色边框)
-   #tag_cloud   : 标签云 (/tags 页面, 灰色背景方块)
-   .one-tag-list: 单标签文章列表
-   .listing-seperator: 年份/月份分隔符
-*/
-
+/* Hux add tags support */
 .tags{
 	margin-bottom: -5px;
 	a,.tag{
@@ -885,7 +802,7 @@ img::-moz-selection {
 		margin-bottom: 8px;
 		background: #D6D6D6;
 		&:hover, &:active{
-			background-color: @brand-primary !important;
+			background-color: #0085a1 !important;
 		}
 	}
 	@media only screen and (min-width: 768px) {
@@ -901,14 +818,16 @@ img::-moz-selection {
 }
 
 .t{
+	//margin-top: 50px;
 	&:first-child{
 		margin-top: 0px;
 	}
 	hr:last-of-type{
+		//display: none;
 	}
 }
 .listing-seperator{
-	color: @brand-primary;
+	color:#0085a1;
 	font-size: 21px !important;
 	&::before{
 		margin-right: 5px;
@@ -963,11 +882,9 @@ img::-moz-selection {
 	}
 }
 
-/* ============================================================
-   13. 图片 & 杂项 (Images & Misc)
-   ============================================================ */
+/* Tags support End*/
 
-/* 文章内图片居中响应式 */
+/* Hux make all img responsible in post-container */
 .post-container img{
 	display: block;
 	max-width: 100%;
@@ -1007,13 +924,7 @@ img::-moz-selection {
 }
 
 
-/* ============================================================
-   14. 多说评论 (Duoshuo — 已废弃)
-   ============================================================
-   ⚠ 多说于 2017-06-01 正式关闭服务。以下样式已无实际用途。
-   项目已改用 Gitalk (GitHub Issues) + Disqus 作为评论系统。
-*/
-
+/* Hux customize Style for Duoshuo */
 .comment{
 	margin-top: 20px;
 	#ds-thread {
@@ -1024,6 +935,9 @@ img::-moz-selection {
 				background: white;
 				box-shadow: none;
 				text-shadow: none;
+			}
+			a.ds-thread-liked{
+
 			}
 			li.ds-tab a.ds-current{
 				border:1px solid #ddd;
@@ -1053,22 +967,15 @@ img::-moz-selection {
 					background: @gray-light;
 				}
 			}
+		}
 	}
 }
 #ds-smilies-tooltip ul.ds-smilies-tabs li a {
 	background: white !important;
 }
-			}
-		}
-	}
-}
 
 
-/* ============================================================
-   15. 全屏页面 (Fullscreen Page)
-   ============================================================
-   用于 404 页面, .page-fullscreen 将头部/标签页置为固定全屏。
-*/
+// Hux fullscreen mode in 404.html
 
 .page-fullscreen .intro-header{
 	position: fixed;
