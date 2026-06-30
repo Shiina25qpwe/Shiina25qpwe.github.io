@@ -2,36 +2,7 @@
 layout: default
 ---
 
-<!--
-  ============================================================
-  keynote.html — 嵌入式页面布局（继承 default）
-  ============================================================
-  使用方式：在页面 front-matter 中设置 layout: keynote
-
-  适用 front-matter 字段：
-    iframe        : 嵌入的 URL（必填，页面主要内容由此 iframe 承载）
-    title         : 页面标题
-    subtitle      : 副标题（可选）
-    author        : 作者名（可选）
-    tags          : 标签数组
-    navcolor      : "invert" → 导航栏反色（浅色背景 iframe 时使用）
-    date          : 发布日期
-
-  与 post.html 的区别：
-    - 无封面背景图，代之以全屏 iframe 嵌入
-    - 无 header-img / header-mask 支持
-    - Gitalk 使用路径原文（不用 md5），无 distractionFreeMode
-    - Disqus 使用 site.disqus.enable（而非 site.disqus_username）
-    - 全屏自适应 JS（窗口大小变化时重新调整 iframe 高度）
-
-  页面结构：
-    封面区   → iframe 全屏嵌入 + 标签 + 标题 + 副标题 + 作者/日期
-    正文区   → {{ content }}（通常为空，内容在 iframe 中）
-    评论区   → Gitalk（优先）/ Disqus（备选）
-    侧栏区   → 精选标签 + 友情链接
-    底部 JS  → 全屏自适应 + Disqus 嵌入 + anchor-js 锚点
-  ============================================================
--->
+<!-- keynote.html — 嵌入式页面布局（全屏 iframe）-->
 
 <!-- WeChat 分享 hack（已废弃） -->
 <!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
