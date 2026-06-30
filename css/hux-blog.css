@@ -1,14 +1,43 @@
+/*
+ * ============================================================
+ * hux-blog.css — Hux Blog 主题自定义样式
+ * ============================================================
+ *
+ * 颜色方案（主题色）：
+ *   主色 #0085a1（青蓝色）     — 链接 hover、选中高亮、标签激活
+ *   正文 #404040（深灰）        — 默认文字
+ *   次级 #808080（中灰）        — 侧栏、引用、上一篇/下一篇 meta
+ *   浅色 #bfbfbf（浅灰）        — 侧栏文字、标签边框
+ *   白色 #ffffff                — 封面标题、导航栏（非 fixed）
+ *   背景 #f8f8f8 / #F5F5F5     — 代码块背景、目录激活背景
+ *
+ * 字体方案：
+ *   - 中英文混排：系统原生字体栈（-apple-system → PingFang SC → Microsoft YaHei...）
+ *   - 衬线装饰：Lora, Times New Roman（文章 meta、文章摘要）
+ *
+ * 注：字体栈在正文、标题、导航栏、按钮等多处重复声明（约 6 次），
+ *     因 2016 年 CSS 自定义属性（--var）尚未普及，暂无更好方案。
+ *     如需全局修改字体，搜索 "font-family-stack" 标签即可找到所有位置。
+ * ============================================================
+ */
+
+
+/* ==================== 侧栏通用样式 ==================== */
+
+/* 大屏：侧栏右侧留 5% 边距 */
 @media (min-width: 1200px) {
   .post-container,
   .sidebar-container {
     padding-right: 5%;
   }
 }
+/* 中屏：仅正文容器留边距 */
 @media (min-width: 768px) {
   .post-container {
     padding-right: 5%;
   }
 }
+
 .sidebar-container {
   color: #bfbfbf;
   font-size: 14px;
@@ -35,6 +64,8 @@
 .sidebar-container .tags a:active {
   border-color: #0085a1;
 }
+
+/* 个人简介（"ABOUT ME" 区域） */
 .sidebar-container .short-about img {
   width: 80%;
   display: block;
@@ -48,9 +79,15 @@
 .sidebar-container .short-about .list-inline > li {
   padding-left: 0px;
 }
+
+
+/* ==================== 侧边目录（Side Catalog） ==================== */
+/* 仅大屏（≥1200px）可见，依赖 jquery.nav.js */
+
 .catalog-container {
   padding: 0px;
 }
+
 .side-catalog {
   display: block;
   overflow: auto;
@@ -62,6 +99,8 @@
   position: fixed;
   top: -21px;
 }
+
+/* 折叠/展开图标（使用 ::before 伪元素显示 + 或 −） */
 .side-catalog.fold .catalog-toggle::before {
   content: "+";
 }
@@ -74,6 +113,8 @@
   margin-right: 5px;
   bottom: 1px;
 }
+
+/* 目录项列表 */
 .side-catalog .catalog-body {
   position: relative;
   list-style: none;
@@ -99,6 +140,8 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
+/* 目录层级缩进 */
 .side-catalog .catalog-body .h1_nav,
 .side-catalog .catalog-body .h2_nav,
 .side-catalog .catalog-body .h3_nav {
@@ -117,6 +160,8 @@
 .side-catalog .catalog-body .h6_nav a {
   max-width: 170px;
 }
+
+/* 当前激活的目录项 */
 .side-catalog .catalog-body .active {
   border-radius: 4px;
   background-color: #F5F5F5;
@@ -124,57 +169,56 @@
 .side-catalog .catalog-body .active a {
   color: #0085a1!important;
 }
+
+/* 小屏隐藏侧边目录 */
 @media (max-width: 1200px) {
   .side-catalog {
     display: none;
   }
 }
+
+
+/* ==================== 全局排版 ==================== */
+
 body {
-  /* Hux learn from
-     *     TypeIsBeautiful,
-     *     [This Post](http://zhuanlan.zhihu.com/ibuick/20186806) etc.
-     */
+  /* font-family-stack: 中英文混排系统字体栈 */
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Arial", "PingFang SC", "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "Microsoft JhengHei", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "WenQuanYi Micro Hei", SimSun, sans-serif;
   line-height: 1.7;
   font-size: 16px;
   color: #404040;
   overflow-x: hidden;
 }
+
 p {
   margin: 30px 0;
 }
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  /* Hux learn from
-     *     TypeIsBeautiful,
-     *     [This Post](http://zhuanlan.zhihu.com/ibuick/20186806) etc.
-     */
+
+h1, h2, h3, h4, h5, h6 {
+  /* font-family-stack */
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Arial", "PingFang SC", "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "Microsoft JhengHei", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "WenQuanYi Micro Hei", SimSun, sans-serif;
-  line-height: 1.7;
-  line-height: 1.1;
+  line-height: 1.1;    /* 覆盖 body 的 1.7，标题用更紧凑的行高 */
   font-weight: bold;
 }
 h4 {
   font-size: 21px;
 }
+
 a {
   color: #404040;
 }
 a:hover,
 a:focus {
-  color: #0085a1;
+  color: #0085a1;    /* 主题色 hover */
 }
 a img:hover,
 a img:focus {
-  cursor: zoom-in;
+  cursor: zoom-in;    /* 点击图片放大 */
 }
+
 article {
-  overflow-x: hidden;
+  overflow-x: hidden;    /* 防止代码块等宽内容溢出 */
 }
+
 blockquote {
   color: #808080;
   font-style: italic;
@@ -184,6 +228,8 @@ blockquote {
 blockquote p {
   margin: 0;
 }
+
+/* 图片说明文字 */
 small.img-hint {
   display: block;
   margin-top: -20px;
@@ -195,6 +241,8 @@ br + small.img-hint {
 img.shadow {
   box-shadow: rgba(0, 0, 0, 0.258824) 0px 2px 5px 0px;
 }
+
+/* 语言选择下拉框 */
 select {
   -webkit-appearance: none;
   margin-top: 15px;
@@ -207,16 +255,22 @@ select.sel-lang {
   min-height: 28px;
   font-size: 14px;
 }
+
+/* 表格 */
 .table th,
 .table td {
   border: 1px solid #eee !important;
 }
+
+/* 标题下方装饰线（首页"文章"上方） */
 hr.small {
   max-width: 100px;
   margin: 15px auto;
   border-width: 4px;
   border-color: white;
 }
+
+/* 代码块与表格容器：iOS 平滑滚动 */
 pre,
 .table-responsive {
   -webkit-overflow-scrolling: touch;
@@ -227,15 +281,22 @@ pre code {
   white-space: pre;
   word-wrap: normal;
 }
+
+
+/* ==================== 文章列表（首页） ==================== */
 .postlist-container {
   margin-bottom: 15px;
 }
+
+
+/* ==================== 文章正文样式 ==================== */
+
 .post-container a {
-  color: #337ab7;
+  color: #337ab7;          /* Bootstrap 蓝 */
 }
 .post-container a:hover,
 .post-container a:focus {
-  color: #0085a1;
+  color: #0085a1;          /* 主题色 */
 }
 .post-container h1,
 .post-container h2,
@@ -277,6 +338,7 @@ pre code {
     padding-left: 20px;
   }
 }
+/* 嵌套列表减间距 */
 .post-container ol ol,
 .post-container ol ul,
 .post-container ul ol,
@@ -296,6 +358,16 @@ pre code {
   line-height: 2;
   margin-top: 20px;
 }
+
+/* 文章内图片：居中 + 限制最大宽度 */
+.post-container img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.5em auto 1.6em auto;
+}
+
+/* 上一篇 / 下一篇导航 */
 .post-container .pager li {
   width: 48%;
 }
@@ -313,12 +385,16 @@ pre code {
   font-weight: normal;
   letter-spacing: 0.5px;
 }
+
+
+/* ==================== 移动端导航栏动画 ==================== */
+/* 仅 ≤767px 时使用 CSS3 Material Design 风格的展开/收起动画 */
+
 @media only screen and (max-width: 767px) {
-  /**
-	 * Layout
-	 * Since V1.6 we use absolute positioning to prevent to expand container-fluid
-	 * which would cover tags. A absolute positioning make a new layer.
-	 */
+  /*
+   * 布局：绝对定位，独立层（不撑开 container-fluid）
+   * 避免撑开页面导致标签被覆盖
+   */
   .navbar-default .navbar-collapse {
     position: absolute;
     right: 0;
@@ -329,14 +405,12 @@ pre code {
     border-radius: 2px;
     width: 170px;
   }
-  /**
-	 * Animation
-	 * HuxBlog-Navbar using genuine Material Design Animation
-	 */
+
+  /*
+   * 收起状态：opacity 0 + scaleX(0)，从右上角缩进
+   * 展开状态（.in）：opacity 1 + scaleX(1) + 列表项逐项淡入
+   */
   #huxblog_navbar {
-    /**
-		 * Sharable code and 'out' function
-		 */
     opacity: 0;
     transform: scaleX(0);
     transform-origin: top right;
@@ -344,14 +418,13 @@ pre code {
     -webkit-transform: scaleX(0);
     -webkit-transform-origin: top right;
     -webkit-transition: all 200ms cubic-bezier(0.47, 0, 0.4, 0.99) 0ms;
-    /**
-		 *'In' Animation
-		 */
   }
   #huxblog_navbar a {
     font-size: 13px;
     line-height: 28px;
   }
+
+  /* 折叠区域：高度 0 → scaleY(0) */
   #huxblog_navbar .navbar-collapse {
     height: 0px;
     transform: scaleY(0);
@@ -361,11 +434,15 @@ pre code {
     -webkit-transform-origin: top right;
     -webkit-transition: -webkit-transform 400ms cubic-bezier(0.32, 1, 0.23, 1) 0ms;
   }
+
+  /* 列表项：opacity 0 */
   #huxblog_navbar li {
     opacity: 0;
     transition: opacity 100ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
     -webkit-transition: opacity 100ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
   }
+
+  /* ===== 展开状态（JS 添加 .in 类） ===== */
   #huxblog_navbar.in {
     transform: scaleX(1);
     -webkit-transform: scaleX(1);
@@ -380,11 +457,16 @@ pre code {
     -webkit-transition: -webkit-transform 500ms cubic-bezier(0.23, 1, 0.32, 1);
   }
   #huxblog_navbar.in li {
+    /* 列表项逐个淡入（205ms 延迟逐项错开） */
     opacity: 1;
     transition: opacity 450ms cubic-bezier(0.23, 1, 0.32, 1) 205ms;
     -webkit-transition: opacity 450ms cubic-bezier(0.23, 1, 0.32, 1) 205ms;
   }
 }
+
+
+/* ==================== 导航栏通用样式 ==================== */
+
 .navbar-custom {
   background: none;
   border: none;
@@ -393,10 +475,7 @@ pre code {
   left: 0;
   width: 100%;
   z-index: 3;
-  /* Hux learn from
-     *     TypeIsBeautiful,
-     *     [This Post](http://zhuanlan.zhihu.com/ibuick/20186806) etc.
-     */
+  /* font-family-stack */
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Arial", "PingFang SC", "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "Microsoft JhengHei", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "WenQuanYi Micro Hei", SimSun, sans-serif;
   line-height: 1.7;
 }
@@ -419,6 +498,8 @@ pre code {
 .navbar-custom .nav li a:active {
   background: rgba(0, 0, 0, 0.12);
 }
+
+/* 中屏及以上：导航栏透明 + 白色文字 */
 @media only screen and (min-width: 768px) {
   .navbar-custom {
     background: transparent;
@@ -448,12 +529,14 @@ pre code {
     background: none;
   }
 }
+
+/* 大屏（≥1170px）：滚动时导航栏固定 + 背景切换动画 */
 @media only screen and (min-width: 1170px) {
   .navbar-custom {
     -webkit-transition: background-color 0.3s;
     -moz-transition: background-color 0.3s;
     transition: background-color 0.3s;
-    /* Force Hardware Acceleration in WebKit */
+    /* GPU 加速（强制开启硬件合成层） */
     -webkit-transform: translate3d(0, 0, 0);
     -moz-transform: translate3d(0, 0, 0);
     -ms-transform: translate3d(0, 0, 0);
@@ -462,8 +545,9 @@ pre code {
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
   }
+
+  /* 向下滚动后 fixed：白色半透明背景 + 深色文字 */
   .navbar-custom.is-fixed {
-    /* when the user scrolls down, we hide the header right above the viewport */
     position: fixed;
     top: -61px;
     background-color: rgba(255, 255, 255, 0.9);
@@ -486,8 +570,9 @@ pre code {
   .navbar-custom.is-fixed .nav li a:focus {
     color: #0085a1;
   }
+
+  /* 向上滚动时 visible：导航栏从顶部滑入 */
   .navbar-custom.is-visible {
-    /* if the user changes the scrolling direction, we show the header */
     -webkit-transform: translate3d(0, 100%, 0);
     -moz-transform: translate3d(0, 100%, 0);
     -ms-transform: translate3d(0, 100%, 0);
@@ -495,6 +580,35 @@ pre code {
     transform: translate3d(0, 100%, 0);
   }
 }
+
+/* 汉堡按钮样式 */
+.navbar-default .navbar-toggle:focus,
+.navbar-default .navbar-toggle:hover {
+  background-color: inherit;
+}
+.navbar-default .navbar-toggle:active {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+.navbar-default .navbar-toggle {
+  border-color: transparent;
+  padding: 19px 16px;
+  margin-top: 2px;
+  margin-right: 2px;
+  margin-bottom: 2px;
+  border-radius: 50%;
+}
+.navbar-default .navbar-toggle .icon-bar {
+  width: 18px;
+  border-radius: 0px;
+  background-color: white;
+}
+.navbar-default .navbar-toggle .icon-bar + .icon-bar {
+  margin-top: 3px;
+}
+
+
+/* ==================== 封面区（Header） ==================== */
+
 .intro-header {
   background: no-repeat center center;
   background-color: #808080;
@@ -503,15 +617,15 @@ pre code {
   -moz-background-size: cover;
   background-size: cover;
   -o-background-size: cover;
-  margin-bottom: 0px;
-  /* 0 on mobile, modify by Hux */
+  margin-bottom: 0px;          /* 移动端无底部间距 */
 }
 @media only screen and (min-width: 768px) {
   .intro-header {
-    margin-bottom: 20px;
-    /* response on desktop */
+    margin-bottom: 20px;       /* 桌面端底部留间距 */
   }
 }
+
+/* 三种标题区通用上下内边距 */
 .intro-header .site-heading,
 .intro-header .post-heading,
 .intro-header .page-heading {
@@ -525,14 +639,18 @@ pre code {
     padding: 150px 0;
   }
 }
+
+/* site-heading（首页）使用稍大的内边距（覆盖上面的通用值） */
 .intro-header .site-heading {
   padding: 95px 0 70px;
 }
 @media only screen and (min-width: 768px) {
   .intro-header .site-heading {
-    padding: 150px 0;
+    padding: 150px 0;          /* 中屏以上统一 */
   }
 }
+
+/* site-heading / page-heading：文字居中 + 大标题 */
 .intro-header .site-heading,
 .intro-header .page-heading {
   text-align: center;
@@ -544,10 +662,7 @@ pre code {
 }
 .intro-header .site-heading .subheading,
 .intro-header .page-heading .subheading {
-  /* Hux learn from
-     *     TypeIsBeautiful,
-     *     [This Post](http://zhuanlan.zhihu.com/ibuick/20186806) etc.
-     */
+  /* font-family-stack */
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Arial", "PingFang SC", "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "Microsoft JhengHei", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "WenQuanYi Micro Hei", SimSun, sans-serif;
   line-height: 1.7;
   font-size: 18px;
@@ -562,6 +677,8 @@ pre code {
     font-size: 80px;
   }
 }
+
+/* post-heading（文章页）：左对齐 + 较小标题 */
 .intro-header .post-heading h1 {
   font-size: 30px;
   margin-bottom: 24px;
@@ -572,10 +689,7 @@ pre code {
   display: block;
 }
 .intro-header .post-heading .subheading {
-  /* Hux learn from
-     *     TypeIsBeautiful,
-     *     [This Post](http://zhuanlan.zhihu.com/ibuick/20186806) etc.
-     */
+  /* font-family-stack */
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Arial", "PingFang SC", "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "Microsoft JhengHei", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "WenQuanYi Micro Hei", SimSun, sans-serif;
   line-height: 1.7;
   font-size: 17px;
@@ -584,6 +698,7 @@ pre code {
   margin: 10px 0 30px;
   margin-top: -5px;
 }
+/* meta（作者/日期）：衬线斜体 */
 .intro-header .post-heading .meta {
   font-family: 'Lora', 'Times New Roman', serif;
   font-style: italic;
@@ -604,6 +719,10 @@ pre code {
     font-size: 20px;
   }
 }
+
+
+/* ==================== 文章预览卡片（首页文章列表） ==================== */
+
 .post-preview > a {
   color: #404040;
 }
@@ -625,6 +744,7 @@ pre code {
   font-weight: 300;
   margin-bottom: 10px;
 }
+/* 文章 meta（日期、标签等） */
 .post-preview > .post-meta {
   font-family: 'Lora', 'Times New Roman', serif;
   color: #808080;
@@ -654,6 +774,8 @@ pre code {
     font-size: 18px;
   }
 }
+
+/* 文章内容预览文本（首页摘要） */
 .post-content-preview {
   font-size: 13px;
   font-style: italic;
@@ -667,11 +789,14 @@ pre code {
     font-size: 14px;
   }
 }
+
 .section-heading {
   font-size: 36px;
   margin-top: 60px;
   font-weight: 700;
 }
+
+/* 图片说明标题 */
 .caption {
   text-align: center;
   font-size: 14px;
@@ -682,6 +807,10 @@ pre code {
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
 }
+
+
+/* ==================== 页脚 ==================== */
+
 footer {
   font-size: 20px;
   padding: 50px 0 65px;
@@ -702,6 +831,10 @@ footer .copyright a:hover,
 footer .copyright a:focus {
   color: #0085a1;
 }
+
+
+/* ==================== 浮动标签表单（联系页面） ==================== */
+
 .floating-label-form-group {
   font-size: 14px;
   position: relative;
@@ -730,33 +863,36 @@ footer .copyright a:focus {
   margin: 0;
   font-size: 0.85em;
   line-height: 1.764705882em;
-  vertical-align: middle;
-  vertical-align: baseline;
+  vertical-align: baseline;    /* 与输入框基线对齐 */
   opacity: 0;
   -webkit-transition: top 0.3s ease,opacity 0.3s ease;
   -moz-transition: top 0.3s ease,opacity 0.3s ease;
   -ms-transition: top 0.3s ease,opacity 0.3s ease;
   transition: top 0.3s ease,opacity 0.3s ease;
 }
-.floating-label-form-group::not(:first-child) {
+/* 修复：::not 是伪元素写法，伪类应使用单冒号 :not */
+.floating-label-form-group:not(:first-child) {
   padding-left: 14px;
   border-left: 1px solid #eeeeee;
 }
+/* 有值时标签上浮 */
 .floating-label-form-group-with-value label {
   top: 0;
   opacity: 1;
 }
+/* 聚焦时标签变主题色 */
 .floating-label-form-group-with-focus label {
   color: #0085a1;
 }
 form .row:first-child .floating-label-form-group {
   border-top: 1px solid #eeeeee;
 }
+
+
+/* ==================== 按钮 ==================== */
+
 .btn {
-  /* Hux learn from
-     *     TypeIsBeautiful,
-     *     [This Post](http://zhuanlan.zhihu.com/ibuick/20186806) etc.
-     */
+  /* font-family-stack */
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Arial", "PingFang SC", "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "Microsoft JhengHei", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "WenQuanYi Micro Hei", SimSun, sans-serif;
   line-height: 1.7;
   text-transform: uppercase;
@@ -776,16 +912,17 @@ form .row:first-child .floating-label-form-group {
   border: 1px solid #0085a1;
   color: white;
 }
+
+
+/* ==================== 分页器（上一篇 / 下一篇） ==================== */
+
 .pager {
   margin: 20px 0 0 !important;
   padding: 0px !important;
 }
 .pager li > a,
 .pager li > span {
-  /* Hux learn from
-     *     TypeIsBeautiful,
-     *     [This Post](http://zhuanlan.zhihu.com/ibuick/20186806) etc.
-     */
+  /* font-family-stack */
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Arial", "PingFang SC", "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "Microsoft JhengHei", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "WenQuanYi Micro Hei", SimSun, sans-serif;
   line-height: 1.7;
   text-transform: uppercase;
@@ -816,6 +953,7 @@ form .row:first-child .floating-label-form-group {
 .pager li > a:focus > span {
   color: white;
 }
+/* 禁用态 */
 .pager .disabled > a,
 .pager .disabled > a:hover,
 .pager .disabled > a:focus,
@@ -824,6 +962,10 @@ form .row:first-child .floating-label-form-group {
   background-color: #404040;
   cursor: not-allowed;
 }
+
+
+/* ==================== 选中文本高亮 ==================== */
+
 ::-moz-selection {
   color: white;
   text-shadow: none;
@@ -842,7 +984,11 @@ img::-moz-selection {
   color: white;
   background: transparent;
 }
-/* Hux add tags support */
+
+
+/* ==================== 标签系统 ==================== */
+
+/* 封面区标签（白色半透明圆角标签） */
 .tags {
   margin-bottom: -5px;
 }
@@ -874,6 +1020,8 @@ img::-moz-selection {
     margin-right: 5px;
   }
 }
+
+/* 标签页标题区 */
 #tag-heading {
   padding: 70px 0 60px;
 }
@@ -882,6 +1030,8 @@ img::-moz-selection {
     padding: 55px 0;
   }
 }
+
+/* 标签云（tags.html 页面） */
 #tag_cloud {
   margin: 20px 0 15px 0;
 }
@@ -893,6 +1043,7 @@ img::-moz-selection {
   margin: 0 2px;
   margin-bottom: 8px;
   background: #D6D6D6;
+  /* 颜色渐变由 jquery.tagcloud.js 动态控制 */
 }
 #tag_cloud a:hover,
 #tag_cloud .tag:hover,
@@ -905,6 +1056,8 @@ img::-moz-selection {
     margin-bottom: 25px;
   }
 }
+
+/* 标签评论数 */
 .tag-comments {
   font-size: 12px;
 }
@@ -913,6 +1066,8 @@ img::-moz-selection {
     font-size: 14px;
   }
 }
+
+/* 标签列表分隔符 */
 .t:first-child {
   margin-top: 0px;
 }
@@ -929,12 +1084,11 @@ img::-moz-selection {
     line-height: 2 !important;
   }
 }
+
+/* 单标签文章列表 */
 .one-tag-list .tag-text {
   font-weight: 200;
-  /* Hux learn from
-     *     TypeIsBeautiful,
-     *     [This Post](http://zhuanlan.zhihu.com/ibuick/20186806) etc.
-     */
+  /* font-family-stack */
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Arial", "PingFang SC", "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "Microsoft JhengHei", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "WenQuanYi Micro Hei", SimSun, sans-serif;
   line-height: 1.7;
 }
@@ -972,40 +1126,10 @@ img::-moz-selection {
     font-size: 18px;
   }
 }
-/* Tags support End*/
-/* Hux make all img responsible in post-container */
-.post-container img {
-  display: block;
-  max-width: 100%;
-  height: auto;
-  margin: 1.5em auto 1.6em auto;
-}
-/* Hux Optimize UserExperience */
-.navbar-default .navbar-toggle:focus,
-.navbar-default .navbar-toggle:hover {
-  background-color: inherit;
-}
-.navbar-default .navbar-toggle:active {
-  background-color: rgba(255, 255, 255, 0.25);
-}
-/* Hux customize Style for navBar button */
-.navbar-default .navbar-toggle {
-  border-color: transparent;
-  padding: 19px 16px;
-  margin-top: 2px;
-  margin-right: 2px;
-  margin-bottom: 2px;
-  border-radius: 50%;
-}
-.navbar-default .navbar-toggle .icon-bar {
-  width: 18px;
-  border-radius: 0px;
-  background-color: white;
-}
-.navbar-default .navbar-toggle .icon-bar + .icon-bar {
-  margin-top: 3px;
-}
-/* Hux customize Style for Duoshuo */
+
+
+/* ==================== 多说 / Disqus 评论框样式 ==================== */
+
 .comment {
   margin-top: 20px;
 }
@@ -1045,6 +1169,10 @@ img::-moz-selection {
 #ds-smilies-tooltip ul.ds-smilies-tabs li a {
   background: white !important;
 }
+
+
+/* ==================== 全屏模式（keynote 页面） ==================== */
+
 .page-fullscreen .intro-header {
   position: fixed;
   left: 0;
@@ -1059,6 +1187,7 @@ img::-moz-selection {
   padding-bottom: 150px;
   width: 100%;
   height: 100%;
+  /* flexbox 居中（兼容老式 -webkit- 写法 + 标准写法） */
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-box-pack: center;
