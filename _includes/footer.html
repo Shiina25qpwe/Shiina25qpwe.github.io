@@ -1,12 +1,24 @@
-<!-- Footer -->
+<!--
+  ============================================================
+  footer.html — 页脚模板
+  包含：社交图标（复用 social-icon.html）、版权信息、JS 脚本加载
+  ============================================================
+-->
+
+
+<!-- ==================== Footer 页脚主体 ==================== -->
 <footer>
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+                <!-- ========== 社交图标列表 ========== -->
                 <ul class="list-inline text-center">
+
+                    <!-- RSS 订阅（站内链接，当前页打开，不使用 external） -->
                     {% if site.RSS %}
                     <li>
-                        <a href="{{ "/feed.xml" | prepend: site.baseurl }}">
+                        <a href="{{ '/feed.xml' | prepend: site.baseurl }}">
                             <span class="fa-stack fa-lg">
                                 <i class="fa fa-circle fa-stack-2x"></i>
                                 <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
@@ -14,82 +26,70 @@
                         </a>
                     </li>
                     {% endif %}
-                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+
+                    <!--
+                      以下社交平台统一使用 social-icon.html 组件
+                      避免重复编写相同的 <li><a><span><i> 结构
+
+                      添加新平台步骤：
+                      1. 在 _config.yml 中添加 username 变量（如 mastodon_username: "xxx"）
+                      2. 在此处添加 {% if %} 块，参照已有平台格式
+                      3. 如需自定义文字图标 → 传 text 参数（如简书="简"、知乎="知"）
+                      4. 如有 Font Awesome 4 图标 → 传 icon 参数（如 icon="github"）
+                      5. 外链 → external=true；站内链接 → 不传或 external=false
+                    -->
+
+                    <!-- 简书（外链，自定义文字图标"简"） -->
                     {% if site.jianshu_username %}
-                            <li>
-                                <a target="_blank" href="https://www.jianshu.com/u/{{ site.jianshu_username }}">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
-                                    </span>
-                                </a>
-                            </li>
+                        {% capture jianshu_url %}https://www.jianshu.com/u/{{ site.jianshu_username }}{% endcapture %}
+                        {% include social-icon.html url=jianshu_url text="简" external=true %}
                     {% endif %}
+
+                    <!-- Twitter（外链，当前页打开，原始行为未设 target="_blank"） -->
                     {% if site.twitter_username %}
-                    <li>
-                        <a href="https://twitter.com/{{ site.twitter_username }}">
-                            <span class="fa-stack fa-lg">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
-                            </span>
-                        </a>
-                    </li>
+                        {% capture twitter_url %}https://twitter.com/{{ site.twitter_username }}{% endcapture %}
+                        {% include social-icon.html url=twitter_url icon="twitter" %}
                     {% endif %}
 
-                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    <!-- 知乎（外链，新标签页打开，自定义文字图标"知"） -->
                     {% if site.zhihu_username %}
-                    <li>
-                        <a target="_blank" href="https://www.zhihu.com/people/{{ site.zhihu_username }}">
-                            <span class="fa-stack fa-lg">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa  fa-stack-1x fa-inverse">知</i>
-                            </span>
-                        </a>
-                    </li>
+                        {% capture zhihu_url %}https://www.zhihu.com/people/{{ site.zhihu_username }}{% endcapture %}
+                        {% include social-icon.html url=zhihu_url text="知" external=true %}
                     {% endif %}
+
+                    <!-- 微博（外链，新标签页打开） -->
                     {% if site.weibo_username %}
-                    <li>
-                        <a target="_blank" href="http://weibo.com/{{ site.weibo_username }}">
-                            <span class="fa-stack fa-lg">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
-                            </span>
-                        </a>
-                    </li>
+                        {% capture weibo_url %}http://weibo.com/{{ site.weibo_username }}{% endcapture %}
+                        {% include social-icon.html url=weibo_url icon="weibo" external=true %}
                     {% endif %}
 
-
+                    <!-- Facebook（外链，新标签页打开） -->
                     {% if site.facebook_username %}
-                    <li>
-                        <a target="_blank" href="https://www.facebook.com/{{ site.facebook_username }}">
-                            <span class="fa-stack fa-lg">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
-                            </span>
-                        </a>
-                    </li>
+                        {% capture facebook_url %}https://www.facebook.com/{{ site.facebook_username }}{% endcapture %}
+                        {% include social-icon.html url=facebook_url icon="facebook" external=true %}
                     {% endif %}
+
+                    <!-- GitHub（外链，新标签页打开） -->
                     {% if site.github_username %}
-                    <li>
-                        <a target="_blank" href="https://github.com/{{ site.github_username }}">
-                            <span class="fa-stack fa-lg">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                            </span>
-                        </a>
-                    </li>
+                        {% capture github_url %}https://github.com/{{ site.github_username }}{% endcapture %}
+                        {% include social-icon.html url=github_url icon="github" external=true %}
                     {% endif %}
+
+                    <!-- LinkedIn（外链，新标签页打开） -->
                     {% if site.linkedin_username %}
-                    <li>
-                        <a target="_blank" href="https://www.linkedin.com/in/{{ site.linkedin_username }}">
-                            <span class="fa-stack fa-lg">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
-                            </span>
-                        </a>
-                    </li>
+                        {% capture linkedin_url %}https://www.linkedin.com/in/{{ site.linkedin_username }}{% endcapture %}
+                        {% include social-icon.html url=linkedin_url icon="linkedin" external=true %}
                     {% endif %}
+
                 </ul>
+
+                <!-- ========== 版权信息 ========== -->
+                <!--
+                  site.title             : 站点标题，来自 _config.yml
+                  site.time | date: '%Y' : 当前年份（动态生成）
+                  site.github_repo       : GitHub 仓库链接
+                  site.github_username   : GitHub 用户名
+                -->
                 <p class="copyright text-muted">
                     Copyright &copy; {{ site.title }} {{ site.time | date: '%Y' }}
                     <br>
@@ -100,25 +100,44 @@
                         src="https://ghbtns.com/github-btn.html?user={{ site.github_username }}&repo={{ site.github_username }}.github.io&type=star&count=true" >
                     </iframe>
                 </p>
+
             </div>
         </div>
     </div>
 </footer>
+<!-- ==================== Footer 结束 ==================== -->
 
-<!-- jQuery -->
-<script src="{{ "/js/jquery.min.js " | prepend: site.baseurl }}"></script>
 
-<!-- Bootstrap Core JavaScript -->
-<script src="{{ "/js/bootstrap.min.js " | prepend: site.baseurl }}"></script>
+<!-- ==================== JavaScript 脚本加载 ==================== -->
+<!--
+  加载顺序有讲究：
+  1. jQuery → Bootstrap（依赖 jQuery）→ 自定义主题 JS
+  2. Service Worker（PWA 离线缓存，需在根路径注册）
+  3. async() 工具函数（延迟加载非关键脚本，不阻塞页面渲染）
+  4. 各功能模块按需加载
+-->
 
-<!-- Custom Theme JavaScript -->
-<script src="{{ "/js/hux-blog.min.js " | prepend: site.baseurl }}"></script>
 
-<!-- Service Worker -->
+<!-- jQuery（Bootstrap 依赖，必须先加载） -->
+<script src="{{ '/js/jquery.min.js' | prepend: site.baseurl }}"></script>
+
+<!-- Bootstrap Core JavaScript（依赖 jQuery） -->
+<script src="{{ '/js/bootstrap.min.js' | prepend: site.baseurl }}"></script>
+
+<!-- Custom Theme JavaScript（主题核心逻辑，依赖 jQuery + Bootstrap） -->
+<script src="{{ '/js/hux-blog.min.js' | prepend: site.baseurl }}"></script>
+
+
+<!-- ==================== Service Worker（PWA 离线缓存） ==================== -->
+<!--
+  site.service-worker : 在 _config.yml 中设置 true/false 控制是否启用
+  sw.js 必须放在站点根目录，因为 SW 只能控制同级及以下路径的页面
+  启用条件：HTTPS（或 localhost）+ _config.yml 中 service-worker: true
+-->
 {% if site.service-worker %}
 <script type="text/javascript">
     if(navigator.serviceWorker){
-        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        // 安全限制：SW 只能控制同级或子级路径的页面，因此 sw.js 必须在根目录
         navigator.serviceWorker
             .register('/sw.js')
             .then((registration) => {console.log('Service Worker Registered. ', registration)})
@@ -128,7 +147,13 @@
 {% endif %}
 
 
-<!-- async load function -->
+<!-- ==================== async() 异步加载工具函数 ==================== -->
+<!--
+  定义全局 async(u, c) 函数：
+    u : 脚本 URL
+    c : 加载完成后的回调函数（可选）
+  用途：延迟加载非关键 JS，避免阻塞首屏渲染
+-->
 <script>
     function async(u, c) {
       var d = document, t = 'script',
@@ -140,41 +165,52 @@
     }
 </script>
 
-<!-- 
-     Because of the native support for backtick-style fenced code blocks 
-     right within the Markdown is landed in Github Pages, 
-     From V1.6, There is no need for Highlight.js, 
-     so Huxblog drops it officially.
 
-     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
-     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
-     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
--->
+<!-- ==================== Highlight.js（已废弃，仅供参考） ==================== -->
 <!--
-    <script>
-        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
-            hljs.initHighlightingOnLoad();
-        })
-    </script>
-    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+  自 GitHub Pages 升级到 Jekyll 3.0 后，原生支持反引号格式的代码高亮（Rouge），
+  不再需要 Highlight.js。以下为旧版代码，保留作为参考。
+
+  参考链接：
+  - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0
+  - https://help.github.com/articles/creating-and-highlighting-code-blocks/
+  - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers
+
+  旧版写法（如需恢复，取消注释）：
+  <script>
+      async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+          hljs.initHighlightingOnLoad();
+      })
+  </script>
+  <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
 -->
 
 
-<!-- jquery.tagcloud.js -->
+<!-- ==================== jquery.tagcloud.js（标签云） ==================== -->
+<!--
+  仅在 tags.html 页面启用（通过检测 #tag_cloud 元素是否存在）
+  标签颜色渐变：从淡蓝紫 #bbbbee → 深蓝绿 #0085a1
+-->
 <script>
-    // only load tagcloud.js in tag.html
+    // 仅在标签云页面（tags.html）加载此脚本
     if($('#tag_cloud').length !== 0){
         async('{{ "/js/jquery.tagcloud.js" | prepend: site.baseurl }}',function(){
+            // 配置标签云样式
             $.fn.tagcloud.defaults = {
-                //size: {start: 1, end: 1, unit: 'em'},
-                color: {start: '#bbbbee', end: '#0085a1'},
+                //size: {start: 1, end: 1, unit: 'em'},  // 如启用，可控制字号范围
+                color: {start: '#bbbbee', end: '#0085a1'}, // 颜色渐变范围
             };
             $('#tag_cloud a').tagcloud();
         })
     }
 </script>
 
-<!--fastClick.js -->
+
+<!-- ==================== FastClick.js（移动端点击加速） ==================== -->
+<!--
+  消除移动端 300ms 点击延迟
+  挂载到 <nav> 元素，加速导航栏响应
+-->
 <script>
     async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
         var $nav = document.querySelector("nav");
@@ -183,14 +219,20 @@
 </script>
 
 
-<!-- Google Analytics -->
+<!-- ==================== Google Analytics（谷歌分析） ==================== -->
+<!--
+  控制变量（在 _config.yml 中设置）：
+    ga_track_id : Google Analytics 跟踪 ID（如 "UA-XXXXXXXXX-X"）
+    ga_domain   : 域名（如 "auto" 或具体域名）
+  若未设置 ga_track_id → 整个脚本块不输出
+-->
 {% if site.ga_track_id %}
 <script>
-    // dynamic User by Hux
+    // 从 Jekyll 配置注入 GA 参数
     var _gaId = '{{ site.ga_track_id }}';
     var _gaDomain = '{{ site.ga_domain }}';
 
-    // Originial
+    // Google Analytics 标准初始化代码
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -202,13 +244,18 @@
 {% endif %}
 
 
-<!-- Baidu Tongji -->
+<!-- ==================== Baidu Tongji（百度统计） ==================== -->
+<!--
+  控制变量（在 _config.yml 中设置）：
+    ba_track_id : 百度统计 ID
+  若未设置 → 整个脚本块不输出
+-->
 {% if site.ba_track_id %}
 <script>
-    // dynamic User by Hux
+    // 从 Jekyll 配置注入百度统计参数
     var _baId = '{{ site.ba_track_id }}';
 
-    // Originial
+    // 百度统计标准初始化代码
     var _hmt = _hmt || [];
     (function() {
       var hm = document.createElement("script");
@@ -220,35 +267,63 @@
 {% endif %}
 
 
+<!-- ==================== Side Catalog（侧边目录导航） ==================== -->
+<!--
+  仅当文章 front-matter 中设置 catalog: true 时才启用
+  功能：
+  1. 扫描 post-container 中的 h1~h6 标题，自动生成目录树
+  2. 点击目录项平滑滚动到对应标题
+  3. 滚动页面时高亮当前所在的目录项
+  4. 支持折叠/展开切换
 
-<!-- Side Catalog -->
+  依赖：jquery.nav.js（异步加载）
+-->
 {% if page.catalog %}
 <script type="text/javascript">
+    /**
+     * 从页面标题生成侧边目录
+     * @param {string} selector - 目录容器的 CSS 选择器（如 ".catalog-body"）
+     *
+     * 实现逻辑：
+     * 1. 查找 div.post-container 内的所有 h1~h6
+     * 2. 为每个标题生成 <li> 导航项，类名为 {标签名}_nav（如 h2_nav）
+     * 3. 导航链接使用标题的 id 作为锚点
+     */
     function generateCatalog (selector) {
         var P = $('div.post-container'),a,n,t,l,i,c;
         a = P.find('h1,h2,h3,h4,h5,h6');
         a.each(function () {
-            n = $(this).prop('tagName').toLowerCase();
-            i = "#"+$(this).prop('id');
-            t = $(this).text();
+            n = $(this).prop('tagName').toLowerCase(); // 标题级别：h1/h2/h3...
+            i = "#"+$(this).prop('id');                 // 锚点：页面内 #id 跳转
+            t = $(this).text();                         // 标题文本
             c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
             l = $('<li class="'+n+'_nav"></li>').append(c);
             $(selector).append(l);
         });
-        return true;    
+        return true;
     }
 
+    // 生成目录
     generateCatalog(".catalog-body");
 
-    // toggle side catalog
+    // 切换侧边目录的折叠/展开状态
     $(".catalog-toggle").click((function(e){
         e.preventDefault();
         $('.side-catalog').toggleClass("fold")
     }))
 
-    /*
-     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
-     * Fork by Hux to support padding
+    /**
+     * 加载 jquery.nav.js 并初始化滚动监听
+     *
+     * 参考：https://github.com/davist11/jQuery-One-Page-Nav
+     * Hux 修改版：增加 padding 参数以适配固定导航栏高度偏移
+     *
+     * 配置说明：
+     *   currentClass    : 当前激活项添加的 CSS 类名
+     *   changeHash      : 是否修改 URL hash（false 避免刷新）
+     *   scrollSpeed     : 平滑滚动速度（毫秒）
+     *   scrollThreshold : 滚动到多少百分比时切换（0.2 = 20%）
+     *   padding         : 顶部偏移量（防止固定导航栏遮挡标题）
      */
     async("{{ '/js/jquery.nav.js' | prepend: site.baseurl }}", function () {
         $('.catalog-body').onePageNav({
@@ -267,4 +342,3 @@
     });
 </script>
 {% endif %}
-

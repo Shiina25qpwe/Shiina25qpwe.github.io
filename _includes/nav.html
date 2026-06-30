@@ -1,24 +1,42 @@
-<!-- Navigation -->
+<!--
+  ============================================================
+  nav.html — 顶部导航栏模板
+  包含：Bootstrap 导航结构 + 自定义高性能导航动画（CSS3 / Vanilla JS）
+  ============================================================
+-->
+
+<!-- ==================== 导航栏 HTML 结构 ==================== -->
 <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
     <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
+
+        <!-- 品牌区 + 移动端汉堡按钮 -->
         <div class="navbar-header page-scroll">
+            <!-- 移动端菜单切换按钮（三横线图标） -->
             <button type="button" class="navbar-toggle">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
+            <!-- 品牌名/站点标题，点击返回首页 -->
             <a class="navbar-brand" href="{{ site.baseurl }}/">{{ site.title }}</a>
         </div>
 
-        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- 导航链接区 -->
+        <!--
+          id="huxblog_navbar" : 自定义 JS 控制的对象
+          navbar-collapse    : Bootstrap 原始折叠类
+          遍历 site.pages 中所有包含 title 的页面，自动生成导航链接
+        -->
         <div id="huxblog_navbar">
             <div class="navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
+                    <!-- Home 链接（固定显示） -->
                     <li>
                         <a href="{{ site.baseurl }}/">Home</a>
                     </li>
+                    <!-- 遍历所有页面，自动生成导航项 -->
+                    <!-- site.pages → 所有页面对象；page.title → 页面标题（来自 front-matter） -->
                     {% for page in site.pages %}{% if page.title %}
                     <li>
                         <a href="{{ page.url | prepend: site.baseurl }}">{{ page.title }}</a>
@@ -28,36 +46,63 @@
             </div>
         </div>
         <!-- /.navbar-collapse -->
-    </div>
-    <!-- /.container -->
-</nav>
-<script>
-    // Drop Bootstarp low-performance Navbar
-    // Use customize navbar with high-quality material design animation
-    // in high-perf jank-free CSS3 implementation
-    var $body   = document.body;
-    var $toggle = document.querySelector('.navbar-toggle');
-    var $navbar = document.querySelector('#huxblog_navbar');
-    var $collapse = document.querySelector('.navbar-collapse');
 
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+
+<!-- ==================== 自定义导航交互逻辑（Vanilla JS，无 jQuery 依赖） ==================== -->
+<!--
+  为什么不用 Bootstrap 原生导航？
+  → Bootstrap 的 collapse 组件性能较差，Hux 用纯 CSS3 transition + 少量 JS 实现，
+
+  实现要点：
+  1. 用 CSS class "in" 控制展开/收起动画（通过 height 过渡）
+  2. 点击页面任意空白处关闭导航（移动端友好）
+  3. 与 FastClick.js 配合，通过 e.target 过滤避免事件冲突
+-->
+<script>
+    // ===== DOM 元素引用 =====
+    var $body     = document.body;
+    var $toggle   = document.querySelector('.navbar-toggle');   // 汉堡按钮
+    var $navbar   = document.querySelector('#huxblog_navbar');  // 导航容器
+    var $collapse = document.querySelector('.navbar-collapse'); // Bootstrap 折叠区
+
+    // ===== 导航控制对象 =====
     var __HuxNav__ = {
+        /**
+         * 关闭导航菜单
+         * 1. 移除 "in" 类，触发 CSS 折叠动画
+         * 2. 400ms 后（动画结束）将高度设为 0，防止频繁切换
+         */
         close: function(){
             $navbar.className = " ";
-            // wait until animation end.
+            // 延迟等待 CSS transition 完成
             setTimeout(function(){
-                // prevent frequently toggle
+                // 防止在动画期间被频繁 toggle 导致状态错乱
                 if($navbar.className.indexOf('in') < 0) {
                     $collapse.style.height = "0px"
                 }
             },400)
         },
+        /**
+         * 打开导航菜单
+         * 1. 将高度设为 auto（自适应内容）
+         * 2. 添加 "in" 类，触发 CSS 展开动画
+         */
         open: function(){
             $collapse.style.height = "auto"
             $navbar.className += " in";
         }
     }
 
-    // Bind Event
+    // ===== 事件绑定 =====
+
+    /**
+     * 汉堡按钮点击 → 切换展开/折叠
+     * 检查当前是否已展开（class 包含 "in"），决定调用 open() 还是 close()
+     */
     $toggle.addEventListener('click', function(e){
         if ($navbar.className.indexOf('in') > 0) {
             __HuxNav__.close()
@@ -67,15 +112,17 @@
     })
 
     /**
-     * Since Fastclick is used to delegate 'touchstart' globally
-     * to hack 300ms delay in iOS by performing a fake 'click',
-     * Using 'e.stopPropagation' to stop 'touchstart' event from 
-     * $toggle/$collapse will break global delegation.
-     * 
-     * Instead, we use a 'e.target' filter to prevent handler
-     * added to document close HuxNav.  
+     * 点击页面任意位置关闭导航（移动端常用交互）
      *
-     * Also, we use 'click' instead of 'touchstart' as compromise
+     * 为什么用 'click' 而不是 'touchstart'？
+     * → FastClick.js 会在全局代理 'touchstart' 事件来消除 300ms 延迟，
+     *   如果在 toggle/collapse 上使用 e.stopPropagation() 会破坏 FastClick 的全局代理。
+     *   因此这里改用 e.target 过滤器来判断点击来源，避免误关导航。
+     *
+     * 过滤逻辑：
+     * - 点击按钮本身（$toggle）→ 不处理，由上面的事件负责
+     * - 点击按钮内的横线（icon-bar）→ 不处理，同上
+     * - 其他所有地方 → 关闭导航
      */
     document.addEventListener('click', function(e){
         if(e.target == $toggle) return;
