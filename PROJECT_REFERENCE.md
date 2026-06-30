@@ -250,6 +250,7 @@ ba_track_id: b50bf2b12b5338a1845e33832976fd68
 
 ### 常用 Liquid 语法
 
+{% raw %}
 | 语法 | 说明 |
 |------|------|
 | `{% if site.xxx %}` | 检查 `_config.yml` 中是否有值 |
@@ -262,6 +263,7 @@ ba_track_id: b50bf2b12b5338a1845e33832976fd68
 | `{{ "path" \| prepend: site.baseurl }}` | 路径拼接 |
 | `{{ text \| strip_html \| truncate:200 }}` | 过滤链：去 HTML → 截 200 字符 |
 | `{{ page.url \| replace:'A','B' }}` | 字符串替换 |
+{% endraw %}
 
 ### 常用 front-matter 变量
 
@@ -554,10 +556,10 @@ deploy:
 → `_config.yml` 的 `title`, `SEOTitle`, `description`
 
 ### 新增社交平台图标
-→ `_config.yml` 加用户名 → `footer.html` 加 `{% include social-icon.html %}`
+→ `_config.yml` 加用户名 → `footer.html` 加 {% raw %}`{% include social-icon.html %}`{% endraw %}
 
 ### 修改导航栏菜单
-→ `_includes/nav.html` 的 `{% for page in site.pages %}` 循环
+→ `_includes/nav.html` 的 {% raw %}`{% for page in site.pages %}`{% endraw %} 循环
 
 ### 修改首页文章数
 → `_config.yml` 的 `paginate`
