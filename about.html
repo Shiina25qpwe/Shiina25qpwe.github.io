@@ -5,112 +5,64 @@ description: "一个没什么干货的博客"
 header-img: "img/64800561_p0.jpg"
 ---
 
-<!-- Language Selector -->
-<!-- <select class="sel-lang" onchange= "onLanChange(this.options[this.options.selectedIndex].value)">
-    <option value="0" selected> 中文 Chinese </option>
-    <option value="1"> 英文 English </option>
-</select> -->
+<!--
+  ============================================================
+  about.html — 关于页面
+  ============================================================
+
+  Front Matter 说明：
+    layout      : 使用 page 布局（继承 default，渲染为独立页面）
+    title       : 页面标题（显示在头部大图和浏览器标签页）
+    description : 页面副标题（显示在头部大图 title 下方）
+    header-img  : 页面顶部背景大图路径
+
+  ============================================================
+-->
+
+
+<!-- ==================== 关于页面正文内容 ==================== -->
 
 <p>自用博客,主要用于记录一些动漫观看随笔和网上有意思的发言,还可能写点读书笔记.</p>
 
 <p>本博客还有很多东西没有做好,将来可能会(也可能不会)逐步完善.</p>
 
-<!-- Chinese Version -->
-<!--<div class="zh post-container">
 
-    <!--copied from markdown -->
-<!--    <blockquote><p>冰冻三尺 非一日之寒<br>
-    积土成山 非斯须之作</p></blockquote>
+<!-- ==================== 评论系统（模板参考） ==================== -->
+<!--
+  以下评论系统默认不启用。
+  启用条件：在 _config.yml 中取消对应配置的注释并设置 enable: true。
 
-    <p>Hey，我是<strong>柏荧(BY)</strong>，一只iOS程序猿，现在厦门工作。</p>
-
-    <p>工作、学习之余，我还是一个健身爱好者，同时也非常喜欢拳击。</p>
-
-    <p>这是我的利用 <a href="https://pages.github.com/">GitHub Pages</a> 与 <a href="http://jekyll.com.cn/">Jekyll</a> 搭建的 个人博客。我在GitHub主页<a href="https://github.com/qiubaiying">👉GitHub·BY</a> 与 简书主页<a href="https://http://www.jianshu.com/u/e71990ada2fd">👉BY</a>。如果有什么问题，欢迎提出探讨~</p>
-
-    <p></p>
-
-    <h5>Talks</h5>
-
-    <ul>
-        <li><a href="https://github.com">GitHub</a></li>
-        <li><a href="http://jekyll.com.cn/">jekyll</a></li>
-        <li><a href="http://huangxuan.me/">Hux</a></li>
-        <li><a href="https://analytics.google.com/analytics">Google Analytics</a></li>
-    </ul>
-</div>
-
-<!-- English Version -->
-<!-- <div class="en post-container">
-    <blockquote><p>Yet another iOS Developer. <br>
-    Yet another Life-long Student.</p></blockquote>
-
-    <p>Hi, I am <strong>Baiying Qiu</strong>，you can call me <strong>BY</strong>. I am an iOS software engineer and currently working in Xiamen</p>
-
-    <p>This is my personal blog, through making Github Pages and Jekyll.My GitHub  👉 <a href="http://github.com/qiubaiying">Github·BY</a>.</p>
-
-    <p>I am a sports enthusiast, I like fitness, running and boxing.</p>
-
-    <h5>Talks</h5>
-
-    <ul>
-    <li><a href="https://github.com">GitHub</a></li>
-    <li><a href="http://jekyll.com.cn/">jekyll</a></li>
-    <li><a href="https://pages.github.com/">GitHub Pages</a></li>
-    <li><a href="https://qiubaiying.github.io">BY</a></li>
-    </ul>
-</div> -->
-
-<!-- Handle Language Change -->
-<script type="text/javascript">
-    // get nodes
-    var $zh = document.querySelector(".zh");
-    var $en = document.querySelector(".en");
-    var $select = document.querySelector("select");
-
-    // bind hashchange event
-    window.addEventListener('hashchange', _render);
-
-    // handle render
-    function _render(){
-        var _hash = window.location.hash;
-        // en
-        if(_hash == "#en"){
-            $select.selectedIndex = 1;
-            $en.style.display = "block";
-            $zh.style.display = "none";
-        // zh by default
-        }else{
-            // not trigger onChange, otherwise cause a loop call.
-            $select.selectedIndex = 0;
-            $zh.style.display = "block";
-            $en.style.display = "none";
-        }
-    }
-
-    // handle select change
-    function onLanChange(index){
-        if(index == 0){
-            window.location.hash = "#zh"
-        }else{
-            window.location.hash = "#en"
-        }
-    }
-
-    // init
-    _render();
-</script>
+  当前状态：
+    - Gitalk  : _config.yml 中 gitalk 整块被注释 → 不启用
+    - Disqus  : _config.yml 中 disqus_username 被注释 → 不启用
+-->
 
 
-<!-- Gitalk 评论 start  -->
+<!-- ============================================================
+  Gitalk 评论（基于 GitHub Issues）
+  ============================================================
+  启用步骤：
+    1. 在 _config.yml 中取消 gitalk 配置块的注释
+    2. 将 gitalk.enable 设为 true
+    3. 填入你的 clientID、clientSecret、repo、owner、admin
+       （需先在 GitHub 创建 OAuth Application）
+
+  参数说明：
+    clientID             : GitHub OAuth App 的 Client ID
+    clientSecret         : GitHub OAuth App 的 Client Secret
+    repo                 : 存放评论的仓库名（如 "username.github.io"）
+    owner                : GitHub 用户名
+    admin                : 仓库管理员用户名（可初始化评论）
+    distractionFreeMode  : 是否启用类似 Facebook 的阴影遮罩
+    id                   : 页面唯一标识（同一页面评论共享，可自定义）
+  ============================================================ -->
 {% if site.gitalk.enable %}
-<!-- Gitalk link  -->
 <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
 <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
 
 <div id="gitalk-container"></div>
-    <script type="text/javascript">
-    var gitalk = new Gitalk({
+<script type="text/javascript">
+  var gitalk = new Gitalk({
     clientID: '{{site.gitalk.clientID}}',
     clientSecret: '{{site.gitalk.clientSecret}}',
     repo: '{{site.gitalk.repo}}',
@@ -118,33 +70,91 @@ header-img: "img/64800561_p0.jpg"
     admin: ['{{site.gitalk.admin}}'],
     distractionFreeMode: {{site.gitalk.distractionFreeMode}},
     id: 'about',
-    });
-    gitalk.render('gitalk-container');
+  });
+  gitalk.render('gitalk-container');
 </script>
 {% endif %}
-<!-- Gitalk end -->
 
- <!-- disqus 评论框 start  -->
+
+<!-- ============================================================
+  Disqus 评论
+  ============================================================
+  启用步骤：
+    1. 在 _config.yml 中添加 disqus 配置块：
+         disqus:
+           enable: true
+           username: your_disqus_shortname
+    2. 在 https://disqus.com/ 注册站点获取 shortname
+
+  注：原 _config.yml 只有一个被注释的 disqus_username，
+      缺少 enable 子键，需按上述格式补充才能启用。
+  ============================================================ -->
 {% if site.disqus.enable %}
 
 <div class="comment">
-    <div id="disqus_thread" class="disqus-thread">
-    </div>
+  <div id="disqus_thread" class="disqus-thread"></div>
 </div>
-<!-- disqus 评论框 end -->
 
-<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES * * */
-    var disqus_shortname = "{{site.disqus.username}}";
-    var disqus_identifier = "{{site.disqus.username}}/{{page.url}}";
-    var disqus_url = "{{site.url}}{{page.url}}";
+  /* Disqus 配置变量 */
+  var disqus_shortname = "{{site.disqus.username}}";          // Disqus 站点 shortname
+  var disqus_identifier = "{{site.disqus.username}}/{{page.url}}";  // 页面唯一标识
+  var disqus_url = "{{site.url}}{{page.url}}";                // 页面完整 URL
 
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
+  /* 异步加载 Disqus 嵌入脚本 */
+  (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
 </script>
-<!-- disqus 公共JS代码 end -->
 {% endif %}
+
+
+<!-- ============================================================
+  模板参考：双语版本（已废弃，保留供参考）
+
+  如需恢复中英双语切换功能，取消以下注释：
+    1. 语言选择下拉框
+    2. 中文版内容（.zh post-container）
+    3. 英文版内容（.en post-container）
+    4. 语言切换脚本
+
+  脚本依赖：页面中必须存在 <select class="sel-lang">、
+            .zh 和 .en 元素，否则会报错。
+  ============================================================
+<!-- 模板参考内容如下（已折叠）：
+
+&lt;!-- Language Selector --&gt;
+&lt;select class=&quot;sel-lang&quot; onchange=&quot;onLanChange(this.options[this.options.selectedIndex].value)&quot;&gt;
+    &lt;option value=&quot;0&quot; selected&gt; 中文 Chinese &lt;/option&gt;
+    &lt;option value=&quot;1&quot;&gt; 英文 English &lt;/option&gt;
+&lt;/select&gt;
+
+&lt;div class=&quot;zh post-container&quot;&gt;
+    &lt;blockquote&gt;&lt;p&gt;冰冻三尺 非一日之寒&lt;br&gt;积土成山 非斯须之作&lt;/p&gt;&lt;/blockquote&gt;
+    &lt;p&gt;Hey，我是&lt;strong&gt;柏荧(BY)&lt;/strong&gt;，一只iOS程序猿，现在厦门工作。&lt;/p&gt;
+    &lt;p&gt;工作、学习之余，我还是一个健身爱好者，同时也非常喜欢拳击。&lt;/p&gt;
+    ...
+&lt;/div&gt;
+
+&lt;div class=&quot;en post-container&quot;&gt;
+    &lt;blockquote&gt;&lt;p&gt;Yet another iOS Developer. &lt;br&gt;Yet another Life-long Student.&lt;/p&gt;&lt;/blockquote&gt;
+    &lt;p&gt;Hi, I am &lt;strong&gt;Baiying Qiu&lt;/strong&gt;，you can call me &lt;strong&gt;BY&lt;/strong&gt;...&lt;/p&gt;
+    ...
+&lt;/div&gt;
+
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var $zh = document.querySelector(&quot;.zh&quot;);
+    var $en = document.querySelector(&quot;.en&quot;);
+    var $select = document.querySelector(&quot;select&quot;);
+    window.addEventListener('hashchange', _render);
+    function _render(){ ... }
+    function onLanChange(index){ ... }
+    _render();
+&lt;/script&gt;
+
+  ============================================================
+-->
