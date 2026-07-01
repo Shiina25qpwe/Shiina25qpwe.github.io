@@ -3,40 +3,162 @@ layout: page
 description: "随便记录点什么,有空再慢慢整理吧"
 ---
 
+
+<!--
+  ============================================================
+  index.html — 博客首页（文章列表 + 分页）
+  ============================================================
+
+  数据来源：Jekyll Paginator（分页器）
+    通过 _config.yml 中的 paginate: 10 控制每页显示数量
+    分页器变量由 jekyll-paginate 插件提供
+    文档：https://jekyllrb.com/docs/pagination/
+
+  页面结构：
+    1. 文章预览卡片列表（循环 paginator.posts）
+       - 标题 → 副标题（如有）→ 内容摘要（截取前 200 字符）
+       - 作者 + 日期元信息
+    2. 分页导航（上一页 / 下一页）
+       - 仅在总页数 > 1 时显示
+
+  设计决策：
+    - 使用 strip_html | truncate:200 生成摘要
+      → 直接剥离 HTML 标签后截取纯文本（可能截断英文单词）
+      → 备选方案：post.excerpt（Jekyll 内置摘要，可在 front matter 中用
+        excerpt_separator 控制截断位置）
+    - 日期格式 "%-d" 去除前导零（5 月 3 日显示为 "May 3" 而非 "May 03"）
+      → 注意：%-d 是 Linux strftime 扩展，Windows 可能不支持
+  ============================================================
+-->
+
+
+<!-- ==================== 文章列表 ==================== -->
+
 {% for post in paginator.posts %}
+
+<!--
+  ========== 文章预览卡片 ==========
+  每个卡片包含：
+    <a>     : 整块可点击（链接到文章详情页）
+    <h2>    : 文章标题
+    <h3>    : 文章副标题（subtitle，仅当 front matter 中有时显示）
+    <div>   : 内容摘要（纯文本，截取 200 字符）
+    <p>     : 元信息（作者 + 日期）
+  <hr>      : 文章卡片之间的分隔线
+-->
 <div class="post-preview">
-    <a href="{{ post.url | prepend: site.baseurl }}">
-        <h2 class="post-title">
-            {{ post.title }}
-        </h2>
-        {% if post.subtitle %}
-        <h3 class="post-subtitle">
-            {{ post.subtitle }}
-        </h3>
-        {% endif %}
-        <div class="post-content-preview">
-            {{ post.content | strip_html | truncate:200 }}
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by {% if post.author %}{{ post.author }}{% else %}{{ site.title }}{% endif %} on {{ post.date | date: "%B %-d, %Y" }}
-    </p>
+
+  <!-- 可点击区域：标题 + 副标题 + 摘要预览 -->
+  <a href="{{ post.url | prepend: site.baseurl }}">
+
+    <!--
+      post.title : 文章主标题（来自 Markdown 文件的 front matter）
+    -->
+    <h2 class="post-title">
+      {{ post.title }}
+    </h2>
+
+    <!--
+      post.subtitle : 文章副标题（可选，在 front matter 中定义）
+                      如果未设置 → 整个 <h3> 不渲染
+    -->
+    {% if post.subtitle %}
+    <h3 class="post-subtitle">
+      {{ post.subtitle }}
+    </h3>
+    {% endif %}
+
+    <!--
+      文章内容摘要预览
+
+      处理流程：
+        1. post.content                → 原始 HTML 内容（含 Markdown 渲染后的标签）
+        2. | strip_html                → 剥离所有 HTML 标签，得到纯文本
+        3. | truncate:200              → 截取前 200 个字符（超出部分自动追加 "..."）
+
+      字符数说明：
+        - truncate:200 在英文中约 30-35 词，中文约 100 字
+        - 如需改为按词截断 → truncatewords:30
+    -->
+    <div class="post-content-preview">
+      {{ post.content | strip_html | truncate:200 }}
+    </div>
+
+  </a>
+
+  <!--
+    文章元信息
+
+    post.author : 文章作者（在 front matter 中设置）
+                  如果未设置 → 回退到 site.title（博客标题）
+
+    post.date   : 文章创建日期（来自文件名或 front matter）
+                  | date: "%B %-d, %Y" → 格式化输出如 "July 1, 2026"
+                    %B   : 完整英文月份名（January-December）
+                    %-d  : 无前导零的日期（1-31）
+                    %Y   : 四位数年份
+
+    注意：%-d 是 Linux/glibc 扩展，某些 Ruby 版本可能不支持。
+          如果输出显示字面量 "%-d" 而非数字，改用 %d（含前导零）。
+  -->
+  <p class="post-meta">
+    Posted by
+    {% if post.author %}
+      {{ post.author }}
+    {% else %}
+      {{ site.title }}
+    {% endif %}
+    on {{ post.date | date: "%B %-d, %Y" }}
+  </p>
+
 </div>
+
 <hr>
+
 {% endfor %}
 
-<!-- Pager -->
+
+<!-- ==================== 分页导航 ==================== -->
+
+<!--
+  仅在总页数 > 1 时显示分页按钮
+  paginator.total_pages : Jekyll 分页器提供的总页数
+
+  paginator.previous_page / paginator.previous_page_path :
+    上一页（较新文章）的页码和 URL 路径
+  paginator.next_page / paginator.next_page_path :
+    下一页（较旧文章）的页码和 URL 路径
+
+  URL 处理：
+    prepend: site.baseurl            → 在路径前添加站点子目录前缀
+    replace: '//', '/'               → 修复空 baseurl 时产生的双斜杠
+                                       （如 "//page2/" → "/page2/"）
+
+  注：当 baseurl 为空字符串 "" 时：
+    paginator.previous_page_path = "/page2"
+    prepend: site.baseurl → "//page2"（多了一个 "/"）
+    replace: '//', '/'    → "/page2"（修复）
+-->
 {% if paginator.total_pages > 1 %}
 <ul class="pager">
-    {% if paginator.previous_page %}
-    <li class="previous">
-        <a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&larr; Newer Posts</a>
-    </li>
-    {% endif %}
-    {% if paginator.next_page %}
-    <li class="next">
-        <a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">Older Posts &rarr;</a>
-    </li>
-    {% endif %}
+
+  <!-- 上一页按钮：指向较新的文章 -->
+  {% if paginator.previous_page %}
+  <li class="previous">
+    <a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">
+      &larr; Newer Posts
+    </a>
+  </li>
+  {% endif %}
+
+  <!-- 下一页按钮：指向较旧的文章 -->
+  {% if paginator.next_page %}
+  <li class="next">
+    <a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">
+      Older Posts &rarr;
+    </a>
+  </li>
+  {% endif %}
+
 </ul>
 {% endif %}
