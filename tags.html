@@ -5,66 +5,134 @@ description: 归类整理
 header-img: "img/20180630 060.JPG"
 ---
 
-<!-- Page Header -->
-<header class="intro-header" style="background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="site-heading" id="tag-heading">
-                    <h1>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</h1>
-                    <span class="subheading">{{ page.description }}</span>
-                </div>
-            </div>
+<!--
+  ============================================================
+  tags.html — 标签聚合页
+  ============================================================
+
+  页面结构：
+    1. 标签云（tag cloud）— 所有标签按文章数量显示不同大小
+    2. 标签列表 — 每个标签下按时间倒序展示文章
+
+  数据来源：site.tags（Jekyll 内置变量）
+    格式：{ "tagname" => [post1, post2, ...], ... }
+    遍历时：tag[0] = 标签名, tag[1] = 该标签下的文章数组
+
+  依赖：
+    - jquery.tagcloud.js（通过 footer.html 中的 async 函数异步加载）
+      使用标签的 rel 属性（文章数量）控制字体大小和背景颜色
+    - hux-blog.less 中的 .one-tag-list、.tag-text、.listing-seperator 等样式
+
+  定制参考：
+    tagcloud 颜色渐变范围在 footer.html 中设置：
+      color: {start: '#bbbbee', end: '#0085a1'}
+  ============================================================
+-->
+
+
+<!-- ==================== 页面头部 — 背景大图 ==================== -->
+<header
+  class="intro-header"
+  style="background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')"
+>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="site-heading" id="tag-heading">
+          <!--
+            标题：优先使用 page.title（front matter 中为 "Tags"）
+                  回退 site.title
+          -->
+          <h1>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</h1>
+          <span class="subheading">{{ page.description }}</span>
         </div>
+      </div>
     </div>
+  </div>
 </header>
 
-<!-- Main Content -->
+
+<!-- ==================== 主内容区 ==================== -->
 <div class="container">
-	<div class="row">
-		<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <!-- 标签云 -->
-			<div id='tag_cloud' class="tags">
-				{% for tag in site.tags %}
-				<a href="#{{ tag[0] }}" title="{{ tag[0] }}" rel="{{ tag[1].size }}">{{ tag[0] }}</a>
-				{% endfor %}
-			</div>
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
-            <!--<blockquote class="tag-comments">
-                标签命名规范：
-                    <li>行业观察、职位、公司优先使用中文</li>
-                    <li>外国产品、术语优先使用英文</li>
-            </blockquote>-->
 
-            <!-- 标签列表 -->
-			{% for tag in site.tags %}
-			<div class="one-tag-list">
-			  	<span class="fa fa-tag listing-seperator" id="{{ tag[0] }}">
-                    <span class="tag-text">{{ tag[0] }}</span>
-                </span>
-				{% for post in tag[1] %}
-				  <!-- <li class="listing-item">
-				  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
-				  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
-				  </li> -->
-				 <div class="post-preview">
-				    <a href="{{ post.url | prepend: site.baseurl }}">
-				        <h2 class="post-title">
-                            {{ post.title }}
-				        </h2>
-				        {% if post.subtitle %}
-				        <h3 class="post-subtitle">
-				            {{ post.subtitle }}
-				        </h3>
-				        {% endif %}
-				    </a>
-				    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
-				</div>
-				<hr>
-				{% endfor %}
-			</div>
-			{% endfor %}
+      <!-- ========== 标签云 ========== -->
+      <!--
+        jquery.tagcloud.js 通过以下属性控制标签显示：
 
-		</div>
-	</div>
+        href  : 点击跳转到该标签对应的锚点（#tagname）
+        title : 标签名（tooltip 悬浮提示）
+        rel   : 标签权重（文章数量），数字越大字体越大、背景色越深
+
+        遍历 site.tags（所有标签）：
+          tag[0] = 标签名（字符串）
+          tag[1] = 该标签下的文章列表（数组）
+          tag[1].size = 文章数量
+
+        样式通过 footer.html 中的异步加载配置：
+          $.fn.tagcloud.defaults = {
+            color: {start: '#bbbbee', end: '#0085a1'}
+          };
+      -->
+      <div id="tag_cloud" class="tags">
+        {% for tag in site.tags %}
+        <a href="#{{ tag[0] }}" title="{{ tag[0] }}" rel="{{ tag[1].size }}">
+          {{ tag[0] }}
+        </a>
+        {% endfor %}
+      </div>
+
+
+      <!-- ========== 标签列表（按标签分组展示文章） ========== -->
+      <!--
+        每个标签组的结构：
+          <div.one-tag-list>
+            <span.fa-tag> 标签名（作为锚点目标）
+            <div.post-preview> × N  该标签下的所有文章
+        
+        文章预览卡片格式（与首页 index.html 一致）：
+          - 标题（h2）
+          - 副标题（h3，如有）
+          - 每篇文章间用 <hr> 分隔
+      -->
+      {% for tag in site.tags %}
+      <div class="one-tag-list">
+
+        <!--
+          标签分隔标题
+          id="{{ tag[0] }}"  : 作为标签云中 <a href="#tagName"> 的锚点目标
+          .fa-tag            : Font Awesome 标签图标
+          .listing-seperator : 分隔符样式（蓝色文字，来自 hux-blog.less）
+                              注：CSS 类名 seperator 为历史拼写，修改需同步 Less
+          .tag-text          : 标签文字样式
+        -->
+        <span class="fa fa-tag listing-seperator" id="{{ tag[0] }}">
+          <span class="tag-text">{{ tag[0] }}</span>
+        </span>
+
+        <!-- 遍历该标签下的所有文章 -->
+        {% for post in tag[1] %}
+        <div class="post-preview">
+          <a href="{{ post.url | prepend: site.baseurl }}">
+            <h2 class="post-title">
+              {{ post.title }}
+            </h2>
+            {% if post.subtitle %}
+            <h3 class="post-subtitle">
+              {{ post.subtitle }}
+            </h3>
+            {% endif %}
+          </a>
+        </div>
+        <hr>
+        {% endfor %}
+
+      </div>
+      {% endfor %}
+
+
+    </div>
+  </div>
 </div>
