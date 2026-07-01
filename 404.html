@@ -5,21 +5,73 @@ header-img: "img/404-bg.jpg"
 permalink: /404.html
 ---
 
+<!--
+  ============================================================
+  404.html — 页面未找到错误页
+  ============================================================
 
-<!-- Page Header -->
-<header class="intro-header" style="background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')">
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-				<div class="site-heading" id="tag-heading">
-					<h1>404</h1>
-					<span class="subheading">{{ page.description }}</span>
-				</div>
-			</div>
-		</div>
-	</div>
+  技术说明：
+    1. 使用 default 布局（继承 head.html 和 footer.html 的完整结构）
+    2. 通过 page-fullscreen CSS 类实现全屏居中显示
+    3. background-image 由 header-img 配置，通过内联 style 设置
+    4. 脚本添加 page-fullscreen 类名（对应的 CSS 在 less/hux-blog.less 中定义）：
+       - .intro-header → 固定定位铺满全屏
+       - #tag-heading → Flexbox 垂直居中
+       - footer → 绝对定位在底部，半透明
+
+  需关注的点：
+    - header-img 已在 front matter 中定义，下方的 if/else 回退到
+      site.header-img 的分支实际不会执行（但保留作为模板通用性参考）
+    - id="tag-heading" 的名称是历史遗留（源自标签页），但 CSS 通过
+      此 id 实现全屏居中，修改 id 需同步修改 less/hux-blog.less
+  ============================================================
+-->
+
+
+<!-- ==================== 页面头部 — 全屏背景大图 ==================== -->
+<!--
+  background-image 优先级：
+    1. page.header-img（本页 front matter 中定义为 "img/404-bg.jpg"）
+    2. site.header-img（全局配置 _config.yml 中的 header-img，作为 fallback）
+  site.baseurl : 站点子路径（如博客部署在子目录中），根目录部署时为空
+-->
+<header
+  class="intro-header"
+  style="background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')"
+>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+        <!--
+          404 内容区
+          id="tag-heading" : CSS 选择器钩子，配合 .page-fullscreen 实现 Flexbox 居中
+                             名称不直观但修改需同步 CSS，故保留
+        -->
+        <div class="site-heading" id="tag-heading">
+          <h1>404</h1>
+          <!--
+            page.description : 页面描述文本，来自 front matter：
+                               "你来到了没有知识的荒原 🙊"
+            通过 .subheading 样式类显示为副标题
+          -->
+          <span class="subheading">{{ page.description }}</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
 </header>
 
+
+<!-- ==================== 全屏模式脚本 ==================== -->
+<!--
+  为 <body> 添加 page-fullscreen CSS 类，触发全屏布局：
+    - 头部区域（.intro-header）铺满整个视口
+    - 内容垂直居中
+    - 页脚固定在底部，半透明
+  注：此脚本放在页面末尾，确保 DOM 已就绪（同步执行，无需 DOMContentLoaded）
+-->
 <script>
-	document.body.classList.add('page-fullscreen');
+  document.body.classList.add('page-fullscreen');
 </script>
