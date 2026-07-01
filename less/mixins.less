@@ -1,11 +1,23 @@
-// Mixins
+// ============================================================
+// Mixin 混合定义 - 可复用的样式片段
+// ============================================================
 
+/**
+ * 通用过渡动画 mixin
+ * 为元素添加 0.5 秒的全属性过渡效果
+ * 用法：.my-element { .transition-all(); }
+ */
 .transition-all() {
     -webkit-transition: all 0.5s;
     -moz-transition: all 0.5s;
     transition: all 0.5s;
 }
 
+/**
+ * 背景图片覆盖 mixin
+ * 使背景图始终覆盖整个容器，保持比例裁剪
+ * 用法：.hero { .background-cover(); }
+ */
 .background-cover() {
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -13,40 +25,59 @@
     -o-background-size: cover;
 }
 
+/**
+ * 衬线字体 mixin
+ * 优先使用 Lora，回退到 Times New Roman
+ * 用法：body { .serif(); }
+ */
 .serif() {
-	font-family: 'Lora', 'Times New Roman', serif;
+    font-family: 'Lora', 'Times New Roman', serif;
 }
 
-.sans-serif () {
-	/* Hux learn from
-     *     TypeIsBeautiful,
-     *     [This Post](http://zhuanlan.zhihu.com/ibuick/20186806) etc.
+/**
+ * 无衬线字体 mixin（系统字体优先）
+ *
+ * 字体回退策略（按优先级）：
+ *   1. 系统原生 — San Francisco / 苹方（macOS/iOS）
+ *   2. 英文回退 — Helvetica Neue / Arial
+ *   3. 中文回退 — 苹方→冬青黑体→华文黑体→微软雅黑→微软正黑→思源黑体→文泉驿微米黑→中易宋体
+ *   4. 系统默认 — sans-serif
+ *
+ * 同时设置 line-height: 1.7 保证中文阅读舒适的行间距
+ * 用法：body { .sans-serif(); }
+ */
+.sans-serif() {
+    /* 系统字体优先策略，参考：
+     *   TypeIsBeautiful,
+     *   https://zhuanlan.zhihu.com/p/20186806
+     *   https://www.webkit.org/blog/3709/using-the-system-font-in-web-content/
      */
-	font-family:
-        // System Font            // https://www.webkit.org/blog/3709/using-the-system-font-in-web-content/
-        -apple-system,            // OSX ^10.11 & iOS ^9  San Francisco & 苹方 for Safari
-        BlinkMacSystemFont,       // OSX ^10.11 & iOS ^9  San Francisco & 苹方 for Blink 
-
-        // English First
-        "Helvetica Neue",         // OSX
-        "Arial",                  // Win "Helvetica"
-        //" Segoe UI",            // Win ^8
-
-        // Chinese Fallback
-        "PingFang SC",            // OSX ^10.11 & iOS ^9  苹方（华康信凭黑）
-        "Hiragino Sans GB",       // OSX ^10.6            冬青黑体
-        "STHeiti",                // OSX <10.6  & iOS <9  华文黑体
-        "Microsoft YaHei",        // Win                  微软雅黑
-        "Microsoft JhengHei",     // Win                  微软正黑
-        "Source Han Sans SC",     // SourceHan - begin    思源黑体
+    /*
+     * 字体回退链（按优先级排列）：
+     * 1. 系统原生 — San Francisco / 苹方（macOS/iOS）
+     * 2. 英文回退 — Helvetica Neue / Arial
+     * 3. 中文回退 — 苹方 → 冬青黑体 → 华文黑体 → 微软雅黑 → 微软正黑 → 思源黑体 → 文泉驿微米黑 → 中易宋体
+     * 4. 系统默认 — sans-serif
+     */
+    font-family:
+        -apple-system,            /* Safari - 系统原生   */
+        BlinkMacSystemFont,       /* Chrome/Blink 内核    */
+        "Helvetica Neue",         /* macOS 英文           */
+        "Arial",                  /* Windows 英文         */
+        "PingFang SC",            /* 苹方（华康信凭黑）     */
+        "Hiragino Sans GB",       /* 冬青黑体              */
+        "STHeiti",                /* 华文黑体              */
+        "Microsoft YaHei",        /* 微软雅黑              */
+        "Microsoft JhengHei",     /* 微软正黑              */
+        "Source Han Sans SC",     /* 思源黑体 - 简体       */
         "Noto Sans CJK SC",
         "Source Han Sans CN",
         "Noto Sans SC",
-        "Source Han Sans TC",
-        "Noto Sans CJK TC",       // SourceHan - end
-        "WenQuanYi Micro Hei",    // Linux                文泉驿微米黑
-        SimSun,                   // Win old              中易宋体
-        sans-serif;               // System Fallback
+        "Source Han Sans TC",     /* 思源黑体 - 繁体       */
+        "Noto Sans CJK TC",
+        "WenQuanYi Micro Hei",    /* 文泉驿微米黑          */
+        SimSun,                   /* 中易宋体              */
+        sans-serif;               /* 系统默认兜底          */
 
-	line-height: 1.7;
+    line-height: 1.7;
 }

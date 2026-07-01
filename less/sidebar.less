@@ -1,57 +1,78 @@
 @import "variables.less";
 
-// Sidebar Components
+// ============================================================
+// 侧边栏组件 — 博客侧边栏（作者简介、标签、友链等）
+// ============================================================
 
-// Large Screen
-@media (min-width: 1200px){
-    .post-container, .sidebar-container{
+/**
+ * 响应式布局 — 大屏（≥1200px）：文章区和侧边栏右侧各留 5% 空白
+ * 中屏（768-1199px）：仅文章区右侧留白
+ * 小屏（<768px）：无额外留白
+ * 注：.post-container 在 768px 处已设置 padding-right: 5%，
+ *     此处 1200px 仅需为 .sidebar-container 补充相同规则
+ */
+@media (min-width: 768px) {
+    .post-container {
         padding-right: 5%;
     }
 }
-@media (min-width: 768px){
-    .post-container{
+@media (min-width: 1200px) {
+    .sidebar-container {
         padding-right: 5%;
     }
 }
 
-// Container of Sidebar, also Friends
-.sidebar-container{
+/**
+ * .sidebar-container — 侧边栏主容器
+ */
+.sidebar-container {
     color: @gray-l;
     font-size: 14px;
-    h5{
+
+    // ---- 标题样式 ----
+    h5 {
         color: @gray;
         padding-bottom: 1em;
-        a{
+        a {
             color: @gray !important;
             text-decoration: none;
         }
     }
-    a{
+
+    // ---- 链接通用样式 ----
+    a {
         color: @gray-l !important;
-        &:hover, &:active{
+        &:hover,
+        &:active {
             color: @brand-primary !important;
         }
     }
-    .tags{
-        a{
+
+    // ---- 标签云在侧边栏中的样式覆写 ----
+    .tags {
+        a {
             border-color: @gray-l;
-            &:hover, &:active{
+            &:hover,
+            &:active {
                 border-color: @brand-primary;
             }
         }
     }
-    .short-about{
-        img{
+
+    // ---- 个人简介区块 ----
+    .short-about {
+        img {
             width: 80%;
             display: block;
             border-radius: 5px;
             margin-bottom: 20px;
         }
-        p{
+        p {
             margin-top: 0px;
             margin-bottom: 20px;
         }
-        .list-inline>li{
+        // 社交图标列表：去掉左侧内边距，紧凑排列
+        .list-inline > li {
             padding-left: 0px;
         }
     }

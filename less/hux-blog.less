@@ -3,1026 +3,1133 @@
 @import "sidebar.less";
 @import "side-catalog.less";
 
-// Global Components
+// ============================================================
+// 全局基础样式
+// ============================================================
 
 body {
-	.sans-serif;
-	font-size: 16px;
-	// Hux mpdify to 16px (Mobile First), and increase to 20px while 768+ width
-	color: @gray-dark;
-	//-webkit-user-select:text; //对于 Blog 还是先不开启这句。
-	overflow-x : hidden;
+    .sans-serif();
+    font-size: 16px;       // 移动端基础字号 16px，≥768px 时提升到 20px
+    color: @gray-dark;
+    overflow-x: hidden;    // 防止移动端水平溢出
 }
 
-// -- Typography
+// ============================================================
+// 排版（Typography）
+// ============================================================
 
+// 段落：上下各 30px 间距
 p {
-	margin: 30px 0;
+    margin: 30px 0;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	.sans-serif;
-	line-height: 1.1;
-	font-weight: bold;
+// 标题 h1-h6：无衬线字体，加粗，紧凑行高
+h1, h2, h3, h4, h5, h6 {
+    .sans-serif();
+    line-height: 1.1;
+    font-weight: bold;
 }
-h1{
-	// drop V1.1.1
-	//font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
-h4{
+
+// h4 单独字号（介于 h3 和 h5 之间）
+h4 {
     font-size: 21px;
 }
+
+// 链接：默认深灰，悬停变品牌色
 a {
-	color: @gray-dark;
-	&:hover,
-	&:focus {
-		color: @brand-primary;
-	}
+    color: @gray-dark;
+    &:hover,
+    &:focus {
+        color: @brand-primary;
+    }
 }
 
+// 图片链接：悬停显示放大镜光标
 a img {
-	&:hover,
-	&:focus {
-		cursor: zoom-in;
-	}
+    &:hover,
+    &:focus {
+        cursor: zoom-in;
+    }
 }
 
-article{
-	overflow-x : hidden;
+// 文章区域：也限制水平溢出
+article {
+    overflow-x: hidden;
 }
+
+// 引用块：灰色斜体，内部段落无边距
 blockquote {
-	color: @gray;
-	font-style: italic;
-	font-size: 0.95em;
-	margin: 20px 0 20px;
-	p{
-		margin: 0;
-	}
+    color: @gray;
+    font-style: italic;
+    font-size: 0.95em;
+    margin: 20px 0 20px;
+    p {
+        margin: 0;
+    }
 }
 
-// Utils Style Class can be used in Markdown.
-small.img-hint{
-	display: block;
-	margin-top: -20px;
-	text-align: center;
-}
-br + small.img-hint{
-	margin-top: -40px;
-}
-img.shadow{
-	box-shadow: rgba(0, 0, 0, 0.258824) 0px 2px 5px 0px;
-}
-// Utils Style End
+// ============================================================
+// Markdown 辅助样式类（可在文章中直接使用）
+// ============================================================
 
-// Select 
-select{
-	-webkit-appearance:none;
-	margin-top:15px;
-	color:#337ab7;
-	border-color:#337ab7;
-	padding: 0em 0.4em;
-	background: white;
-	&.sel-lang{
-		min-height: 28px;
-		font-size:14px;
-	}
+// 图片下方提示文字
+small.img-hint {
+    display: block;
+    margin-top: -20px;
+    text-align: center;
+}
+// <br> 后面的提示文字需要更大的负边距补偿换行间距
+br + small.img-hint {
+    margin-top: -40px;
 }
 
-
-// override table style in bootstrap
-.table th, .table td{
-	border: 1px solid #eee !important;
+// 图片阴影效果
+img.shadow {
+    box-shadow: rgba(0, 0, 0, 0.258824) 0px 2px 5px 0px;
 }
 
+// ============================================================
+// 表单元素
+// ============================================================
+
+// 下拉选择框：去掉默认样式，自定义外观
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin-top: 15px;
+    color: #337ab7;
+    border-color: #337ab7;
+    padding: 0em 0.4em;
+    background: white;
+    // 语言切换下拉框
+    &.sel-lang {
+        min-height: 28px;
+        font-size: 14px;
+    }
+}
+
+// ============================================================
+// 表格 — 覆写 Bootstrap 默认样式
+// ============================================================
+
+.table th,
+.table td {
+    border: 1px solid #eee !important;
+}
+
+// 横向分割线（小尺寸）
 hr.small {
-	max-width: 100px;
-	margin: 15px auto;
-	border-width: 4px;
-	border-color: white;
-}
-// add by Hux
-pre,.table-responsive{
-	// sometimes you should use vendor-feature.
-	-webkit-overflow-scrolling: touch;
-}
-pre code{
-	display: block;
-	width: auto;
-	white-space: pre;	// save it but no-wrap;
-	word-wrap: normal;	// no-wrap
+    max-width: 100px;
+    margin: 15px auto;
+    border-width: 4px;
+    border-color: white;
 }
 
-// In the list of posts
-.postlist-container{
-	margin-bottom: 15px;
+// 代码块和响应式表格容器：iOS 平滑滚动
+pre,
+.table-responsive {
+    -webkit-overflow-scrolling: touch;
 }
 
-// In the post.
-.post-container{
-	a{
-		color:#337ab7;
-		// different to @brand-primary
-		&:hover,
-		&:focus {
-			color: @brand-primary;
-		}
-	}
-	h1,
-	h2,
-	h3,
-	h4,
-	h5,
-	h6 {
-		margin: 30px 0 10px;
-	}
-	h5{
-		font-size: 19px;
-		font-weight: 600;
-		color:gray;
-		& + p{
-			margin-top: 5px;
-		}
-	}
-	h6{
-		font-size: 16px;
-		font-weight: 600;
-		color: gray;
-		& + p{
-			margin-top: 5px;
-		}
-	}
-	ul,ol{
-		margin-bottom: 40px;
-		@media screen and (max-width: 768px){
-			&{
-				padding-left: 30px;
-			}
-		}
-		@media screen and (max-width: 500px){
-			&{
-				padding-left: 20px;
-			}
-		}
-	}
-	ol ol, ol ul, ul ol, ul ul{
-		margin-bottom: 5px
-	}
-	li{
-		p{
-			margin: 0;
-			margin-bottom: 5px;
-		}
-		h1,h2,h3,h4,h5,h6{
-			line-height: 2;
-			margin-top: 20px;
-		}
-	}
-	// V1.6 Hux display title by default.
-	.pager li{
-		width: 48%;
-		&.next{ float: right};
-		&.previous{ float: left};
-		> a {
-			width: 100%;
-			> span{
-				color: @gray;
-				font-weight: normal;
-				letter-spacing: 0.5px;
-			}
-		}
-	}
+// 代码块内部：保留原始换行，不自动折行
+pre code {
+    display: block;
+    width: auto;
+    white-space: pre;
+    word-wrap: normal;
 }
 
+// ============================================================
+// 文章列表页
+// ============================================================
 
+// 文章列表容器底部间距
+.postlist-container {
+    margin-bottom: 15px;
+}
 
-// Navigation
+// ============================================================
+// 文章详情页
+// ============================================================
 
-// materialize, mobile only
+.post-container {
+    // 文章内链接颜色（不同于全局 #337ab7，区别于 @brand-primary）
+    a {
+        color: #337ab7;
+        &:hover,
+        &:focus {
+            color: @brand-primary;
+        }
+    }
+
+    // 文章内标题间距
+    h1, h2, h3, h4, h5, h6 {
+        margin: 30px 0 10px;
+    }
+
+    // h5：灰色，加粗，其后紧跟的段落缩减上边距
+    h5 {
+        font-size: 19px;
+        font-weight: 600;
+        color: gray;
+        & + p {
+            margin-top: 5px;
+        }
+    }
+
+    // h6：与 h5 类似但字号更小
+    h6 {
+        font-size: 16px;
+        font-weight: 600;
+        color: gray;
+        & + p {
+            margin-top: 5px;
+        }
+    }
+
+    // 列表：底部大间距，移动端逐步减少左内边距
+    ul,
+    ol {
+        margin-bottom: 40px;
+        @media screen and (max-width: 768px) {
+            padding-left: 30px;
+        }
+        @media screen and (max-width: 500px) {
+            padding-left: 20px;
+        }
+    }
+
+    // 嵌套列表：减小底部间距，避免过于松散
+    ol ol, ol ul, ul ol, ul ul {
+        margin-bottom: 5px;
+    }
+
+    // 列表项中的段落：去除默认上下边距，保留 5px 底边距
+    li {
+        p {
+            margin: 0;
+            margin-bottom: 5px;
+        }
+        // 列表项中的标题：增大行高，顶部留白
+        h1, h2, h3, h4, h5, h6 {
+            line-height: 2;
+            margin-top: 20px;
+        }
+    }
+
+    // 文章内分页导航
+    .pager li {
+        width: 48%;
+        &.next {
+            float: right;
+        }
+        &.previous {
+            float: left;
+        }
+        > a {
+            width: 100%;
+            > span {
+                color: @gray;
+                font-weight: normal;
+                letter-spacing: 0.5px;
+            }
+        }
+    }
+}
+
+// ============================================================
+// 导航栏（Navigation）
+// ============================================================
+
+// ---- 移动端导航动画（≤767px）：Material Design 风格展开/收起 ----
 @media only screen and (max-width: 767px) {
-	/**
-	 * Layout
-	 * Since V1.6 we use absolute positioning to prevent to expand container-fluid
-	 * which would cover tags. A absolute positioning make a new layer.
-	 */
-	.navbar-default .navbar-collapse{
-		position: absolute; 
-     	right: 0;
-		border: none;
-		background: white;
-		box-shadow: 0px 5px 10px 2px rgba(0, 0, 0, 0.2);
-		box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.239216) 0px 1px 4px;
-		border-radius: 2px;
-		width: 170px;
-	}
-	/**
-	 * Animation
-	 * HuxBlog-Navbar using genuine Material Design Animation
-	 */
-	#huxblog_navbar{ 	
-		/**
-		 * Sharable code and 'out' function
-		 */
-		// the container do width-transition
-		opacity: 0;
-		transform: scaleX(0);
-		transform-origin: top right;
-		transition: all 200ms cubic-bezier(0.47, 0, 0.4, 0.99) 0ms;
-		-webkit-transform: scaleX(0);
-		-webkit-transform-origin: top right;
-		-webkit-transition: all 200ms cubic-bezier(0.47, 0, 0.4, 0.99) 0ms;
-		a {
-			font-size: 13px;
-			line-height: 28px;
-		}
-		.navbar-collapse{	// the navbar do height-transition
-			height: 0px; 	// to solve container-mask-tags issue (default state).
-			transform: scaleY(0);
-			transform-origin: top right;
-			transition: transform 400ms cubic-bezier(0.32, 1, 0.23, 1) 0ms;
-			-webkit-transform: scaleY(0);
-			-webkit-transform-origin: top right;
-			-webkit-transition: -webkit-transform 400ms cubic-bezier(0.32, 1, 0.23, 1) 0ms;
-		}
-		li{
-			opacity: 0;
-			transition: opacity 100ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
-			-webkit-transition: opacity 100ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
-		}
-		/**
-		 *'In' Animation
-		 */
-		&.in {
-			transform: scaleX(1);
-			-webkit-transform: scaleX(1);
-			opacity: 1;
-			transition: all 250ms cubic-bezier(0.23,1,0.32,1) 0ms;
-			-webkit-transition: all 250ms cubic-bezier(0.23,1,0.32,1) 0ms;
-			.navbar-collapse{
-				transform: scaleY(1);
-				-webkit-transform: scaleY(1);
-				transition: transform 500ms cubic-bezier(0.23, 1, 0.32, 1);
-				-webkit-transition: -webkit-transform 500ms cubic-bezier(0.23, 1, 0.32, 1);
-			}
-			li{
-				opacity: 1;
-				transition: opacity 450ms cubic-bezier(0.23, 1, 0.32, 1) 205ms;
-				-webkit-transition: opacity 450ms cubic-bezier(0.23, 1, 0.32, 1) 205ms;
-			}
-		}
-	}
+    /**
+     * 布局：移动端下拉菜单使用绝对定位，避免撑开 container-fluid
+     * 使用绝对定位创建新的层叠上下文，防止遮挡标签
+     */
+    .navbar-default .navbar-collapse {
+        position: absolute;
+        right: 0;
+        border: none;
+        background: white;
+        box-shadow: 0px 5px 10px 2px rgba(0, 0, 0, 0.2);
+        box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.239216) 0px 1px 4px;
+        border-radius: 2px;
+        width: 170px;
+    }
+
+    /**
+     * 导航栏动画 — HuxBlog 使用 Material Design 风格的展开动画
+     * 通过 scaleX/scaleY + opacity 实现流畅的展开/收起效果
+     */
+    #huxblog_navbar {
+        // ---- 收起状态（默认） ----
+        opacity: 0;
+        transform: scaleX(0);
+        transform-origin: top right;
+        transition: all 200ms cubic-bezier(0.47, 0, 0.4, 0.99) 0ms;
+        -webkit-transform: scaleX(0);
+        -webkit-transform-origin: top right;
+        -webkit-transition: all 200ms cubic-bezier(0.47, 0, 0.4, 0.99) 0ms;
+
+        a {
+            font-size: 13px;
+            line-height: 28px;
+        }
+
+        // 菜单项容器：高度从 0 开始，scaleY 收起
+        .navbar-collapse {
+            height: 0px;
+            transform: scaleY(0);
+            transform-origin: top right;
+            transition: transform 400ms cubic-bezier(0.32, 1, 0.23, 1) 0ms;
+            -webkit-transform: scaleY(0);
+            -webkit-transform-origin: top right;
+            -webkit-transition: -webkit-transform 400ms cubic-bezier(0.32, 1, 0.23, 1) 0ms;
+        }
+
+        // 菜单项：初始透明
+        li {
+            opacity: 0;
+            transition: opacity 100ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+            -webkit-transition: opacity 100ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+        }
+
+        // ---- 展开状态（.in） ----
+        &.in {
+            transform: scaleX(1);
+            -webkit-transform: scaleX(1);
+            opacity: 1;
+            transition: all 250ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+            -webkit-transition: all 250ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+
+            .navbar-collapse {
+                transform: scaleY(1);
+                -webkit-transform: scaleY(1);
+                transition: transform 500ms cubic-bezier(0.23, 1, 0.32, 1);
+                -webkit-transition: -webkit-transform 500ms cubic-bezier(0.23, 1, 0.32, 1);
+            }
+
+            // 菜单项：延迟依次显示
+            li {
+                opacity: 1;
+                transition: opacity 450ms cubic-bezier(0.23, 1, 0.32, 1) 205ms;
+                -webkit-transition: opacity 450ms cubic-bezier(0.23, 1, 0.32, 1) 205ms;
+            }
+        }
+    }
 }
 
+// ---- 桌面端导航栏样式 ----
 .navbar-custom {
-	// materialize
-	background: none;
-	border:none;
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	z-index: 3;
-	.sans-serif;
-	.navbar-brand {
-		font-weight: 800;
-		// materialize
-		color: white;
-		height: 56px;
-		line-height: 25px;
-		&:hover{
-			color: rgba(255, 255, 255, 0.8);
-		}
-	}
-	.nav {
-		li {
-			a {
-				text-transform: uppercase;
-				font-size: 12px;
-				line-height: 20px;
-				font-weight: 800;
-				letter-spacing: 1px;
-				// only highlight in mobile
-				&:active{
-					background: rgba(0,0,0,0.12)
-				}
-			}
-		}
-	}
-	@media only screen and (min-width: 768px) {
-		body{
-			font-size: 20px;
-		}
-		background: transparent;
-		border-bottom: 1px solid transparent;
-		.navbar-brand {
-			color: white;
-			padding: 20px;
-			line-height: 20px;
-			&:hover,
-			&:focus {
-				color: @white-faded;
-			}
-		}
-		.nav {
-			li {
-				a {
-					color: white;
-					padding: 20px;
-					&:hover,
-					&:focus {
-						color: @white-faded;
-					}
-					&:active{
-						background: none;
-					}
-				}
-			}
-		}
-	}
-	@media only screen and (min-width: 1170px) {
-		-webkit-transition: background-color 0.3s;
-		-moz-transition: background-color 0.3s;
-		transition: background-color 0.3s;
-		/* Force Hardware Acceleration in WebKit */
-		-webkit-transform: translate3d(0, 0, 0);
-		-moz-transform: translate3d(0, 0, 0);
-		-ms-transform: translate3d(0, 0, 0);
-		-o-transform: translate3d(0, 0, 0);
-		transform: translate3d(0, 0, 0);
-		-webkit-backface-visibility: hidden;
-		backface-visibility: hidden;
-		&.is-fixed {
-			/* when the user scrolls down, we hide the header right above the viewport */
-			position: fixed;
-			top: -61px;
-			background-color: fade(white, 90%);
-			border-bottom: 1px solid darken(white, 5%);
-			-webkit-transition: -webkit-transform 0.3s;
-			-moz-transition: -moz-transform 0.3s;
-			transition: transform 0.3s;
-			.navbar-brand {
-				color: @gray-dark;
-				&:hover,
-				&:focus {
-					color: @brand-primary;
-				}
-			}
-			.nav {
-				li {
-					a {
-						color: @gray-dark;
-						&:hover,
-						&:focus {
-							color: @brand-primary;
-						}
-					}
-				}
-			}
-		}
-		&.is-visible {
-			/* if the user changes the scrolling direction, we show the header */
-			-webkit-transform: translate3d(0, 100%, 0);
-			-moz-transform: translate3d(0, 100%, 0);
-			-ms-transform: translate3d(0, 100%, 0);
-			-o-transform: translate3d(0, 100%, 0);
-			transform: translate3d(0, 100%, 0);
-		}
-	}
+    background: none;
+    border: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 3;
+    .sans-serif();
+
+    // 网站标题/Logo
+    .navbar-brand {
+        font-weight: 800;
+        color: white;
+        height: 56px;
+        line-height: 25px;
+        &:hover {
+            color: rgba(255, 255, 255, 0.8);
+        }
+    }
+
+    // 导航链接
+    .nav li a {
+        text-transform: uppercase;
+        font-size: 12px;
+        line-height: 20px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        &:active {
+            background: rgba(0, 0, 0, 0.12);
+        }
+    }
+
+    // ---- 中等屏幕（≥768px）：导航栏透明底，白色文字 ----
+    @media only screen and (min-width: 768px) {
+        body {
+            font-size: 20px;    // 桌面端提升正文字号
+        }
+        background: transparent;
+        border-bottom: 1px solid transparent;
+
+        .navbar-brand {
+            color: white;
+            padding: 20px;
+            line-height: 20px;
+            &:hover,
+            &:focus {
+                color: @white-faded;
+            }
+        }
+
+        .nav li a {
+            color: white;
+            padding: 20px;
+            &:hover,
+            &:focus {
+                color: @white-faded;
+            }
+            &:active {
+                background: none;
+            }
+        }
+    }
+
+    // ---- 大屏幕（≥1170px）：固定导航 + 滚动隐藏/显示 ----
+    @media only screen and (min-width: 1170px) {
+        // 强制 GPU 加速（硬件加速），避免动画卡顿
+        -webkit-transition: background-color 0.3s;
+        -moz-transition: background-color 0.3s;
+        transition: background-color 0.3s;
+        -webkit-transform: translate3d(0, 0, 0);
+        -moz-transform: translate3d(0, 0, 0);
+        -ms-transform: translate3d(0, 0, 0);
+        -o-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+
+        // 向下滚动后：导航栏固定到顶部上方（隐藏状态）
+        &.is-fixed {
+            position: fixed;
+            top: -61px;
+            background-color: fade(white, 90%);
+            border-bottom: 1px solid darken(white, 5%);
+            -webkit-transition: -webkit-transform 0.3s;
+            -moz-transition: -moz-transform 0.3s;
+            transition: transform 0.3s;
+
+            .navbar-brand {
+                color: @gray-dark;
+                &:hover,
+                &:focus {
+                    color: @brand-primary;
+                }
+            }
+
+            .nav li a {
+                color: @gray-dark;
+                &:hover,
+                &:focus {
+                    color: @brand-primary;
+                }
+            }
+        }
+
+        // 向上滚动后：导航栏下滑显示
+        &.is-visible {
+            -webkit-transform: translate3d(0, 100%, 0);
+            -moz-transform: translate3d(0, 100%, 0);
+            -ms-transform: translate3d(0, 100%, 0);
+            -o-transform: translate3d(0, 100%, 0);
+            transform: translate3d(0, 100%, 0);
+        }
+    }
 }
 
-// Header
+// ============================================================
+// 首页大图头部（Header）
+// ============================================================
 
 .intro-header {
-	background: no-repeat center center;
-	background-color: @gray;
-	background-attachment: scroll;
-	.background-cover;
-	// NOTE: Background images are set within the HTML using inline CSS!
-	margin-bottom: 0px;  /* 0 on mobile, modify by Hux */
-	@media only screen and (min-width: 768px) {
-		margin-bottom: 20px;  /* response on desktop */
-	}
-	.site-heading,
-	.post-heading,
-	.page-heading {
-		padding: 85px 0 55px;
-		color: white;
-		@media only screen and (min-width: 768px) {
-			padding: 150px 0;
-		}
-	}
-	// masterialize
-	.site-heading{
-		padding: 95px 0 70px;
-		@media only screen and (min-width: 768px) {
-			padding: 150px 0;
-		}
-	}
-	.site-heading,
-	.page-heading {
-		text-align: center;
-		h1 {
-			margin-top: 0;
-			font-size: 50px;
-		}
-		.subheading {
-			.sans-serif;
-			font-size: 18px;
-			line-height: 1.1;
-			display: block;
-			font-weight: 300;
-			margin: 10px 0 0;
-		}
-		@media only screen and (min-width: 768px) {
-			h1 {
-				font-size: 80px;
-			}
-		}
-	}
-	.post-heading {
-		h1 {
-			font-size: 30px;
-			margin-bottom: 24px;
-		}
-		.subheading,
-		.meta {
-			line-height: 1.1;
-			display: block;
-		}
-		.subheading {
-			.sans-serif;
-			font-size: 17px;
-			line-height: 1.4;
-			font-weight: normal;
-			margin: 10px 0 30px;
-			margin-top: -5px;
-		}
-		.meta {
-			.serif;
-			font-style: italic;
-			font-weight: 300;
-			font-size: 18px;
-			a {
-				color: white;
-			}
-		}
-		@media only screen and (min-width: 768px) {
-			h1 {
-				font-size: 55px;
-			}
-			.subheading {
-				font-size: 30px;
-			}
-			.meta {
-				font-size: 20px;
-			}
-		}
-	}
+    background: no-repeat center center;
+    background-color: @gray;
+    background-attachment: scroll;
+    .background-cover();
+    // 注：背景图通过 HTML 内联 style 设置
+    margin-bottom: 0px;     // 移动端无底部间距
+
+    @media only screen and (min-width: 768px) {
+        margin-bottom: 20px;    // 桌面端留出底部间距
+    }
+
+    // ---- 首页、文章页、独立页面：白色文字，居中 ----
+    .site-heading,
+    .post-heading,
+    .page-heading {
+        padding: 85px 0 55px;
+        color: white;
+        @media only screen and (min-width: 768px) {
+            padding: 150px 0;
+        }
+    }
+
+    // 首页标题单独微调（上边距略多，覆盖上面的统一值）
+    .site-heading {
+        padding: 95px 0 70px;
+        @media only screen and (min-width: 768px) {
+            padding: 150px 0;
+        }
+    }
+
+    // 首页和独立页面：居中排版
+    .site-heading,
+    .page-heading {
+        text-align: center;
+        h1 {
+            margin-top: 0;
+            font-size: 50px;
+        }
+        .subheading {
+            .sans-serif();
+            font-size: 18px;
+            line-height: 1.1;
+            display: block;
+            font-weight: 300;
+            margin: 10px 0 0;
+        }
+        @media only screen and (min-width: 768px) {
+            h1 {
+                font-size: 80px;
+            }
+        }
+    }
+
+    // 文章详情页头部：左对齐，有 meta 信息
+    .post-heading {
+        h1 {
+            font-size: 30px;
+            margin-bottom: 24px;
+        }
+        .subheading,
+        .meta {
+            line-height: 1.1;
+            display: block;
+        }
+        .subheading {
+            .sans-serif();
+            font-size: 17px;
+            line-height: 1.4;
+            font-weight: normal;
+            margin: 10px 0 30px;
+            margin-top: -5px;
+        }
+        .meta {
+            .serif();
+            font-style: italic;
+            font-weight: 300;
+            font-size: 18px;
+            a {
+                color: white;
+            }
+        }
+        @media only screen and (min-width: 768px) {
+            h1 {
+                font-size: 55px;
+            }
+            .subheading {
+                font-size: 30px;
+            }
+            .meta {
+                font-size: 20px;
+            }
+        }
+    }
 }
 
-// Post Preview Pages (Home Page)
+// ============================================================
+// 首页文章预览卡片
+// ============================================================
 
 .post-preview {
-	> a {
-		color: @gray-dark;
-		&:hover,
-		&:focus {
-			text-decoration: none;
-			color: @brand-primary;
-		}
-		> .post-title {
-			font-size: 21px;
-			line-height: 1.3;
-			margin-top: 30px;
-			margin-bottom: 8px;
-		}
-		> .post-subtitle {
-			font-size: 15px;
-			line-height: 1.3;
-			margin: 0;
-			font-weight: 300;
-			margin-bottom: 10px;
-		}
-	}
-	> .post-meta {
-		.serif;
-		color: @gray;
-		font-size: 16px;
-		font-style: italic;
-		margin-top: 0;
-		> a {
-			text-decoration: none;
-			color: @gray-dark;
-			&:hover,
-			&:focus {
-				color: @brand-primary;
-				text-decoration: underline;
-			}
-		}
-	}
-	@media only screen and (min-width: 768px) {
-		> a {
-			> .post-title {
-				font-size: 26px;
-				line-height: 1.3;
-				margin-bottom: 10px;
-			}
-			> .post-subtitle{
-				font-size: 16px;
-			}
-		}
-		.post-meta{
-			font-size: 18px;
-		}
-	}
+    > a {
+        color: @gray-dark;
+        &:hover,
+        &:focus {
+            text-decoration: none;
+            color: @brand-primary;
+        }
+        // 文章标题
+        > .post-title {
+            font-size: 21px;
+            line-height: 1.3;
+            margin-top: 30px;
+            margin-bottom: 8px;
+        }
+        // 文章副标题
+        > .post-subtitle {
+            font-size: 15px;
+            line-height: 1.3;
+            margin: 0;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+    }
+    // 文章元信息（日期、分类等）
+    > .post-meta {
+        .serif();
+        color: @gray;
+        font-size: 16px;
+        font-style: italic;
+        margin-top: 0;
+        > a {
+            text-decoration: none;
+            color: @gray-dark;
+            &:hover,
+            &:focus {
+                color: @brand-primary;
+                text-decoration: underline;
+            }
+        }
+    }
+    @media only screen and (min-width: 768px) {
+        > a {
+            > .post-title {
+                font-size: 26px;
+                line-height: 1.3;
+                margin-bottom: 10px;
+            }
+            > .post-subtitle {
+                font-size: 16px;
+            }
+        }
+        .post-meta {
+            font-size: 18px;
+        }
+    }
 }
 
-// Hux add home-page post-content-preview
-.post-content-preview{
+// 首页文章内容预览摘要
+.post-content-preview {
     font-size: 13px;
     font-style: italic;
-    color:#a3a3a3;
-    &:hover{
+    color: #a3a3a3;
+    &:hover {
         color: @brand-primary;
     }
     @media only screen and (min-width: 768px) {
-        font-size:14px;
+        font-size: 14px;
     }
 }
 
-// Sections
+// ============================================================
+// 通用区块样式
+// ============================================================
 
+// 区块标题
 .section-heading {
-	font-size: 36px;
-	margin-top: 60px;
-	font-weight: 700;
+    font-size: 36px;
+    margin-top: 60px;
+    font-weight: 700;
 }
 
+// 图片说明文字
 .caption {
-	text-align: center;
-	font-size: 14px;
-	padding: 10px;
-	font-style: italic;
-	margin: 0;
-	display: block;
-	border-bottom-right-radius: 5px;
-	border-bottom-left-radius: 5px;
+    text-align: center;
+    font-size: 14px;
+    padding: 10px;
+    font-style: italic;
+    margin: 0;
+    display: block;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
 }
+
+// ============================================================
+// 页脚
+// ============================================================
 
 footer {
-	font-size: 20px;
-	padding: 50px 0 65px;
-	.list-inline {
-		margin: 0;
-		padding: 0;
-	}
-	.copyright {
-		font-size: 14px;
-		text-align: center;
-		margin-bottom: 0;
-		a{
-			color:#337ab7;
-			// different to @brand-primary
-			&:hover,
-			&:focus {
-				color: @brand-primary;
-			}
-		}
-	}
+    font-size: 20px;
+    padding: 50px 0 65px;
+    .list-inline {
+        margin: 0;
+        padding: 0;
+    }
+    .copyright {
+        font-size: 14px;
+        text-align: center;
+        margin-bottom: 0;
+        a {
+            color: #337ab7;
+            &:hover,
+            &:focus {
+                color: @brand-primary;
+            }
+        }
+    }
 }
 
-// Contact Form Styles
+// ============================================================
+// 联系表单（浮动标签效果）
+// ============================================================
 
+// 浮动标签表单组：底部分割线，标签浮在输入框上方
 .floating-label-form-group {
-	font-size: 14px;
-	position: relative;
-	margin-bottom: 0;
-	padding-bottom: 0.5em;
-	border-bottom: 1px solid @gray-light;
-	input,
-	textarea {
-		z-index: 1;
-		position: relative;
-		padding-right: 0;
-		padding-left: 0;
-		border: none;
-		border-radius: 0;
-		font-size: 1.5em;
-		background: none;
-		box-shadow: none !important;
-		resize: none;
-	}
-	label {
-		display: block;
-		z-index: 0;
-		position: relative;
-		top: 2em;
-		margin: 0;
-		font-size: 0.85em;
-		line-height: 1.764705882em;
-		vertical-align: middle;
-		vertical-align: baseline;
-		opacity: 0;
-		-webkit-transition: top 0.3s ease,opacity 0.3s ease;
-		-moz-transition: top 0.3s ease,opacity 0.3s ease;
-		-ms-transition: top 0.3s ease,opacity 0.3s ease;
-		transition: top 0.3s ease,opacity 0.3s ease;
-	}
-	&::not(:first-child) {
-		padding-left: 14px;
-		border-left: 1px solid @gray-light;
-	}
+    font-size: 14px;
+    position: relative;
+    margin-bottom: 0;
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid @gray-light;
+
+    // 输入框和文本域：透明背景，无边框
+    input,
+    textarea {
+        z-index: 1;
+        position: relative;
+        padding-right: 0;
+        padding-left: 0;
+        border: none;
+        border-radius: 0;
+        font-size: 1.5em;
+        background: none;
+        box-shadow: none !important;
+        resize: none;
+    }
+
+    // 标签：默认在输入框下方，透明隐藏
+    label {
+        display: block;
+        z-index: 0;
+        position: relative;
+        top: 2em;
+        margin: 0;
+        font-size: 0.85em;
+        line-height: 1.764705882em;
+        vertical-align: baseline;       // 注意：只有一个生效，middle 被 baseline 覆盖
+        opacity: 0;
+        -webkit-transition: top 0.3s ease, opacity 0.3s ease;
+        -moz-transition: top 0.3s ease, opacity 0.3s ease;
+        -ms-transition: top 0.3s ease, opacity 0.3s ease;
+        transition: top 0.3s ease, opacity 0.3s ease;
+    }
+
+    // 非第一个表单组的左侧分割线
+    &::not(:first-child) {
+        padding-left: 14px;
+        border-left: 1px solid @gray-light;
+    }
 }
 
+// 有值时：标签浮到上方并显示
 .floating-label-form-group-with-value {
-	label {
-		top: 0;
-		opacity: 1;
-	}
+    label {
+        top: 0;
+        opacity: 1;
+    }
 }
 
+// 聚焦时：标签变为品牌色
 .floating-label-form-group-with-focus {
-	label {
-		color: @brand-primary;
-	}
+    label {
+        color: @brand-primary;
+    }
 }
 
+// 第一行表单组添加上边框
 form .row:first-child .floating-label-form-group {
-	border-top: 1px solid @gray-light;
+    border-top: 1px solid @gray-light;
 }
 
-// Button Styles
+// ============================================================
+// 按钮样式
+// ============================================================
 
 .btn {
-	.sans-serif;
-	text-transform: uppercase;
-	font-size: 14px;
-	font-weight: 800;
-	letter-spacing: 1px;
-	border-radius: 0;
-	padding: 15px 25px;
+    .sans-serif();
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    border-radius: 0;
+    padding: 15px 25px;
 }
 
+// 大按钮
 .btn-lg {
-	font-size: 16px;
-	padding: 25px 35px;
+    font-size: 16px;
+    padding: 25px 35px;
 }
 
+// 默认按钮悬停：品牌色背景
 .btn-default {
-	&:hover,
-	&:focus {
-		background-color: @brand-primary;
-		border: 1px solid @brand-primary;
-		color: white;
-	}
+    &:hover,
+    &:focus {
+        background-color: @brand-primary;
+        border: 1px solid @brand-primary;
+        color: white;
+    }
 }
 
-// Pager Styling
+// ============================================================
+// 分页器样式
+// ============================================================
 
 .pager {
-	margin: 20px 0 0 !important;
-	padding:0px !important;
+    margin: 20px 0 0 !important;
+    padding: 0px !important;
 
-	li {
-		> a,
-		> span {
-			.sans-serif;
-			text-transform: uppercase;
-			font-size: 13px;
-			font-weight: 800;
-			letter-spacing: 1px;
-			padding: 10px;
-			background-color: white;
-			border-radius: 0;
-			@media only screen and (min-width: 768px) {
-				font-size: 14px;
-				padding: 15px 25px;
-			}
-		}
+    li {
+        > a,
+        > span {
+            .sans-serif();
+            text-transform: uppercase;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 0;
+            @media only screen and (min-width: 768px) {
+                font-size: 14px;
+                padding: 15px 25px;
+            }
+        }
 
-		> a {
-			color: @gray-dark;
-		}
-		> a:hover,
-		> a:focus {
-			color: white;
-			background-color: @brand-primary;
-			border: 1px solid @brand-primary;
+        > a {
+            color: @gray-dark;
+        }
 
-			// V1.6 display title
-			> span{
-				color: white;
-			}
-		}
-	}
+        > a:hover,
+        > a:focus {
+            color: white;
+            background-color: @brand-primary;
+            border: 1px solid @brand-primary;
+            > span {
+                color: white;
+            }
+        }
+    }
 
-	.disabled {
-		> a,
-		> a:hover,
-		> a:focus,
-		> span {
-			color: @gray;
-			background-color: @gray-dark;
-			cursor: not-allowed;
-		}
-	}
+    // 禁用状态
+    .disabled {
+        > a,
+        > a:hover,
+        > a:focus,
+        > span {
+            color: @gray;
+            background-color: @gray-dark;
+            cursor: not-allowed;
+        }
+    }
 }
 
-// -- Highlight Color Customization
+// ============================================================
+// 文本选中高亮颜色
+// ============================================================
 
 ::-moz-selection {
-	color: white;
-	text-shadow: none;
-	background: @brand-primary;
+    color: white;
+    text-shadow: none;
+    background: @brand-primary;
 }
 
 ::selection {
-	color: white;
-	text-shadow: none;
-	background: @brand-primary;
+    color: white;
+    text-shadow: none;
+    background: @brand-primary;
 }
 
+// 图片选中时不显示背景色
 img::selection {
-	color: white;
-	background: transparent;
+    color: white;
+    background: transparent;
 }
-
 img::-moz-selection {
-	color: white;
-	background: transparent;
+    color: white;
+    background: transparent;
 }
 
+// ============================================================
+// 标签系统（Tags）
+// ============================================================
 
-/* Hux add tags support */
-.tags{
-	margin-bottom: -5px;
-	a,.tag{
-		display: inline-block;
-		border: 1px solid rgba(255,255,255,0.8);
-		border-radius: 999em;
-		padding: 0 10px;
-		color: rgba(255,255,255,1);
-		line-height: 24px;
-		font-size: 12px;
-		text-decoration: none;
-		margin: 0 1px;
-		margin-bottom: 6px;
-		&:hover, &:active{
-			color:white;
-			border-color: white;
-			background-color: rgba(255,255,255,0.4);
-			text-decoration: none;
-
-		}
-		@media only screen and (min-width: 768px) {
-			margin-right: 5px;
-		}
-	}
+// 通用标签样式：胶囊形圆角边框
+.tags {
+    margin-bottom: -5px;
+    a,
+    .tag {
+        display: inline-block;
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        border-radius: 999em;
+        padding: 0 10px;
+        color: rgba(255, 255, 255, 1);
+        line-height: 24px;
+        font-size: 12px;
+        text-decoration: none;
+        margin: 0 1px;
+        margin-bottom: 6px;
+        &:hover,
+        &:active {
+            color: white;
+            border-color: white;
+            background-color: rgba(255, 255, 255, 0.4);
+            text-decoration: none;
+        }
+        @media only screen and (min-width: 768px) {
+            margin-right: 5px;
+        }
+    }
 }
 
-#tag-heading{
-	padding: 70px 0 60px;
-	@media only screen and (min-width: 768px) {
-		padding:55px 0;
-	}
-
-}
-// tag_cloud
-#tag_cloud{
-	margin:20px 0 15px 0;
-	a,.tag{
-		font-size: 14px;
-		border: none;
-		line-height: 28px;
-		margin: 0 2px;
-		margin-bottom: 8px;
-		background: #D6D6D6;
-		&:hover, &:active{
-			background-color: #0085a1 !important;
-		}
-	}
-	@media only screen and (min-width: 768px) {
-		margin-bottom: 25px;
-	}
+// 标签页头部
+#tag-heading {
+    padding: 70px 0 60px;
+    @media only screen and (min-width: 768px) {
+        padding: 55px 0;
+    }
 }
 
-.tag-comments{
+// 标签云容器
+#tag_cloud {
+    margin: 20px 0 15px 0;
+    a,
+    .tag {
+        font-size: 14px;
+        border: none;
+        line-height: 28px;
+        margin: 0 2px;
+        margin-bottom: 8px;
+        background: #D6D6D6;
+        &:hover,
+        &:active {
+            background-color: #0085a1 !important;
+        }
+    }
+    @media only screen and (min-width: 768px) {
+        margin-bottom: 25px;
+    }
+}
+
+// 标签评论数
+.tag-comments {
     font-size: 12px;
-    	@media only screen and (min-width: 768px) {
-		font-size:14px;
-	}
+    @media only screen and (min-width: 768px) {
+        font-size: 14px;
+    }
 }
 
-.t{
-	//margin-top: 50px;
-	&:first-child{
-		margin-top: 0px;
-	}
-	hr:last-of-type{
-		//display: none;
-	}
-}
-.listing-seperator{
-	color:#0085a1;
-	font-size: 21px !important;
-	&::before{
-		margin-right: 5px;
-	}
-	@media only screen and (min-width: 768px) {
-		font-size: 20px !important;
-		line-height: 2 !important;
-	}
+// 标签列表项容器
+.t {
+    &:first-child {
+        margin-top: 0px;
+    }
 }
 
-// Customize Style for Posts in One-Tag-List
-.one-tag-list{
-	.tag-text{
-		font-weight: 200;
-		.sans-serif;
-	}
-	.post-preview {
-		position: relative;
-		> a {
-			.post-title{
-				font-size: 16px;
-				font-weight: 500;
-				margin-top: 20px;
-			}
-			.post-subtitle{
-				font-size: 12px;
-			}
-		}
-		> .post-meta{
-			position: absolute;
-			right: 5px;
-			bottom: 0px;
-			margin: 0px;
-			font-size: 12px;
-			line-height: 12px;
-		}
-		@media only screen and (min-width: 768px) {
-			margin-left: 20px;
-			> a {
-				> .post-title {
-					font-size: 18px;
-					line-height: 1.3
-				}
-				> .post-subtitle{
-					font-size: 14px;
-				}
-			}
-			.post-meta{
-				font-size: 18px;
-			}
-		}
-	}
+// 标签列表分隔符（字母/分类标题）
+.listing-seperator {
+    color: #0085a1;
+    font-size: 21px !important;
+    &::before {
+        margin-right: 5px;
+    }
+    @media only screen and (min-width: 768px) {
+        font-size: 20px !important;
+        line-height: 2 !important;
+    }
 }
 
-/* Tags support End*/
+// ============================================================
+// 单标签文章列表（按标签筛选后的文章列表）
+// ============================================================
 
-/* Hux make all img responsible in post-container */
-.post-container img{
-	display: block;
-	max-width: 100%;
-	height: auto;
-	margin: 1.5em auto 1.6em auto;
+.one-tag-list {
+    .tag-text {
+        font-weight: 200;
+        .sans-serif();
+    }
+    .post-preview {
+        position: relative;
+        > a {
+            .post-title {
+                font-size: 16px;
+                font-weight: 500;
+                margin-top: 20px;
+            }
+            .post-subtitle {
+                font-size: 12px;
+            }
+        }
+        > .post-meta {
+            position: absolute;
+            right: 5px;
+            bottom: 0px;
+            margin: 0px;
+            font-size: 12px;
+            line-height: 12px;
+        }
+        @media only screen and (min-width: 768px) {
+            margin-left: 20px;
+            > a {
+                > .post-title {
+                    font-size: 18px;
+                    line-height: 1.3;
+                }
+                > .post-subtitle {
+                    font-size: 14px;
+                }
+            }
+            .post-meta {
+                font-size: 18px;
+            }
+        }
+    }
 }
 
+// ============================================================
+// 文章内图片：响应式居中
+// ============================================================
 
-/* Hux Optimize UserExperience */
+.post-container img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 1.5em auto 1.6em auto;
+}
+
+// ============================================================
+// 导航栏切换按钮（汉堡菜单）
+// ============================================================
+
 .navbar-default .navbar-toggle {
-	&:focus, &:hover{
-		background-color: inherit;
-	}
-  	&:active{
-  		background-color: rgba(255, 255, 255, 0.25);
-  	}
+    // ---- 基础样式 ----
+    border-color: transparent;
+    padding: 19px 16px;
+    margin-top: 2px;
+    margin-right: 2px;
+    margin-bottom: 2px;
+    border-radius: 50%;
+
+    // 交互状态
+    &:focus,
+    &:hover {
+        background-color: inherit;
+    }
+    &:active {
+        background-color: rgba(255, 255, 255, 0.25);
+    }
+
+    // 汉堡图标的三条横线
+    .icon-bar {
+        width: 18px;
+        border-radius: 0px;
+        background-color: white;
+    }
+    .icon-bar + .icon-bar {
+        margin-top: 3px;
+    }
 }
 
-/* Hux customize Style for navBar button */
+// ============================================================
+// 多说评论插件（Duoshuo）样式覆写
+// ============================================================
 
-.navbar-default .navbar-toggle{
-	border-color: transparent;
-	padding:19px 16px;
-	margin-top: 2px;
-	margin-right: 2px;
-	margin-bottom: 2px;
-	border-radius: 50%;
-	.icon-bar{
-		width: 18px;
-		border-radius: 0px;
-		// materialize
-		background-color: white;
-	}
-	.icon-bar+.icon-bar{
-		margin-top: 3px;
-	}
+.comment {
+    margin-top: 20px;
+
+    #ds-thread #ds-reset {
+        // 点赞按钮
+        a.ds-like-thread-button {
+            border: 1px solid #ddd;
+            border-radius: 0px;
+            background: white;
+            box-shadow: none;
+            text-shadow: none;
+        }
+        // 当前标签页
+        li.ds-tab a.ds-current {
+            border: 1px solid #ddd;
+            border-radius: 0px;
+            background: white;
+            box-shadow: none;
+            text-shadow: none;
+        }
+        // 文本框区域和渐变背景：去除默认样式
+        .ds-textarea-wrapper {
+            background: none;
+        }
+        .ds-gradient-bg {
+            background: none;
+        }
+        // 发表选项和按钮底部分割线
+        .ds-post-options {
+            border-bottom: 1px solid #ccc;
+        }
+        .ds-post-button {
+            border-bottom: 1px solid #ccc;
+            background: white;
+            box-shadow: none;
+            &:hover {
+                background: @gray-light;
+            }
+        }
+    }
 }
 
-
-/* Hux customize Style for Duoshuo */
-.comment{
-	margin-top: 20px;
-	#ds-thread {
-		#ds-reset {
-			a.ds-like-thread-button{
-				border:1px solid #ddd;
-				border-radius: 0px;
-				background: white;
-				box-shadow: none;
-				text-shadow: none;
-			}
-			a.ds-thread-liked{
-
-			}
-			li.ds-tab a.ds-current{
-				border:1px solid #ddd;
-				border-radius: 0px;
-				background: white;
-				box-shadow: none;
-				text-shadow: none;
-			}
-			.ds-textarea-wrapper{
-				//border:1px solid #ddd;
-				background: none;
-			}
-			.ds-gradient-bg{
-				background: none;
-			}
-			.ds-post-options{
-				border-bottom: 1px solid #ccc;
-			}
-			.ds-post-button{
-				border-bottom: 1px solid #ccc;
-			}
-			//v1.6 flatten button
-			.ds-post-button{
-				background: white;
-				box-shadow: none;
-				&:hover{
-					background: @gray-light;
-				}
-			}
-		}
-	}
-}
+// 表情选择器标签：白底覆写
 #ds-smilies-tooltip ul.ds-smilies-tabs li a {
-	background: white !important;
+    background: white !important;
 }
 
+// ============================================================
+// 404 页面全屏模式
+// ============================================================
 
-// Hux fullscreen mode in 404.html
+.page-fullscreen {
+    // 头部全屏铺满
+    .intro-header {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+    }
 
-.page-fullscreen .intro-header{
-	position: fixed;
-	left: 0;
-	top: 0;
-	width: 100%;
-	height: 100%;
+    // 标签标题区域：Flexbox 垂直居中
+    #tag-heading {
+        position: fixed;
+        left: 0;
+        top: 0;
+        padding-bottom: 150px;
+        width: 100%;
+        height: 100%;
+
+        // 旧版 Flexbox（2009 标准）
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-box-pack: center;
+        -webkit-box-align: center;
+
+        // 过渡版 Flexbox（2012 标准）
+        display: -webkit-flex;
+        -webkit-align-items: center;
+        -webkit-justify-content: center;
+        -webkit-flex-direction: column;
+
+        // 现代 Flexbox
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    // 页脚固定在底部，半透明
+    footer {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        padding-bottom: 20px;
+        opacity: 0.6;
+        color: #fff;
+        .copyright {
+            color: #fff;
+            a {
+                color: #fff;
+                &:hover {
+                    color: #ddd;
+                }
+            }
+        }
+    }
 }
-.page-fullscreen #tag-heading{
-	position: fixed;
-	left: 0;
-	top: 0;
-	padding-bottom: 150px;
-	width: 100%;
-	height: 100%;
-	display: -webkit-box;
-	-webkit-box-orient: vertical;
-	-webkit-box-pack: center;
-	-webkit-box-align: center;
-
-	display: -webkit-flex;
-	-webkit-align-items: center;
-	-webkit-justify-content: center;
-	-webkit-flex-direction: column;
-
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-direction: column;
-}
-.page-fullscreen footer{
-	position: absolute;
-	width: 100%;
-	bottom: 0;
-	padding-bottom: 20px;
-	opacity: 0.6;
-	color: #fff;
-}
-.page-fullscreen footer .copyright{
-	color: #fff;
-}
-.page-fullscreen footer .copyright a{
-	color: #fff;
-}
-.page-fullscreen footer .copyright a:hover{
-	color: #ddd;
-}
-
-
-

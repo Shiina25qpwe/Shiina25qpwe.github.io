@@ -1,34 +1,52 @@
-// Directory Section
+// ============================================================
+// 侧边目录组件 — 文章内标题导航，跟随滚动
+// ============================================================
 
-.catalog-container{
+// 目录容器（父级占位）
+.catalog-container {
     padding: 0px;
 }
 
+/**
+ * .side-catalog — 侧边目录主体
+ *
+ * 状态类：
+ *   .fixed — 滚动超过首页横幅后固定在屏幕右侧
+ *   .fold  — 折叠状态，隐藏目录内容，切换按钮显示 "+"
+ */
 .side-catalog {
-    &.fixed{
-        position: fixed;
-        top: -21px;
-    }
-    &.fold{
-        .catalog-toggle::before{
-            content: "+";
-        }
-        .catalog-body{
-            display: none;
-        }
-    }
-    .catalog-toggle::before{
-        content: "−";
-        position: relative;
-        margin-right: 5px;
-        bottom: 1px;
-    }
     display: block;
     overflow: auto;
     height: 100%;
     padding-bottom: 40px;
     width: 195px;
-    .catalog-body{
+
+    // ---- 固定定位状态：滚动超过首页后吸顶 ----
+    &.fixed {
+        position: fixed;
+        top: -21px;
+    }
+
+    // ---- 折叠状态：隐藏目录列表，按钮变为 "+" ----
+    &.fold {
+        .catalog-toggle::before {
+            content: "+";
+        }
+        .catalog-body {
+            display: none;
+        }
+    }
+
+    // ---- 目录开关按钮（默认显示 "−" 表示展开） ----
+    .catalog-toggle::before {
+        content: "−";
+        position: relative;
+        margin-right: 5px;
+        bottom: 1px;
+    }
+
+    // ---- 目录列表主体 ----
+    .catalog-body {
         position: relative;
         list-style: none;
         height: auto;
@@ -36,10 +54,10 @@
         padding-left: 0px;
         padding-right: 5px;
         text-indent: 0;
-        li{
-            position: relative;
-            list-style: none;
-            a{
+
+        li {
+            // 目录项：单行省略显示
+            a {
                 padding-left: 10px;
                 max-width: 180px;
                 display: inline-block;
@@ -52,30 +70,41 @@
                 text-overflow: ellipsis;
             }
         }
-        .h1_nav,.h2_nav,.h3_nav{
+
+        // ---- 标题级别样式：h1/h2/h3 不缩进，加粗 ----
+        .h1_nav,
+        .h2_nav,
+        .h3_nav {
             margin-left: 0;
             font-size: 13px;
             font-weight: bold;
         }
-        .h4_nav,.h5_nav,.h6_nav{
+
+        // ---- 标题级别样式：h4/h5/h6 缩进 10px，稍小 ----
+        .h4_nav,
+        .h5_nav,
+        .h6_nav {
             margin-left: 10px;
             font-size: 12px;
-            a{
-                max-width: 170px;
+            a {
+                max-width: 170px;   // 缩进后文本宽度相应减小
             }
         }
-        .active{
-            a{
-                color: #0085a1!important;
-            }
+
+        // ---- 当前高亮项：蓝色文字 + 浅灰背景 ----
+        .active {
             border-radius: 4px;
             background-color: #F5F5F5;
+            a {
+                color: #0085a1 !important;
+            }
         }
     }
 }
 
-@media (max-width: 1200px){
-    .side-catalog{
+// 小屏幕（≤1200px）：隐藏侧边目录
+@media (max-width: 1200px) {
+    .side-catalog {
         display: none;
     }
 }
