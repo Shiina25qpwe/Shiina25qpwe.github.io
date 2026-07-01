@@ -1,30 +1,110 @@
 ---
 layout: null
 ---
+
+<!--
+  ============================================================
+  feed.xml — RSS 2.0 订阅源
+  ============================================================
+
+  用途：为 RSS 阅读器（如 Feedly、Inoreader）提供博客更新订阅
+  访问：https://yourdomain.com/feed.xml
+  规范：https://www.rssboard.org/rss-specification
+
+  输出格式：RSS 2.0 + Atom 自引用（兼容新旧阅读器）
+
+  设计决策：
+    - 使用 post.content 而非 post.excerpt 作为每条目的描述
+      → RSS 阅读器中可直接阅读全文（无需跳转网站）
+      → 代价：feed 文件较大，每次请求传输全量 HTML
+      → 如需改为摘要，将 post.content 替换为 post.excerpt 即可
+
+    - 仅包含最近 10 篇文章（limit:10）
+      → 控制 feed 大小，旧文章可通过网站归档访问
+
+    - 标题/内容使用 xml_escape 过滤器
+      → 防止特殊字符（< > & 等）破坏 XML 结构
+  ============================================================
+-->
+
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
+
+    <!--
+      ========== 频道元信息（Channel Metadata） ==========
+      RSS 阅读器订阅时首先看到的信息，描述整个博客
+    -->
+
+    <!-- title       : 博客标题（来自 _config.yml 的 title） -->
     <title>{{ site.title | xml_escape }}</title>
+
+    <!-- description : 博客描述（来自 _config.yml 的 description） -->
     <description>{{ site.description | xml_escape }}</description>
+
+    <!-- link        : 博客首页 URL（site.url + site.baseurl 拼接） -->
     <link>{{ site.url }}{{ site.baseurl }}/</link>
-    <atom:link href="{{ "/feed.xml" | prepend: site.baseurl | prepend: site.url }}" rel="self" type="application/rss+xml" />
+
+    <!-- atom:link   : Atom 自引用链接
+          href : feed 自身的完整 URL（用于自动发现和订阅验证）
+          rel  : "self" 表示此链接指向 feed 本身
+          type : MIME 类型 application/rss+xml -->
+    <atom:link
+      href="{{ "/feed.xml" | prepend: site.baseurl | prepend: site.url }}"
+      rel="self"
+      type="application/rss+xml"
+    />
+
+    <!-- pubDate     : 频道发布日期（Jekyll 构建时间） -->
     <pubDate>{{ site.time | date_to_rfc822 }}</pubDate>
+
+    <!-- lastBuildDate : 频道最后更新时间（同构建时间） -->
     <lastBuildDate>{{ site.time | date_to_rfc822 }}</lastBuildDate>
+
+    <!-- generator   : 生成此 feed 的工具（Jekyll + 版本号） -->
     <generator>Jekyll v{{ jekyll.version }}</generator>
+
+
+    <!--
+      ========== 文章条目（Items） ==========
+      遍历最近 10 篇文章，每篇生成一个 <item>
+    -->
     {% for post in site.posts limit:10 %}
-      <item>
-        <title>{{ post.title | xml_escape }}</title>
-        <description>{{ post.content | xml_escape }}</description>
-        <pubDate>{{ post.date | date_to_rfc822 }}</pubDate>
-        <link>{{ post.url | prepend: site.baseurl | prepend: site.url }}</link>
-        <guid isPermaLink="true">{{ post.url | prepend: site.baseurl | prepend: site.url }}</guid>
-        {% for tag in post.tags %}
-        <category>{{ tag | xml_escape }}</category>
-        {% endfor %}
-        {% for cat in post.categories %}
-        <category>{{ cat | xml_escape }}</category>
-        {% endfor %}
-      </item>
+    <item>
+
+      <!-- title       : 文章标题（xml_escape 防止 XML 注入） -->
+      <title>{{ post.title | xml_escape }}</title>
+
+      <!-- description : 文章内容（完整 HTML，xml_escape 后作为纯文本/转义 HTML）
+           注意：完整 HTML 内容会使 feed 文件较大。
+           如需改为摘要，替换为 {{ post.excerpt | xml_escape }} -->
+      <description>{{ post.content | xml_escape }}</description>
+
+      <!-- pubDate     : 文章发布日期（RFC 822 格式，如 "Mon, 01 Jan 2024 00:00:00 +0800"） -->
+      <pubDate>{{ post.date | date_to_rfc822 }}</pubDate>
+
+      <!-- link        : 文章完整 URL（用于 RSS 阅读器中的"查看原文"链接） -->
+      <link>{{ post.url | prepend: site.baseurl | prepend: site.url }}</link>
+
+      <!-- guid        : 文章全局唯一标识符（Globally Unique Identifier）
+           isPermaLink="true"  → guid 是一个永久链接（大多数博客使用此模式）
+           值：文章完整 URL（只要 URL 不变，RSS 阅读器就不会重复显示） -->
+      <guid isPermaLink="true">{{ post.url | prepend: site.baseurl | prepend: site.url }}</guid>
+
+      <!-- category    : 文章标签（tags）
+           一个 <item> 可以有多个 <category> 元素 -->
+      {% for tag in post.tags %}
+      <category>{{ tag | xml_escape }}</category>
+      {% endfor %}
+
+      <!-- category    : 文章分类（categories）
+           标签和分类都映射到 RSS <category> 元素 -->
+      {% for cat in post.categories %}
+      <category>{{ cat | xml_escape }}</category>
+      {% endfor %}
+
+    </item>
     {% endfor %}
+
   </channel>
 </rss>
