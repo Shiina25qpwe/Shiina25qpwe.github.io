@@ -5,21 +5,92 @@ header-img: "img/404-bg.jpg"
 permalink: /offline.html
 ---
 
+<!--
+  ============================================================
+  offline.html — 离线页面（PWA Service Worker 兜底页）
+  ============================================================
 
-<!-- Page Header -->
-<header class="intro-header" style="background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')">
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-				<div class="site-heading" id="tag-heading">
-					<h1>Offline</h1>
-					<span class="subheading">{{ page.description }}</span>
-				</div>
-			</div>
-		</div>
-	</div>
+  触发时机：
+    用户已安装 PWA 且处于离线状态时，任何未缓存的页面请求
+    都会被 Service Worker（sw.js）拦截并返回此页面。
+    对应 SW 代码：
+      .catch(() => caches.match('offline.html'))
+
+  技术说明：
+    1. 使用 default 布局（继承完整的 head.html + footer.html）
+    2. 通过 page-fullscreen CSS 类实现全屏居中
+    3. background-image 由 header-img 配置（复用 404 页面背景图）
+    4. 脚本添加 page-fullscreen 类名（对应的 CSS 在 less/hux-blog.less 中）：
+       - .intro-header → 固定定位铺满全屏
+       - #tag-heading   → Flexbox 垂直居中
+       - footer         → 绝对定位在底部，半透明
+
+  与 404.html 的差异：
+    - 标题文字：404 → Offline
+    - 描述文字：404（找不到页面）→ 网络问题
+    - 功能上完全一致（全屏错误提示页）
+
+  需关注的点：
+    - header-img 已在 front matter 中定义，下方的 if/else 回退到
+      site.header-img 的分支实际不会执行（保留作为模板通用性）
+    - id="tag-heading" 的名称是历史遗留（源自标签页），CSS 依赖此 id
+      实现 flexbox 居中，修改 id 需同步 less/hux-blog.less
+    - offline.html 需要被预缓存（SW install 阶段 cache.add('offline.html')）
+      如果此文件的路径或内容发生变化，需同步更新 sw.js
+  ============================================================
+-->
+
+
+<!-- ==================== 页面头部 — 全屏背景大图 ==================== -->
+<!--
+  background-image 优先级：
+    1. page.header-img（本页 front matter 中定义为 "img/404-bg.jpg"）
+    2. site.header-img（全局配置 _config.yml 中的 header-img，作为 fallback）
+  site.baseurl : 站点子路径（根目录部署时为空）
+-->
+<header
+  class="intro-header"
+  style="background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')"
+>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+        <!--
+          离线提示内容区
+          id="tag-heading" : CSS 选择器钩子，配合 .page-fullscreen 实现 Flexbox 居中
+        -->
+        <div class="site-heading" id="tag-heading">
+
+          <!--
+            标题：Offline — 明确告知用户当前为离线状态
+          -->
+          <h1>Offline</h1>
+
+          <!--
+            副标题：page.description — 来自 front matter：
+            "网络似乎出现了问题 😥"
+            通过 .subheading 样式类显示为副标题
+          -->
+          <span class="subheading">{{ page.description }}</span>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
 </header>
 
+
+<!-- ==================== 全屏模式脚本 ==================== -->
+<!--
+  为 <body> 添加 page-fullscreen CSS 类，触发全屏布局：
+    - 头部区域（.intro-header）铺满整个视口
+    - 内容垂直居中
+    - 页脚固定在底部，半透明
+
+  注：此脚本放在页面末尾，确保 DOM 已就绪（同步执行即可）
+-->
 <script>
-	document.body.classList.add('page-fullscreen');
+  document.body.classList.add('page-fullscreen');
 </script>
