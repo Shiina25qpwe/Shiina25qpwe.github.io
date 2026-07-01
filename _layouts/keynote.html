@@ -129,8 +129,8 @@ layout: default
                 <!-- Gitalk end -->
 
                 <!-- Disqus 评论（备选方案） -->
-                <!-- 注意：此处使用 site.disqus.enable 控制，与 post.html 的 site.disqus_username 不同 -->
-                {% if site.disqus.enable %}
+                <!-- 与 post.html 一致，使用扁平配置 site.disqus_username -->
+                {% if site.disqus_username %}
                 <div class="comment">
                     <div id="disqus_thread" class="disqus-thread">
                     </div>
@@ -218,11 +218,11 @@ layout: default
 <!-- ==================== 页面底部 JS ==================== -->
 
 <!-- Disqus 嵌入脚本 -->
-<!-- 注意：此处使用 site.disqus.username（嵌套结构），与 post.html 的 site.disqus_username（扁平结构）不同 -->
-{% if site.disqus.enable %}
+<!-- 与 post.html 一致，使用扁平配置 site.disqus_username -->
+{% if site.disqus_username %}
 <script type="text/javascript">
     /* Disqus 配置变量 */
-    var disqus_shortname = "{{site.disqus.username}}";
+    var disqus_shortname = "{{site.disqus_username}}";
     var disqus_identifier = "{{page.id}}";
     var disqus_url = "{{site.url}}{{page.url}}";
 

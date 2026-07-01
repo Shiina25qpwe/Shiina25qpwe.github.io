@@ -82,7 +82,10 @@
 
     <!-- ==================== MathJax 数学公式渲染 ==================== -->
     <!--
-      全局加载 MathJax 3.x（使用 SVG 渲染器，兼容性好）
+      按需加载 MathJax 3.x（仅在 front matter 中设置 mathjax: true 的页面加载）
+      使用 SVG 渲染器，兼容性好
+
+      启用方法：在文章 front matter 中添加 mathjax: true
 
       配置说明：
         inlineMath      : 行内公式分隔符，$...$ 和 \(...\) 均可
@@ -91,13 +94,8 @@
         tags            : 'ams' → 公式编号靠右（AMS 风格）
         skipHtmlTags    : 跳过这些标签内的内容，避免误解析
         fontCache       : 'global' → SVG 字体缓存模式（性能更好）
-
-      如需按页面控制是否加载，可在外层添加：
-        {% if page.mathjax %}
-          ...MathJax 代码...
-        {% endif %}
-      当前策略：所有页面均加载（缺点：无公式页面也有额外请求）
     -->
+    {% if page.mathjax %}
     <script>
         window.MathJax = {
             tex: {
@@ -117,5 +115,6 @@
     <script type="text/javascript" id="MathJax-script" async
         src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
     </script>
+    {% endif %}
 
 </head>

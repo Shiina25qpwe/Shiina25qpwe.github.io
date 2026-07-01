@@ -80,16 +80,12 @@ header-img: "img/64800561_p0.jpg"
   Disqus 评论
   ============================================================
   启用步骤：
-    1. 在 _config.yml 中添加 disqus 配置块：
-         disqus:
-           enable: true
-           username: your_disqus_shortname
+    1. 在 _config.yml 中取消 disqus_username 的注释并填入你的 shortname
     2. 在 https://disqus.com/ 注册站点获取 shortname
 
-  注：原 _config.yml 只有一个被注释的 disqus_username，
-      缺少 enable 子键，需按上述格式补充才能启用。
+  与 post.html 一致，使用扁平配置 site.disqus_username
   ============================================================ -->
-{% if site.disqus.enable %}
+{% if site.disqus_username %}
 
 <div class="comment">
   <div id="disqus_thread" class="disqus-thread"></div>
@@ -97,8 +93,8 @@ header-img: "img/64800561_p0.jpg"
 
 <script type="text/javascript">
   /* Disqus 配置变量 */
-  var disqus_shortname = "{{site.disqus.username}}";          // Disqus 站点 shortname
-  var disqus_identifier = "{{site.disqus.username}}/{{page.url}}";  // 页面唯一标识
+  var disqus_shortname = "{{site.disqus_username}}";          // Disqus 站点 shortname
+  var disqus_identifier = "{{site.disqus_username}}/{{page.url}}";  // 页面唯一标识
   var disqus_url = "{{site.url}}{{page.url}}";                // 页面完整 URL
 
   /* 异步加载 Disqus 嵌入脚本 */

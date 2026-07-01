@@ -28,7 +28,8 @@ description: "主要写ACG相关随笔的备用博客"
 keyword: "anime, comic, game"
 url: "https://byq0002.github.io/"
 baseurl: ""
-#github_repo: "https://github.com/qiubaiying/qiubaiying.github.io.git"
+github_username: BYQ0002                # GitHub 用户名（用于页脚 Star 按钮）
+github_repo: "https://github.com/BYQ0002/BYQ0002.github.io"  # GitHub 仓库地址
 
 
 # ============================================================
