@@ -1,13 +1,76 @@
+# ============================================================
+#  .travis.yml — Travis CI 持续集成配置
+# ============================================================
+#  用途：每次 git push 时自动执行 Jekyll 构建，验证站点能正确生成
+#
+#  工作流程：
+#    1. 检出代码
+#    2. 安装 Jekyll 及插件
+#    3. 执行 jekyll build（构建失败 → CI 报错）
+#
+#  注册：https://travis-ci.org（或 travis-ci.com）
+#  文档：https://docs.travis-ci.com/
+
+# ============================================================
+# 构建环境
+# ============================================================
+
+# language       : 指定构建语言（Travis 会预装对应语言的运行环境）
+#                  ruby → 适用于 Jekyll（Ruby 静态站点生成器）
 language: ruby
+
+# rvm            : Ruby 版本管理器，锁定 Ruby 版本确保构建一致性
+#                  Travis 默认使用最新 Ruby，显式指定避免版本漂移
+rvm:
+  - 2.7
+
+# cache          : 启用依赖缓存，加速后续构建
+#                  bundler → 缓存 gem 包，避免每次重新下载
+cache: bundler
+
+# env.global     : 全局环境变量（所有构建步骤可用）
+#   NOKOGIRI_USE_SYSTEM_LIBRARIES : 强制 nokogiri 使用系统库而非编译原生扩展
+#                                   如果项目不依赖 nokogiri，此行可安全移除
 env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
-install: 
+
+# ============================================================
+# 构建触发条件
+# ============================================================
+
+# branches.only  : 仅对指定分支触发构建
+#                  master → 只构建主分支（PR、其他分支忽略，节省 CI 配额）
+branches:
+  only:
+    - master
+
+# ============================================================
+# 安装阶段（install）— 安装项目依赖
+# ============================================================
+
+# 注：此处使用 gem install 而非 bundle install，
+#     因为项目未提供 Gemfile（依赖固定为 jekyll + jekyll-paginate）
+#     如需严格版本管理，可添加 Gemfile 并改用 bundle install
+install:
   - gem install jekyll
   - gem install jekyll-paginate
-script: 
-  - jekyll build
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
-  
 
+# ============================================================
+# 构建阶段（script）— 执行构建命令
+# ============================================================
+
+# jekyll build   : 将源文件编译为 _site 静态网站目录
+#                   构建失败（如 Liquid 语法错误、配置问题）→ CI 状态标记为失败
+#                   构建成功 → CI 状态标记为通过
+script:
+  - jekyll build
+
+# ============================================================
+# 构建后阶段（after_success）— 构建成功后执行
+# ============================================================
+
+# 无：原配置中有一行 Codecov 代码覆盖率上传（bash <(curl -s https://codecov.io/bash)），
+#     但本博客是纯静态站点，无测试代码无覆盖率数据，该命令无效且浪费构建时间，已移除。
+#     如需部署到 GitHub Pages，可在此添加 deploy 配置块，参考：
+#     https://docs.travis-ci.com/user/deployment/pages/
