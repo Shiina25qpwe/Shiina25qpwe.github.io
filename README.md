@@ -18,6 +18,7 @@
   - [404 页面](#404-页面)
   - [离线页 offline.html](#离线页-offlinehtml)
   - [RSS 订阅 feed.xml](#rss-订阅-feedxml)
+  - [黑夜模式](#黑夜模式)
 - [布局系统](#布局系统)
   - [default 布局](#default-布局)
   - [page 布局](#page-布局)
@@ -97,6 +98,10 @@ git push origin master
 │   ├── sidebar.less         #   侧边栏样式
 │   └── side-catalog.less    #   侧边目录样式
 ├── css/                     # 编译后的 CSS
+│   ├── bootstrap.css/min.css#   Bootstrap 样式
+│   ├── hux-blog.css/min.css #   主题样式（Less 编译输出）
+│   ├── dark-mode.css        #   黑夜模式样式
+│   └── syntax.css           #   代码高亮样式
 ├── js/                      # JavaScript 脚本
 │   ├── hux-blog.js          #   主题主脚本（未压缩源文件）
 │   ├── hux-blog.min.js      #   主题主脚本（压缩版，生产使用）
@@ -381,6 +386,70 @@ tags:                           # 标签列表
 
 ---
 
+## 黑夜模式
+
+### 工作原理
+
+黑夜模式通过四个组件协同工作，所有页面共享（因为都继承自 `default.html` 布局）：
+
+```
+用户打开页面
+  → head.html 防闪烁脚本：读取 localStorage / 系统偏好 → 设置 <html data-theme="dark">
+  → dark-mode.css：通过 [data-theme="dark"] 选择器覆盖所有亮色样式
+  → nav.html：导航栏右侧显示 🌙/☀️ 切换按钮
+  → footer.html 切换 JS：点击按钮 → 更新 data-theme + localStorage + 浏览器标签颜色
+```
+
+### 颜色体系
+
+所有暗色颜色定义在 `css/dark-mode.css` 中，采用 CSS 变量约定（注释中标注，方便快速定位）：
+
+| 变量 | 色值 | 用途 |
+|------|------|------|
+| `--bg-primary` | `#1b1b1b` | 页面主背景 |
+| `--bg-surface` | `#252525` | 卡片/容器背景 |
+| `--bg-elevated` | `#2d2d2d` | 浮层/导航背景 |
+| `--text-primary` | `#d4d4d4` | 正文文字 |
+| `--text-secondary` | `#999` | 次要文字 |
+| `--text-muted` | `#777` | 最淡文字 |
+| `--border` | `#404040` | 边框/分割线 |
+| `--brand` | `#0099b8` | 品牌色（暗色下稍亮） |
+| `--link` | `#4db8cc` | 正文链接色 |
+
+### 覆盖范围
+
+`dark-mode.css` 共 22 节，覆盖以下区域：
+
+| 节 | 覆盖内容 |
+|----|---------|
+| 1-4 | 全局基础、排版、表格、代码块/语法高亮 |
+| 5-7 | 导航栏、首页大图、文章预览卡片 |
+| 8 | 文章详情页（正文链接、h5/h6、分页导航） |
+| 9-11 | 通用区块、侧边栏、侧边目录 |
+| 12-18 | 页脚、标签系统、分页器、按钮、表单、下拉框、文本选中 |
+| 19-21 | 404/全屏页面、说说评论、Gitalk 评论区 |
+| 22 | 主题切换按钮样式（桌面/移动端） |
+
+### 用户操作
+
+- **切换**：点击导航栏右侧的 🌙/☀️ 按钮
+- **记忆**：用户选择存入 `localStorage['theme']`，下次访问自动恢复
+- **跟随系统**：若用户从未手动切换，首次访问时跟随 `prefers-color-scheme: dark` 系统设置
+- **系统切换响应**：当用户未手动设置主题时，系统切换亮/暗模式会自动跟随
+
+### 修改指南
+
+| 需求 | 方法 |
+|------|------|
+| 修改暗色背景色 | `css/dark-mode.css` → 搜索 `#1b1b1b` 替换 |
+| 修改暗色文字颜色 | `css/dark-mode.css` → 搜索 `#d4d4d4` 替换 |
+| 修改暗色品牌色 | `css/dark-mode.css` → 搜索 `#0099b8` 替换 |
+| 修改切换按钮图标 | `footer.html` → `updateIcon()` 中的 `☀️` / `🌙` → 换成其他 emoji 或文字 |
+| 关闭黑夜模式 | 1. 删除 `nav.html` 中的按钮 `<li>` 2. 删除 `footer.html` 中"黑夜模式切换逻辑"script 块 3. 删除 `head.html` 中防闪烁脚本 4. 删除 `css/dark-mode.css` 的 `<link>` |
+| 新增某区域的暗色覆盖 | 在 `css/dark-mode.css` 末尾追加 `[data-theme="dark"] 你的选择器 { ... }` |
+
+---
+
 ## 布局系统
 
 博客使用 Jekyll 布局继承体系：`default → page/post/keynote`
@@ -487,10 +556,13 @@ navcolor: "invert"                   # 导航栏反色（浅色背景时使用�
 | Bootstrap CSS | 栅格系统 | CDN 或本地 `css/bootstrap.min.css` |
 | hux-blog CSS | 主题样式 | `css/hux-blog.min.css`（Grunt 编译自 Less） |
 | syntax.css | 代码高亮 | Rouge 语法着色主题 |
+| dark-mode.css | 黑夜模式样式 | `css/dark-mode.css`（通过 `[data-theme="dark"]` 选择器覆盖亮色） |
 | Font Awesome | 图标字体 | CDN 加载 v4.6.3 |
 | MathJax | 数学公式渲染 | CDN 加载 v3.x，所有页面均加载 |
 
 **⚠️ MathJax 在所有页面加载：** 即使文章没有数学公式，也会下载 ~200KB MathJax 库。如需按需加载，在 `head.html` 的 MathJax 脚本外包裹 `{% if page.mathjax %}`。
+
+另外 `head.html` 最顶部还有一个**黑夜模式防闪烁脚本**，在 CSS 加载前根据 `localStorage` 或系统偏好设置 `data-theme` 属性，避免亮→暗的闪烁。
 
 ### nav.html — 顶部导航栏
 
@@ -511,6 +583,9 @@ navcolor: "invert"                   # 导航栏反色（浅色背景时使用�
 | 隐藏某页面 | 去掉该页面 front matter 的 `title` |
 | 修改导航栏品牌名 | `<a class="navbar-brand">` 中的 `{{ site.title }}` |
 | 调整移动端菜单宽度 | `less/hux-blog.less` → `#huxblog_navbar .navbar-collapse` → `width: 170px` |
+| 移除黑夜模式按钮 | 删除 `nav.html` 中 `<li>` 包裹的 `<button class="theme-toggle-btn">` 整个块 |
+
+导航栏右侧有一个 🌙/☀️ **主题切换按钮**，点击后调用 `footer.html` 中的切换逻辑在亮色/暗色模式之间切换。
 
 ### footer.html — 页脚 + JS 加载
 
@@ -519,6 +594,7 @@ navcolor: "invert"                   # 导航栏反色（浅色背景时使用�
 **脚本加载顺序（有依赖关系，不要随意调换）：**
 
 ```
+0. 黑夜模式切换    → 主题切换 JS（先于 jQuery，不依赖任何库）
 1. jQuery         → Bootstrap 依赖
 2. Bootstrap      → 导航栏 collapse 等功能
 3. hux-blog.min.js → 主题核心逻辑（表格、视频响应式、导航滚动）
@@ -535,6 +611,8 @@ navcolor: "invert"                   # 导航栏反色（浅色背景时使用�
 | 关闭 Service Worker | `_config.yml` → `service-worker: false` |
 | 更换统计代码 | 百度统计 / Google Analytics 区块（由 `_config.yml` 控制是否渲染） |
 | 关闭 FastClick | 移除对应的 `<script>` 块 |
+| 修改黑夜模式颜色 | 编辑 `css/dark-mode.css`（颜色变量说明见[黑夜模式](#黑夜模式)） |
+| 修改切换图标 | `footer.html` 中 `updateIcon()` 函数的 `☀️` / `🌙` 文字 |
 
 ### social-icon.html — 社交图标组件
 
