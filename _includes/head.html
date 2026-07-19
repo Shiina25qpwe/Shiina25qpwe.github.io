@@ -6,6 +6,17 @@
 -->
 
 <head>
+    <!-- ==================== 黑夜模式防闪烁脚本 ==================== -->
+    <!-- 必须在任何 CSS 加载前执行，避免亮色主题闪烁 -->
+    <script>
+        (function() {
+            var theme = localStorage.getItem('theme');
+            if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+
     <!-- ==================== 基础 Meta ==================== -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -59,6 +70,9 @@
 
     <!-- 代码高亮 CSS（Rouge/Pygments 语法着色主题） -->
     <link rel="stylesheet" href="{{ '/css/syntax.css' | prepend: site.baseurl }}">
+
+    <!-- 黑夜模式样式（通过 [data-theme="dark"] 覆盖亮色样式） -->
+    <link rel="stylesheet" href="{{ '/css/dark-mode.css' | prepend: site.baseurl }}">
 
 
     <!-- ==================== Font Awesome 图标字体 ==================== -->

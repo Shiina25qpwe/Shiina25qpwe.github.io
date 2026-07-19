@@ -118,6 +118,59 @@
 -->
 
 
+<!-- ==================== 黑夜模式切换逻辑 ==================== -->
+<script>
+    (function() {
+        var html = document.documentElement;
+        var toggle = document.getElementById('theme-toggle');
+        var icon = toggle ? toggle.querySelector('.theme-icon') : null;
+        var metaTheme = document.querySelector('meta[name="theme-color"]');
+        var lightColor = '{{ site.chrome-tab-theme-color }}';
+        var darkColor = '#1b1b1b';
+
+        // 初始化图标
+        function updateIcon() {
+            if (!icon) return;
+            icon.textContent = html.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙';
+        }
+
+        // 更新 meta theme-color
+        function updateMetaTheme() {
+            if (!metaTheme) return;
+            metaTheme.setAttribute('content',
+                html.getAttribute('data-theme') === 'dark' ? darkColor : lightColor);
+        }
+
+        // 初始化
+        updateIcon();
+        updateMetaTheme();
+
+        // 切换按钮点击
+        if (toggle) {
+            toggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var current = html.getAttribute('data-theme');
+                var next = current === 'dark' ? 'light' : 'dark';
+                html.setAttribute('data-theme', next);
+                localStorage.setItem('theme', next);
+                updateIcon();
+                updateMetaTheme();
+            });
+        }
+
+        // 监听系统颜色方案变化（当用户未手动设置主题时跟随系统）
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+            if (!localStorage.getItem('theme')) {
+                html.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+                updateIcon();
+                updateMetaTheme();
+            }
+        });
+    })();
+</script>
+
+
 <!-- jQuery（Bootstrap 依赖，必须先加载） -->
 <script src="{{ '/js/jquery.min.js' | prepend: site.baseurl }}"></script>
 

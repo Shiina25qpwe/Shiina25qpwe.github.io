@@ -1,0 +1,547 @@
+/* ============================================================
+ * dark-mode.css — 黑夜模式样式
+ *
+ * 通过 [data-theme="dark"] 选择器覆盖所有亮色主题样式
+ * 颜色体系：
+ *   --bg-primary:    #1b1b1b  页面主背景
+ *   --bg-surface:    #252525  卡片/容器背景
+ *   --bg-elevated:   #2d2d2d  浮层/导航背景
+ *   --text-primary:  #d4d4d4  正文文字
+ *   --text-secondary:#999     次要文字
+ *   --text-muted:    #777     最淡文字
+ *   --border:        #404040  边框/分割线
+ *   --brand:         #0099b8  品牌色（暗色下稍亮）
+ *   --link:          #4db8cc  正文链接色
+ * ============================================================ */
+
+/* ============================================================
+ * 1. 全局基础
+ * ============================================================ */
+[data-theme="dark"] {
+  background-color: #1b1b1b;
+}
+
+[data-theme="dark"] body {
+  color: #d4d4d4;
+  background-color: #1b1b1b;
+}
+
+[data-theme="dark"] a {
+  color: #d4d4d4;
+}
+
+[data-theme="dark"] a:hover,
+[data-theme="dark"] a:focus {
+  color: #0099b8;
+}
+
+[data-theme="dark"] a img:hover,
+[data-theme="dark"] a img:focus {
+  cursor: zoom-in;
+}
+
+/* ============================================================
+ * 2. 排版
+ * ============================================================ */
+[data-theme="dark"] blockquote {
+  color: #999;
+  border-left-color: #404040;
+}
+
+[data-theme="dark"] hr.small {
+  border-color: #2d2d2d;
+}
+
+[data-theme="dark"] img.shadow {
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 2px 8px 0px;
+}
+
+/* ============================================================
+ * 3. 表格
+ * ============================================================ */
+[data-theme="dark"] .table th,
+[data-theme="dark"] .table td {
+  border-color: #404040 !important;
+}
+
+/* ============================================================
+ * 4. 代码块 & 语法高亮
+ * ============================================================ */
+[data-theme="dark"] .highlight pre,
+[data-theme="dark"] pre,
+[data-theme="dark"] .highlight .hll {
+  background-color: #1e1e1e;
+  border-color: #404040;
+}
+
+/* Rouge 语法高亮 — 暗色覆盖 */
+[data-theme="dark"] .highlight .c   { color: #6a9955; }  /* 注释 */
+[data-theme="dark"] .highlight .cm  { color: #6a9955; }
+[data-theme="dark"] .highlight .cp  { color: #569cd6; font-weight: bold; }
+[data-theme="dark"] .highlight .c1  { color: #6a9955; }
+[data-theme="dark"] .highlight .cs  { color: #569cd6; font-weight: bold; }
+[data-theme="dark"] .highlight .err { color: #f44747; background-color: #3a1f1f; }
+[data-theme="dark"] .highlight .k   { color: #569cd6; font-weight: bold; }
+[data-theme="dark"] .highlight .kc  { color: #569cd6; font-weight: bold; }
+[data-theme="dark"] .highlight .kd  { color: #569cd6; font-weight: bold; }
+[data-theme="dark"] .highlight .kn  { color: #569cd6; font-weight: bold; }
+[data-theme="dark"] .highlight .kp  { color: #569cd6; font-weight: bold; }
+[data-theme="dark"] .highlight .kr  { color: #569cd6; font-weight: bold; }
+[data-theme="dark"] .highlight .kt  { color: #569cd6; }
+[data-theme="dark"] .highlight .o   { color: #d4d4d4; }
+[data-theme="dark"] .highlight .ow  { color: #569cd6; font-weight: bold; }
+[data-theme="dark"] .highlight .gd  { color: #d4d4d4; background-color: #3a1f1f; }
+[data-theme="dark"] .highlight .gd .x { color: #d4d4d4; background-color: #4a2020; }
+[data-theme="dark"] .highlight .ge  { font-style: italic; }
+[data-theme="dark"] .highlight .gr  { color: #f44747; }
+[data-theme="dark"] .highlight .gh  { color: #999; }
+[data-theme="dark"] .highlight .gi  { color: #d4d4d4; background-color: #1f3a1f; }
+[data-theme="dark"] .highlight .gi .x { color: #d4d4d4; background-color: #204a20; }
+[data-theme="dark"] .highlight .go  { color: #888; }
+[data-theme="dark"] .highlight .gp  { color: #999; }
+[data-theme="dark"] .highlight .gs  { font-weight: bold; }
+[data-theme="dark"] .highlight .gu  { color: #c586c0; }
+[data-theme="dark"] .highlight .gt  { color: #f44747; }
+[data-theme="dark"] .highlight .m   { color: #b5cea8; }
+[data-theme="dark"] .highlight .mf  { color: #b5cea8; }
+[data-theme="dark"] .highlight .mh  { color: #b5cea8; }
+[data-theme="dark"] .highlight .mi  { color: #b5cea8; }
+[data-theme="dark"] .highlight .mo  { color: #b5cea8; }
+[data-theme="dark"] .highlight .il  { color: #b5cea8; }
+[data-theme="dark"] .highlight .s   { color: #ce9178; }
+[data-theme="dark"] .highlight .sb  { color: #ce9178; }
+[data-theme="dark"] .highlight .sc  { color: #ce9178; }
+[data-theme="dark"] .highlight .sd  { color: #ce9178; }
+[data-theme="dark"] .highlight .s2  { color: #ce9178; }
+[data-theme="dark"] .highlight .se  { color: #ce9178; }
+[data-theme="dark"] .highlight .sh  { color: #ce9178; }
+[data-theme="dark"] .highlight .si  { color: #ce9178; }
+[data-theme="dark"] .highlight .sx  { color: #ce9178; }
+[data-theme="dark"] .highlight .sr  { color: #ce9178; }
+[data-theme="dark"] .highlight .s1  { color: #ce9178; }
+[data-theme="dark"] .highlight .ss  { color: #ce9178; }
+[data-theme="dark"] .highlight .n   { color: #d4d4d4; }
+[data-theme="dark"] .highlight .na  { color: #9cdcfe; }
+[data-theme="dark"] .highlight .nb  { color: #569cd6; }
+[data-theme="dark"] .highlight .nc  { color: #4ec9b0; }
+[data-theme="dark"] .highlight .no  { color: #9cdcfe; }
+[data-theme="dark"] .highlight .ni  { color: #c586c0; }
+[data-theme="dark"] .highlight .ne  { color: #569cd6; }
+[data-theme="dark"] .highlight .nf  { color: #dcdcaa; }
+[data-theme="dark"] .highlight .nn  { color: #d4d4d4; }
+[data-theme="dark"] .highlight .nt  { color: #569cd6; }
+[data-theme="dark"] .highlight .nv  { color: #9cdcfe; }
+[data-theme="dark"] .highlight .vc  { color: #9cdcfe; }
+[data-theme="dark"] .highlight .vg  { color: #9cdcfe; }
+[data-theme="dark"] .highlight .vi  { color: #9cdcfe; }
+[data-theme="dark"] .highlight .w   { color: #555; }
+[data-theme="dark"] .highlight .bp  { color: #999; }
+[data-theme="dark"] .highlight .gc  { color: #999; background-color: #2a3038; }
+
+/* ============================================================
+ * 5. 导航栏
+ * ============================================================ */
+
+/* --- 桌面端固定导航（滚动后出现）--- */
+[data-theme="dark"] .navbar-custom.is-fixed {
+  background-color: rgba(30, 30, 30, 0.95);
+  border-bottom-color: #333;
+}
+
+[data-theme="dark"] .navbar-custom.is-fixed .navbar-brand {
+  color: #d4d4d4;
+}
+
+[data-theme="dark"] .navbar-custom.is-fixed .navbar-brand:hover,
+[data-theme="dark"] .navbar-custom.is-fixed .navbar-brand:focus {
+  color: #0099b8;
+}
+
+[data-theme="dark"] .navbar-custom.is-fixed .nav li a {
+  color: #d4d4d4;
+}
+
+[data-theme="dark"] .navbar-custom.is-fixed .nav li a:hover,
+[data-theme="dark"] .navbar-custom.is-fixed .nav li a:focus {
+  color: #0099b8;
+}
+
+/* --- 默认透明导航（首页顶部大图上）保持白色不变 --- */
+
+/* --- 移动端下拉菜单 --- */
+@media only screen and (max-width: 767px) {
+  [data-theme="dark"] .navbar-default .navbar-collapse {
+    background: #2d2d2d;
+    box-shadow: 0px 5px 10px 2px rgba(0, 0, 0, 0.5);
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 6px, rgba(0, 0, 0, 0.4) 0px 1px 4px;
+  }
+}
+
+/* ============================================================
+ * 6. 首页大图头部
+ * ============================================================ */
+[data-theme="dark"] .intro-header {
+  background-color: #555;
+}
+
+/* ============================================================
+ * 7. 首页文章预览卡片
+ * ============================================================ */
+[data-theme="dark"] .post-preview > a {
+  color: #d4d4d4;
+}
+
+[data-theme="dark"] .post-preview > a:hover,
+[data-theme="dark"] .post-preview > a:focus {
+  color: #0099b8;
+}
+
+[data-theme="dark"] .post-preview > .post-meta {
+  color: #999;
+}
+
+[data-theme="dark"] .post-preview > .post-meta > a {
+  color: #d4d4d4;
+}
+
+[data-theme="dark"] .post-preview > .post-meta > a:hover,
+[data-theme="dark"] .post-preview > .post-meta > a:focus {
+  color: #0099b8;
+}
+
+[data-theme="dark"] .post-content-preview {
+  color: #777;
+}
+
+[data-theme="dark"] .post-content-preview:hover {
+  color: #0099b8;
+}
+
+/* ============================================================
+ * 8. 文章详情页
+ * ============================================================ */
+[data-theme="dark"] .post-container a {
+  color: #4db8cc;
+}
+
+[data-theme="dark"] .post-container a:hover,
+[data-theme="dark"] .post-container a:focus {
+  color: #0099b8;
+}
+
+[data-theme="dark"] .post-container h5,
+[data-theme="dark"] .post-container h6 {
+  color: #999;
+}
+
+[data-theme="dark"] .post-container .pager li > a > span {
+  color: #999;
+}
+
+/* ============================================================
+ * 9. 通用区块
+ * ============================================================ */
+[data-theme="dark"] .section-heading {
+  color: #d4d4d4;
+}
+
+/* ============================================================
+ * 10. 侧边栏
+ * ============================================================ */
+[data-theme="dark"] .sidebar-container {
+  color: #999;
+}
+
+[data-theme="dark"] .sidebar-container h5 {
+  color: #999;
+}
+
+[data-theme="dark"] .sidebar-container h5 a {
+  color: #999 !important;
+}
+
+[data-theme="dark"] .sidebar-container a {
+  color: #999 !important;
+}
+
+[data-theme="dark"] .sidebar-container a:hover,
+[data-theme="dark"] .sidebar-container a:active {
+  color: #0099b8 !important;
+}
+
+[data-theme="dark"] .sidebar-container .tags a {
+  border-color: #999;
+}
+
+[data-theme="dark"] .sidebar-container .tags a:hover,
+[data-theme="dark"] .sidebar-container .tags a:active {
+  border-color: #0099b8;
+}
+
+/* ============================================================
+ * 11. 侧边目录
+ * ============================================================ */
+[data-theme="dark"] .side-catalog .catalog-body .active {
+  background-color: #2d2d2d;
+}
+
+[data-theme="dark"] .side-catalog .catalog-body .active a {
+  color: #0099b8 !important;
+}
+
+/* ============================================================
+ * 12. 页脚
+ * ============================================================ */
+[data-theme="dark"] footer {
+  color: #999;
+}
+
+[data-theme="dark"] footer .copyright a {
+  color: #4db8cc;
+}
+
+[data-theme="dark"] footer .copyright a:hover,
+[data-theme="dark"] footer .copyright a:focus {
+  color: #0099b8;
+}
+
+/* ============================================================
+ * 13. 标签系统
+ * ============================================================ */
+[data-theme="dark"] #tag_cloud a,
+[data-theme="dark"] #tag_cloud .tag {
+  background: #3a3a3a;
+  color: #d4d4d4;
+}
+
+[data-theme="dark"] #tag_cloud a:hover,
+[data-theme="dark"] #tag_cloud a:active,
+[data-theme="dark"] #tag_cloud .tag:hover,
+[data-theme="dark"] #tag_cloud .tag:active {
+  background-color: #0099b8 !important;
+  color: #fff;
+}
+
+[data-theme="dark"] .listing-seperator {
+  color: #0099b8;
+}
+
+/* 标签页头部标签胶囊 */
+[data-theme="dark"] .tags a,
+[data-theme="dark"] .tags .tag {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ============================================================
+ * 14. 分页器
+ * ============================================================ */
+[data-theme="dark"] .pager li > a,
+[data-theme="dark"] .pager li > span {
+  background-color: #252525;
+  color: #d4d4d4;
+}
+
+[data-theme="dark"] .pager li > a {
+  color: #d4d4d4;
+}
+
+[data-theme="dark"] .pager li > a:hover,
+[data-theme="dark"] .pager li > a:focus {
+  color: white;
+  background-color: #0099b8;
+  border-color: #0099b8;
+}
+
+[data-theme="dark"] .pager li > a:hover > span,
+[data-theme="dark"] .pager li > a:focus > span {
+  color: white;
+}
+
+[data-theme="dark"] .pager .disabled > a,
+[data-theme="dark"] .pager .disabled > a:hover,
+[data-theme="dark"] .pager .disabled > a:focus,
+[data-theme="dark"] .pager .disabled > span {
+  color: #666;
+  background-color: #2d2d2d;
+}
+
+/* ============================================================
+ * 15. 按钮
+ * ============================================================ */
+[data-theme="dark"] .btn-default {
+  color: #d4d4d4;
+  background-color: #252525;
+  border-color: #404040;
+}
+
+[data-theme="dark"] .btn-default:hover,
+[data-theme="dark"] .btn-default:focus {
+  background-color: #0099b8;
+  border-color: #0099b8;
+  color: white;
+}
+
+/* ============================================================
+ * 16. 浮动标签表单
+ * ============================================================ */
+[data-theme="dark"] .floating-label-form-group {
+  border-bottom-color: #404040;
+}
+
+[data-theme="dark"] .floating-label-form-group input,
+[data-theme="dark"] .floating-label-form-group textarea {
+  color: #d4d4d4;
+}
+
+[data-theme="dark"] .floating-label-form-group label {
+  color: #999;
+}
+
+[data-theme="dark"] .floating-label-form-group-with-focus label {
+  color: #0099b8;
+}
+
+[data-theme="dark"] .floating-label-form-group::not(:first-child) {
+  border-left-color: #404040;
+}
+
+[data-theme="dark"] form .row:first-child .floating-label-form-group {
+  border-top-color: #404040;
+}
+
+/* ============================================================
+ * 17. 下拉选择框
+ * ============================================================ */
+[data-theme="dark"] select {
+  color: #4db8cc;
+  border-color: #4db8cc;
+  background: #1b1b1b;
+}
+
+/* ============================================================
+ * 18. 文本选中
+ * ============================================================ */
+[data-theme="dark"] ::-moz-selection {
+  color: white;
+  background: #0099b8;
+}
+
+[data-theme="dark"] ::selection {
+  color: white;
+  background: #0099b8;
+}
+
+/* ============================================================
+ * 19. 404 / 全屏页面
+ * ============================================================ */
+[data-theme="dark"] .page-fullscreen footer {
+  color: #999;
+}
+
+[data-theme="dark"] .page-fullscreen footer .copyright {
+  color: #999;
+}
+
+[data-theme="dark"] .page-fullscreen footer .copyright a {
+  color: #4db8cc;
+}
+
+[data-theme="dark"] .page-fullscreen footer .copyright a:hover {
+  color: #0099b8;
+}
+
+/* ============================================================
+ * 20. 说说评论（Duoshuo）覆写
+ * ============================================================ */
+[data-theme="dark"] .comment #ds-thread #ds-reset a.ds-like-thread-button {
+  background: #252525;
+  border-color: #404040;
+}
+
+[data-theme="dark"] .comment #ds-thread #ds-reset li.ds-tab a.ds-current {
+  background: #252525;
+  border-color: #404040;
+}
+
+[data-theme="dark"] .comment #ds-thread #ds-reset .ds-post-button {
+  background: #252525;
+  border-bottom-color: #404040;
+}
+
+[data-theme="dark"] .comment #ds-thread #ds-reset .ds-post-button:hover {
+  background: #404040;
+}
+
+[data-theme="dark"] #ds-smilies-tooltip ul.ds-smilies-tabs li a {
+  background: #252525 !important;
+}
+
+/* ============================================================
+ * 21. Gitalk 评论区暗色适配
+ * ============================================================ */
+[data-theme="dark"] .gt-container .gt-header-textarea,
+[data-theme="dark"] .gt-container .gt-comment-content,
+[data-theme="dark"] .gt-container .gt-popup {
+  background-color: #252525;
+  color: #d4d4d4;
+}
+
+[data-theme="dark"] .gt-container .gt-comment-body {
+  color: #d4d4d4;
+}
+
+/* ============================================================
+ * 22. 导航栏主题切换按钮
+ * ============================================================ */
+/* 主题切换按钮基础样式 */
+.theme-toggle-btn {
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 18px;
+  padding: 20px 15px;
+  line-height: 20px;
+  color: inherit;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 桌面端：白色（在顶部大图上） */
+@media only screen and (min-width: 768px) {
+  .theme-toggle-btn {
+    color: white;
+    padding: 20px;
+  }
+  .theme-toggle-btn:hover {
+    color: rgba(255, 255, 255, 0.8);
+  }
+}
+
+/* 固定导航状态：暗色文字 */
+[data-theme="dark"] .navbar-custom.is-fixed .theme-toggle-btn {
+  color: #d4d4d4;
+}
+
+[data-theme="dark"] .navbar-custom.is-fixed .theme-toggle-btn:hover {
+  color: #0099b8;
+}
+
+/* 亮色模式的固定导航：正常暗色文字 */
+.navbar-custom.is-fixed .theme-toggle-btn {
+  color: #404040;
+}
+
+.navbar-custom.is-fixed .theme-toggle-btn:hover {
+  color: #0085a1;
+}
+
+/* 移动端：继承导航链接的颜色 */
+@media only screen and (max-width: 767px) {
+  .theme-toggle-btn {
+    font-size: 13px;
+    line-height: 28px;
+    padding: 10px 15px;
+    width: 100%;
+    text-align: left;
+  }
+}
