@@ -1,0 +1,23 @@
+# 统一行尾规则：文本文件入库时统一为 LF
+* text=auto
+
+# Markdown 明确使用 LF
+*.md text eol=lf
+
+# 常见的二进制文件，不做行尾转换
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.gz binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.mp3 binary
+*.mp4 binary
+*.webm binary
